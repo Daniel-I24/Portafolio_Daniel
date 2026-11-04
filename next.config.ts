@@ -14,7 +14,8 @@ const csp = [
   `connect-src 'self' ${supabaseHost && `https://${supabaseHost} wss://${supabaseHost}`}`,
   "frame-ancestors 'none'",
   "base-uri 'self'",
-  "form-action 'self' https://github.com",
+  // The admin login form redirects to Supabase Auth and then to GitHub OAuth.
+  `form-action 'self' https://github.com ${supabaseHost && `https://${supabaseHost}`}`,
   "object-src 'none'",
   "upgrade-insecure-requests",
 ].join("; ");
