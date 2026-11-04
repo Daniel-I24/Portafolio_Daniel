@@ -58,7 +58,9 @@ export function Character({ pose, variant = "dani", animated = true, className, 
       transition={{ duration: 0.5, ease: [0.16, 1, 0.3, 1] }} style={{ originY: 1 }}>
       <g transform={`translate(0 ${def.drop ?? 0})`}>
         {def.back}
-        {def.legs.map((angles, i) => <Limb key={i} from={HIPS[i]} angles={angles} len={26} color={pants} shade={pantsShade} width={16} foot />)}
+        <motion.g animate={live && pose === "sitting" ? { skewX: [-8, 8, -8] } : undefined} transition={{ duration: 1.4, repeat: Infinity, ease: "easeInOut" }} style={{ originY: 0 }}>
+          {def.legs.map((angles, i) => <Limb key={i} from={HIPS[i]} angles={angles} len={26} color={pants} shade={pantsShade} width={16} foot />)}
+        </motion.g>
         <motion.g animate={live ? { scale: [1, 1.02, 1] } : undefined} transition={{ duration: 3.2, repeat: Infinity, ease: "easeInOut" }}>
           <g {...line} strokeWidth={5}>
             <path d="M58 104q22 14 44 0-6-8-22-8t-22 8z" fill={clothShade} />
