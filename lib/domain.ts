@@ -11,7 +11,7 @@ export type IconName =
 export type Accent = "hoodie" | "mustard" | "denim" | "spray-red" | "slime";
 
 export type Card = { title: string; subtitle: string; tags: string[] };
-export type CardAction = { label: string; href: string; icon: IconName };
+export type CardAction = { label: string; href: string; icon: IconName; note?: string }; // note: why it is the README
 
 export abstract class Entity {
   constructor(
@@ -23,13 +23,18 @@ export abstract class Entity {
   abstract toCard(): Card;
 }
 
-type KindAction = { label: string; icon: IconName; url: (p: ProjectData) => string };
-
-const KIND_ACTIONS: Record<ProjectKind, KindAction> = {
+const KIND_ACTIONS: Record<ProjectKind, { label: string; icon: IconName; url: (p: ProjectData) => string }> = {
   web: { label: "Demo en vivo", icon: "arrow", url: (p) => p.liveUrl },
   mobile: { label: "Descargar APK", icon: "apk", url: (p) => p.apkUrl || p.liveUrl },
   api: { label: "Documentación", icon: "code", url: (p) => p.liveUrl },
   desktop: { label: "Ver código", icon: "github", url: (p) => p.repoUrl },
+};
+
+const NO_DEMO_NOTES: Record<ProjectKind, string> = {
+  web: "La demo pública todavía no está desplegada: el README explica cómo correr el proyecto en local.",
+  mobile: "Todavía no hay un APK publicado: el README explica cómo compilar e instalar la app.",
+  api: "Es una API sin interfaz web pública: el README documenta cómo ejecutarla y probar sus endpoints.",
+  desktop: "Es una aplicación de escritorio, no corre en el navegador: el README explica cómo instalarla y ejecutarla.",
 };
 
 export class Project extends Entity {
@@ -43,11 +48,12 @@ export class Project extends Entity {
   get liveUrl(): string { return this.data.liveUrl; }
   get apkUrl(): string { return this.data.apkUrl; }
 
-  /** Secondary card action depends on the project kind; null when its URL is missing or repeats "Código". */
+  /** Second card link by kind. Without a demo (or when it would repeat "Código") it falls back to the README. */
   secondaryAction(): CardAction | null {
-    const action = KIND_ACTIONS[this.kind];
-    const href = action.url(this.data);
-    return href && href !== this.repoUrl ? { label: action.label, icon: action.icon, href } : null;
+    const { label, icon, url } = KIND_ACTIONS[this.kind];
+    const href = url(this.data);
+    if (href && href !== this.repoUrl) return { label, icon, href };
+    return this.repoUrl ? { label: "Documentación", icon: "code", href: `${this.repoUrl}#readme`, note: NO_DEMO_NOTES[this.kind] } : null;
   }
 
   toCard(): Card {
