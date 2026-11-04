@@ -1,0 +1,121 @@
+@import "tailwindcss";
+
+@theme {
+  /* Palette "Concreto & Spray" */
+  --color-asphalt: #1c1b1a;
+  --color-concrete: #5e5b57;
+  --color-cement: #a8a39b;
+  --color-paper: #f1eadf;
+  --color-ink: #0e0e0e;
+  --color-hoodie: #e07a2f;
+  --color-mustard: #f2c14e;
+  --color-spray-red: #d7263d;
+  --color-denim: #2f7378;
+  --color-slime: #9bd94a;
+
+  /* Fonts (CSS variables injected by next/font in app/layout.tsx) */
+  --font-spray: var(--font-rubik-spray), "Impact", sans-serif;
+  --font-tag: var(--font-sedgwick), cursive;
+  --font-marker: var(--font-permanent-marker), cursive;
+  --font-sans: var(--font-archivo), system-ui, sans-serif;
+  --font-mono: var(--font-jetbrains), ui-monospace, monospace;
+
+  /* Hard sticker shadows only: no blur */
+  --shadow-sticker: 4px 4px 0 var(--color-ink);
+  --shadow-sticker-sm: 2px 2px 0 var(--color-ink);
+  --shadow-sticker-lg: 8px 8px 0 var(--color-ink);
+
+  /* Motion tokens: 150 ms hover · 300 ms menus · 600 ms entrances */
+  --ease-snap: cubic-bezier(0.16, 1, 0.3, 1);
+  --default-transition-duration: 150ms;
+  --default-transition-timing-function: cubic-bezier(0.16, 1, 0.3, 1);
+
+  --animate-drip: drip 1.6s var(--ease-snap) both;
+  --animate-blink: blink 4s steps(1) infinite;
+  --animate-wobble: wobble 2.4s ease-in-out infinite;
+}
+
+@layer base {
+  html {
+    background-color: var(--color-asphalt);
+    color: var(--color-paper);
+    -webkit-tap-highlight-color: transparent;
+  }
+
+  body {
+    font-family: var(--font-sans);
+    overflow-x: hidden;
+  }
+
+  :focus-visible {
+    outline: 3px solid var(--color-mustard);
+    outline-offset: 3px;
+  }
+
+  ::selection {
+    background: var(--color-hoodie);
+    color: var(--color-ink);
+  }
+}
+
+@layer utilities {
+  /* Concrete noise: feTurbulence in a data URI, layered over the background color */
+  .texture-concrete {
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='240' height='240'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='3' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 .55 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+    background-blend-mode: multiply;
+  }
+
+  /* Subtle wall cracks */
+  .texture-cracks {
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='520' height='360' fill='none' stroke='%230e0e0e' stroke-opacity='.28' stroke-width='1.4' stroke-linecap='round'%3E%3Cpath d='M30 40l38 22 14 40 36 12M82 102l-10 34M380 300l26-30 44-6 18-34M450 264l30 18M210 190l22 10 8 26'/%3E%3C/svg%3E");
+  }
+
+  /* Irregular spray splat silhouette */
+  .shape-splat {
+    clip-path: polygon(8% 18%, 22% 4%, 38% 12%, 52% 0, 66% 10%, 84% 6%, 92% 24%, 100% 42%, 90% 58%, 98% 76%, 80% 88%, 64% 100%, 46% 90%, 28% 98%, 14% 84%, 0 70%, 6% 50%, 0 32%);
+  }
+
+  /* Torn paper edge for posters */
+  .shape-torn {
+    clip-path: polygon(0 2%, 6% 0, 14% 2%, 22% 0, 31% 1.5%, 40% 0, 50% 2%, 60% 0, 70% 1.5%, 80% 0, 90% 2%, 100% 0, 100% 98%, 93% 100%, 84% 98%, 75% 100%, 66% 98.5%, 56% 100%, 46% 98%, 36% 100%, 26% 98.5%, 16% 100%, 7% 98%, 0 100%);
+  }
+
+  /* Die-cut sticker border (white outline + hard shadow) */
+  .sticker-cut {
+    box-shadow: 0 0 0 6px var(--color-paper), 4px 4px 0 6px var(--color-ink);
+  }
+
+  /* Marker underline */
+  .marker-underline {
+    background: linear-gradient(transparent 62%, var(--color-mustard) 62%, var(--color-mustard) 88%, transparent 88%) no-repeat;
+  }
+
+  .text-outline {
+    -webkit-text-stroke: 2px var(--color-ink);
+    paint-order: stroke fill;
+  }
+}
+
+@keyframes drip {
+  from { transform: scaleY(0); }
+  to { transform: scaleY(1); }
+}
+
+@keyframes blink {
+  0%, 94%, 100% { transform: scaleY(1); }
+  96% { transform: scaleY(0.1); }
+}
+
+@keyframes wobble {
+  0%, 100% { transform: rotate(-2deg); }
+  50% { transform: rotate(2deg); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
