@@ -1,128 +1,130 @@
 {
   "profile": {
-    "name": "Ivan Daniel Igua Benavides",
+    "fullName": "Ivan Daniel Igua Benavides",
+    "displayName": "Daniel Igua",
     "tag": "Dani",
     "role": "Desarrollador Full Stack",
-    "goal": "futuro especialista en ciberseguridad",
-    "tagline": "Construyo apps completas, del dato a la pantalla, y aprendo a romperlas para hacerlas más seguras.",
-    "about": "Soy Daniel, desarrollador full stack de Pasto, Nariño, y estudiante de Ingeniería de Software en la UCC. Me gusta construir productos de punta a punta y entender cómo se protegen. Fuera del código juego vóley y fútbol, salgo en moto, juego billar y escucho rap y hip hop.",
-    "location": "Pasto, Nariño",
-    "university": "Ingeniería de Software · UCC",
-    "photoUrl": "/daniel-sin-hora.webp",
+    "goal": "Futuro especialista en ciberseguridad",
+    "location": "Pasto, Nariño, Colombia",
+    "about": "Desarrollador full stack en formación. Construyo aplicaciones web, móviles y APIs con arquitectura limpia y patrones de diseño, de la base de datos a la interfaz. Me obsesiona que las cosas funcionen bien, se vean bien y sean seguras. Fuera del código me encuentras en una cancha de vóley o de fútbol, en la moto, en una mesa de billar o con rap en los audífonos. Próxima parada: ciberseguridad.",
+    "photo": "/daniel-sin-hora.webp",
     "cvUrl": "/cv.pdf",
-    "email": "",
-    "github": "https://github.com/Daniel-I24",
-    "linkedin": ""
+    "email": "danieliguadev@gmail.com",
+    "socials": [
+      { "kind": "github", "label": "GitHub", "url": "https://github.com/Daniel-I24" },
+      { "kind": "linkedin", "label": "LinkedIn", "url": "https://www.linkedin.com/in/ivan-igua-1a60ab1ab" }
+    ]
   },
   "projects": [
     {
-      "id": "luma",
+      "slug": "luma",
       "title": "Luma",
-      "summary": "Proyecto Luma. Completa el resumen, el problema y la demo desde el admin.",
       "kind": "web",
-      "stack": [],
-      "repoUrl": "",
-      "liveUrl": "",
-      "apkUrl": "",
-      "imageUrl": "",
-      "problem": "",
-      "solution": "",
-      "myRole": "",
-      "learnings": "",
-      "gallery": [],
-      "githubRepo": "",
-      "stars": 0,
-      "year": 2026,
-      "order": 0,
-      "published": true
+      "summary": "App web y Android para descubrir restaurantes y comercios de Pasto: mapa en vivo, pedidos para recoger y recomendaciones con IA.",
+      "stack": ["Angular", "Tailwind CSS", "Supabase", "Capacitor", "MapLibre"],
+      "repoUrl": "https://github.com/Daniel-I24/Luma",
+      "liveUrl": null,
+      "featured": true
     },
     {
-      "id": "portafolio-graffo",
-      "title": "Portafolio Graffo Edition",
-      "summary": "Este portafolio: una pared de la calle donde se pinta mi vida de developer, con panel de administración propio.",
-      "kind": "web",
-      "stack": ["Next.js", "TypeScript", "Tailwind CSS", "Supabase", "Motion"],
-      "repoUrl": "https://github.com/Daniel-I24/Portafolio_Daniel",
-      "liveUrl": "",
-      "apkUrl": "",
-      "imageUrl": "",
-      "problem": "Quería un portafolio que mostrara quién soy, no una plantilla más.",
-      "solution": "Una web con personajes SVG animados, datos en Supabase y un admin para editar todo sin tocar código.",
-      "myRole": "Diseño, desarrollo y despliegue.",
-      "learnings": "Server Components, RLS en Postgres, Server Actions y animación accesible.",
-      "gallery": [],
-      "githubRepo": "Daniel-I24/Portafolio_Daniel",
-      "stars": 0,
-      "year": 2026,
-      "order": 1,
-      "published": true
+      "slug": "flux",
+      "title": "FLUX",
+      "kind": "mobile",
+      "summary": "Notas y recordatorios por voz para Wear OS. La IA clasifica la idea, detecta la fecha y programa la alarma en el reloj y el celular.",
+      "stack": ["Kotlin", "Compose for Wear OS", "Node.js", "Gemini", "Firebase"],
+      "repoUrl": "https://github.com/Daniel-I24/Flux",
+      "liveUrl": "https://github.com/Daniel-I24/Flux/releases",
+      "featured": true
     },
     {
-      "id": "restaurante-diana-jojoa",
-      "title": "Web del restaurante (pendiente)",
-      "summary": "Sitio web del restaurante de Diana Jojoa. Falta nombre, URL y año.",
+      "slug": "mm-glow-beauty",
+      "title": "M&M Glow Beauty",
+      "kind": "api",
+      "summary": "Backend para un centro estético de Pasto: citas, inventario, pagos, reseñas y recordatorios por correo y WhatsApp.",
+      "stack": ["Spring Boot", "Spring Security", "JWT", "MongoDB", "Docker"],
+      "repoUrl": "https://github.com/Daniel-I24/M-M-Glow-Beauty",
+      "liveUrl": null,
+      "featured": true
+    },
+    {
+      "slug": "plataforma-ia",
+      "title": "Plataforma IA",
       "kind": "web",
-      "stack": [],
-      "repoUrl": "",
-      "liveUrl": "",
-      "apkUrl": "",
-      "imageUrl": "",
-      "problem": "",
-      "solution": "",
-      "myRole": "",
-      "learnings": "",
-      "gallery": [],
-      "githubRepo": "",
-      "stars": 0,
-      "year": 2026,
-      "order": 2,
-      "published": false
+      "summary": "Consumo de IA con control de cuotas: una cadena de proxies limita peticiones por minuto y tokens por mes según el plan.",
+      "stack": ["React", "Vite", "Spring Boot", "Docker"],
+      "repoUrl": "https://github.com/Daniel-I24/PlataformaAIFrontend",
+      "liveUrl": "https://plataforma-ai-frontend.vercel.app",
+      "featured": false
+    },
+    {
+      "slug": "sistema-911",
+      "title": "Sistema de Emergencias 911",
+      "kind": "desktop",
+      "summary": "Simulador de despacho: cola de prioridad para las llamadas, Dijkstra para la unidad más cercana y pila para deshacer acciones.",
+      "stack": ["Python", "Tkinter", "Grafos", "Estructuras de datos"],
+      "repoUrl": "https://github.com/Daniel-I24/911-emergency-system",
+      "liveUrl": null,
+      "featured": false
+    },
+    {
+      "slug": "terminal-transportes-pasto",
+      "title": "Terminal de Transportes Pasto",
+      "kind": "web",
+      "summary": "Sitio web responsive de la Terminal de Transportes de Pasto, hecho para el curso de Diseño de Interfaces.",
+      "stack": ["Angular", "TypeScript", "CSS"],
+      "repoUrl": "https://github.com/Daniel-I24/TerminalTransportesPasto",
+      "liveUrl": "https://terminal-transportes-pasto.vercel.app",
+      "featured": false
     }
   ],
   "testimonials": [
-    { "id": "catalina-botina", "author": "Catalina Botina", "relation": "", "quote": "Testimonio pendiente: escríbelo desde el admin.", "avatarUrl": "", "order": 0, "published": false },
-    { "id": "diana-jojoa", "author": "Diana Jojoa", "relation": "Cliente · restaurante", "quote": "Testimonio pendiente: escríbelo desde el admin.", "avatarUrl": "", "order": 1, "published": false },
-    { "id": "karol-igua", "author": "Karol Igua", "relation": "", "quote": "Testimonio pendiente: escríbelo desde el admin.", "avatarUrl": "", "order": 2, "published": false }
-  ],
-  "experience": [
     {
-      "id": "ucc-software",
-      "type": "academic",
-      "title": "Ingeniería de Software",
-      "place": "Universidad Cooperativa de Colombia · Pasto",
-      "startDate": "2023-01-01",
-      "endDate": "",
-      "description": "Formación en desarrollo de software, bases de datos y arquitectura. Revisa la fecha de inicio desde el admin.",
-      "order": 0,
-      "published": true
+      "name": "Catalina Botina",
+      "role": "Técnico en Salud Oral",
+      "quote": "Daniel Igua, ingeniero de software, es una persona responsable, honesta y respetuosa; es dedicado a su trabajo. Cumple con las tareas asignadas, se le facilita trabajar en equipo y muestra interés por hacer bien su trabajo. Por estas razones considero que es un buen profesional y lo recomiendo para futuras oportunidades laborales."
     },
     {
-      "id": "portafolio-work",
-      "type": "work",
-      "title": "Desarrollador Full Stack · proyectos propios",
-      "place": "Pasto, Nariño",
-      "startDate": "2026-01-01",
-      "endDate": "",
-      "description": "Proyectos web y móviles de punta a punta: diseño, API, base de datos y despliegue.",
-      "order": 1,
-      "published": true
+      "name": "Diana Jojoa",
+      "role": "Dueña de restaurante",
+      "quote": "Él desarrolló la página web de mi negocio, y destaco la creatividad con la que aborda cada proyecto y los pequeños detalles que le añade a sus ideas para marcar la diferencia. Su ingenio y dedicación se reflejan en la calidad de su trabajo."
+    },
+    {
+      "name": "Karol Igua",
+      "role": "Estudiante universitaria",
+      "quote": "He tenido la oportunidad de probar algunas de sus aplicaciones y me parece que tiene ideas bastante innovadoras. Le gusta ser creativo en su diseño y en implementar sus funcionalidades, prevé muchas situaciones, sabe trabajar en equipo y es buen líder a la hora de crear proyectos."
     }
   ],
+  "experience": [
+    { "type": "academic", "period": "2024 — hoy", "title": "Ingeniería de Software", "place": "Universidad Cooperativa de Colombia · Campus Pasto", "summary": "Meta: especialización en ciberseguridad." },
+    { "type": "academic", "period": "2025", "title": "Fundamentos Matemáticos para Ingeniería", "place": "Universidad Mariana · 20 h", "summary": null },
+    { "type": "academic", "period": "2024", "title": "I Seminario Nacional de Ingeniería de Software", "place": "Universidad Cooperativa de Colombia · 16 h", "summary": null },
+    { "type": "academic", "period": "2024", "title": "Aprendizaje automático: ejemplos prácticos", "place": "IBM SkillsBuild", "summary": null },
+    { "type": "academic", "period": "2023", "title": "Bachiller Académico", "place": "I.E.M. Ciudad de Pasto", "summary": null },
+    { "type": "work", "period": "2026", "title": "Desarrollador full stack · Luma", "place": "Proyecto universitario", "summary": "App web y Android con Angular, Supabase (RLS) e IA." },
+    { "type": "work", "period": "2026", "title": "Desarrollador móvil · FLUX", "place": "Proyecto universitario", "summary": "Wear OS con Kotlin, Compose, Gemini y Firebase App Check." },
+    { "type": "work", "period": "2026", "title": "Desarrollador backend · M&M Glow Beauty", "place": "Proyecto para un negocio real de Pasto", "summary": "API REST con Spring Boot, JWT, MongoDB y Docker." },
+    { "type": "work", "period": "2026", "title": "Desarrollador full stack · Plataforma IA", "place": "Proyecto universitario", "summary": "Control de cuotas de IA con el patrón Proxy." },
+    { "type": "work", "period": "[PENDIENTE año]", "title": "Desarrollador web · Página de restaurante", "place": "Cliente: restaurante de Diana Jojoa", "summary": "[PENDIENTE: nombre del restaurante, URL y qué hiciste]", "published": false }
+  ],
   "skills": [
-    { "id": "typescript", "name": "TypeScript", "level": "intermediate", "category": "Lenguajes", "order": 0, "published": true },
-    { "id": "react", "name": "React", "level": "intermediate", "category": "Frontend", "order": 1, "published": true },
-    { "id": "nextjs", "name": "Next.js", "level": "intermediate", "category": "Frontend", "order": 2, "published": true },
-    { "id": "tailwind", "name": "Tailwind CSS", "level": "advanced", "category": "Frontend", "order": 3, "published": true },
-    { "id": "sql", "name": "SQL / Postgres", "level": "intermediate", "category": "Backend", "order": 4, "published": true },
-    { "id": "supabase", "name": "Supabase", "level": "learning", "category": "Backend", "order": 5, "published": true },
-    { "id": "git", "name": "Git y GitHub", "level": "advanced", "category": "Herramientas", "order": 6, "published": true },
-    { "id": "security", "name": "Ciberseguridad", "level": "learning", "category": "Seguridad", "order": 7, "published": true }
+    { "group": "Frontend", "name": "Angular", "level": 3 },
+    { "group": "Frontend", "name": "React / Next.js", "level": 2 },
+    { "group": "Frontend", "name": "Tailwind CSS", "level": 3 },
+    { "group": "Backend", "name": "Spring Boot", "level": 3 },
+    { "group": "Backend", "name": "Node.js · Express", "level": 2 },
+    { "group": "Datos", "name": "PostgreSQL · Supabase", "level": 2 },
+    { "group": "Datos", "name": "MongoDB · Firebase", "level": 2 },
+    { "group": "Móvil", "name": "Kotlin · Jetpack Compose", "level": 2 },
+    { "group": "DevOps", "name": "Docker · Git · Vercel", "level": 2 },
+    { "group": "Seguridad", "name": "JWT · RLS · App Check", "level": 2 },
+    { "group": "Seguridad", "name": "Pentesting", "level": 1 }
   ],
   "interests": [
-    { "id": "volley", "key": "volley", "title": "Voleibol", "note": "Remate primero, pregunto después.", "playlistUrl": "", "order": 0, "published": true },
-    { "id": "football", "key": "football", "title": "Fútbol", "note": "Dominadas hasta que se cae el balón.", "playlistUrl": "", "order": 1, "published": true },
-    { "id": "moto", "key": "moto", "title": "Motos", "note": "Rodando por las carreteras de Nariño.", "playlistUrl": "", "order": 2, "published": true },
-    { "id": "pool", "key": "pool", "title": "Billar", "note": "La 8 siempre al final.", "playlistUrl": "", "order": 3, "published": true },
-    { "id": "music", "key": "music", "title": "Música", "note": "Rap y hip hop, pero escucho de todo.", "playlistUrl": "", "order": 4, "published": true }
+    { "slug": "voley", "title": "Voleibol", "note": "Mi deporte. Lo mío es jugarlo, no verlo." },
+    { "slug": "futbol", "title": "Fútbol", "note": "Jugarlo siempre que se pueda." },
+    { "slug": "motos", "title": "Motos", "note": "Rodar por las carreteras de Nariño." },
+    { "slug": "billar", "title": "Billar", "note": "Paciencia, ángulo y una buena tacada." },
+    { "slug": "musica", "title": "Música", "note": "Rap y hip hop principalmente, pero escucho de todo." },
+    { "slug": "deporte", "title": "Hacer deporte", "note": "Prefiero moverme que mirar desde la tribuna." }
   ]
 }

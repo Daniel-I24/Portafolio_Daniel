@@ -1,5 +1,5 @@
 import type {
-  ExperienceData, InterestData, InterestKey, ProjectData, ProjectKind,
+  ExperienceData, InterestData, InterestSlug, ProfileData, ProjectData, ProjectKind,
   SkillData, SkillLevel, TestimonialData,
 } from "./schemas";
 
@@ -10,17 +10,8 @@ export type IconName =
 
 export type Accent = "hoodie" | "mustard" | "denim" | "spray-red" | "slime";
 
-export interface Card {
-  title: string;
-  subtitle: string;
-  tags: string[];
-}
-
-export interface CardAction {
-  label: string;
-  href: string;
-  icon: IconName;
-}
+export type Card = { title: string; subtitle: string; tags: string[] };
+export type CardAction = { label: string; href: string; icon: IconName };
 
 export abstract class Entity {
   constructor(
@@ -36,7 +27,7 @@ type KindAction = { label: string; icon: IconName; url: (p: ProjectData) => stri
 
 const KIND_ACTIONS: Record<ProjectKind, KindAction> = {
   web: { label: "Demo en vivo", icon: "arrow", url: (p) => p.liveUrl },
-  mobile: { label: "Descargar APK", icon: "apk", url: (p) => p.apkUrl },
+  mobile: { label: "Descargar APK", icon: "apk", url: (p) => p.apkUrl || p.liveUrl },
   api: { label: "Documentación", icon: "code", url: (p) => p.liveUrl },
   desktop: { label: "Ver código", icon: "github", url: (p) => p.repoUrl },
 };
@@ -52,11 +43,11 @@ export class Project extends Entity {
   get liveUrl(): string { return this.data.liveUrl; }
   get apkUrl(): string { return this.data.apkUrl; }
 
-  /** Secondary card action depends on the project kind; null when its URL is still missing. */
+  /** Secondary card action depends on the project kind; null when its URL is missing or repeats "Código". */
   secondaryAction(): CardAction | null {
     const action = KIND_ACTIONS[this.kind];
     const href = action.url(this.data);
-    return href ? { label: action.label, icon: action.icon, href } : null;
+    return href && href !== this.repoUrl ? { label: action.label, icon: action.icon, href } : null;
   }
 
   toCard(): Card {
@@ -69,15 +60,20 @@ export class Testimonial extends Entity {
     super(data.id, data.order, data.published);
   }
 
+  /** Initials for the drawn avatar when there is no photo. */
+  get initials(): string {
+    return this.data.name.split(/\s+/).slice(0, 2).map((word) => word[0]?.toUpperCase()).join("");
+  }
+
   toCard(): Card {
-    return { title: this.data.author, subtitle: this.data.quote, tags: [this.data.relation] };
+    return { title: this.data.name, subtitle: this.data.quote, tags: [this.data.role] };
   }
 }
 
 const LEVEL_LABELS: Record<SkillLevel, { label: string; fill: number }> = {
-  advanced: { label: "Avanzado", fill: 0.9 },
-  intermediate: { label: "Intermedio", fill: 0.6 },
-  learning: { label: "Aprendiendo", fill: 0.3 },
+  3: { label: "Avanzado", fill: 0.9 },
+  2: { label: "Intermedio", fill: 0.6 },
+  1: { label: "Aprendiendo", fill: 0.3 },
 };
 
 export class Skill extends Entity {
@@ -90,12 +86,12 @@ export class Skill extends Entity {
   get fill(): number { return LEVEL_LABELS[this.data.level].fill; }
 
   toCard(): Card {
-    return { title: this.data.name, subtitle: this.levelLabel, tags: [this.data.category] };
+    return { title: this.data.name, subtitle: this.levelLabel, tags: [this.data.group] };
   }
 }
 
-const INTEREST_ICONS: Record<InterestKey, IconName> = {
-  volley: "volley", football: "football", moto: "moto", pool: "pool", music: "music",
+const INTEREST_ICONS: Record<InterestSlug, IconName> = {
+  voley: "volley", futbol: "football", motos: "moto", billar: "pool", musica: "music", deporte: "arrow",
 };
 
 export class Interest extends Entity {
@@ -103,7 +99,7 @@ export class Interest extends Entity {
     super(data.id, data.order, data.published);
   }
 
-  get icon(): IconName { return INTEREST_ICONS[this.data.key]; }
+  get icon(): IconName { return INTEREST_ICONS[this.data.slug]; }
 
   toCard(): Card {
     return { title: this.data.title, subtitle: this.data.note, tags: [] };
@@ -119,16 +115,15 @@ export abstract class Experience extends Entity {
   abstract accent(): Accent;
   abstract icon(): IconName;
 
-  get startDate(): Date { return new Date(this.data.startDate); }
-
-  /** Human period such as "2023 — actual". */
-  period(): string {
-    const end = this.data.endDate ? this.data.endDate.slice(0, 4) : "actual";
-    return `${this.data.startDate.slice(0, 4)} — ${end}`;
+  /** Sort key: the latest year in the period ("2024 — hoy" counts as the current year). */
+  get year(): number {
+    if (/hoy|actual/i.test(this.data.period)) return new Date().getFullYear();
+    const years = this.data.period.match(/\d{4}/g)?.map(Number) ?? [];
+    return years.length ? Math.max(...years) : 0;
   }
 
   toCard(): Card {
-    return { title: this.data.title, subtitle: this.data.place, tags: [this.badge(), this.period()] };
+    return { title: this.data.title, subtitle: this.data.place, tags: [this.badge(), this.data.period] };
   }
 }
 
@@ -137,6 +132,10 @@ export class AcademicExperience extends Experience {
   accent(): Accent { return "mustard"; }
   icon(): IconName { return "shield"; }
 }
+
+/** Short hero phrase: the explicit tagline, or the first sentence of "about". */
+export const shortPhrase = (profile: ProfileData): string =>
+  profile.tagline || (profile.about.match(/^[^.!?]+[.!?]/)?.[0] ?? "");
 
 export class WorkExperience extends Experience {
   badge(): string { return "Proyectos / laboral"; }

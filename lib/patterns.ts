@@ -3,8 +3,8 @@ import { z } from "zod";
 import {
   AcademicExperience, Interest, Project, Skill, Testimonial, WorkExperience, type Experience,
 } from "./domain";
-import { entitySchemas, profileSchema, type EntityRow, type EntityTable, type ProfileData } from "./schemas";
-import { byDateDesc, byOrder, toCamel } from "./structures";
+import { entitySchemas, profileSchema, type EntityInput, type EntityRow, type EntityTable } from "./schemas";
+import { byNewest, byOrder, toCamel } from "./structures";
 import { hasSupabase, publicClient } from "./supabase";
 
 /* ---------- Repository + Strategy: interchangeable data sources ---------- */
@@ -12,7 +12,8 @@ import { hasSupabase, publicClient } from "./supabase";
 export const ENTITY_TABLES = Object.keys(entitySchemas) as EntityTable[];
 export const CACHE_TAGS = ["profile", ...ENTITY_TABLES] as const;
 
-export type Snapshot = { profile: ProfileData } & { [T in EntityTable]: EntityRow<T>[] };
+/** Unparsed rows as stored (seed or DB); EntityFactory validates them. */
+export type Snapshot = { profile: z.input<typeof profileSchema> } & { [T in EntityTable]: Partial<EntityInput<T>>[] };
 
 export interface Repository {
   snapshot(): Promise<Snapshot>;
@@ -22,8 +23,12 @@ export interface Repository {
 export class SeedRepository implements Repository {
   async snapshot(): Promise<Snapshot> {
     const seed = (await import("@/content/seed.json")).default as unknown as Snapshot;
-    const tables = ENTITY_TABLES.map((t) => [t, seed[t].filter((row) => row.published)]);
-    return { profile: seed.profile, ...Object.fromEntries(tables) } as Snapshot;
+    // Seed rows have no id/order: derive them from the slug (or position) and the file order.
+    const withMeta = (table: EntityTable) =>
+      seed[table]
+        .map((row, index) => ({ id: ("slug" in row && row.slug) || `${table}-${index + 1}`, order: index, ...row }))
+        .filter((row) => row.published !== false);
+    return { profile: seed.profile, ...Object.fromEntries(ENTITY_TABLES.map((t) => [t, withMeta(t)])) } as Snapshot;
   }
 }
 
@@ -78,7 +83,7 @@ export class EntityFactory {
       profile: profileSchema.parse(snapshot.profile),
       projects: byOrder(list<Project>("projects")),
       testimonials: byOrder(list<Testimonial>("testimonials")),
-      experience: byDateDesc(list<Experience>("experience"), (e) => e.startDate),
+      experience: byNewest(list<Experience>("experience"), (e) => e.year),
       skills: byOrder(list<Skill>("skills")),
       interests: byOrder(list<Interest>("interests")),
     };

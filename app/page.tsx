@@ -1,5 +1,5 @@
 import { Icon } from "@/components/ui/Icon";
-import type { IconName } from "@/lib/domain";
+import { shortPhrase, type IconName } from "@/lib/domain";
 import { getPortfolio } from "@/lib/patterns";
 
 // Phase 1 placeholder: proves tokens, fonts, textures, icons and the repository end to end.
@@ -14,11 +14,11 @@ export default async function HomePage() {
   return (
     <main id="inicio" className="texture-concrete texture-cracks min-h-dvh bg-concrete px-4 py-16 sm:px-10">
       <p className="font-tag text-5xl text-hoodie">{profile.tag}</p>
-      <h1 className="mt-4 max-w-3xl font-spray text-5xl leading-none text-paper sm:text-7xl">{profile.name}</h1>
+      <h1 className="mt-4 max-w-3xl font-spray text-5xl leading-none text-paper sm:text-7xl">{profile.fullName}</h1>
       <p className="mt-6 inline-block -rotate-2 bg-mustard px-3 py-1 font-marker text-lg text-ink shadow-sticker">
         {profile.goal}
       </p>
-      <p className="mt-6 max-w-xl text-lg">{profile.tagline}</p>
+      <p className="mt-6 max-w-xl text-lg">{shortPhrase(profile)}</p>
 
       <ul className="mt-10 flex flex-wrap gap-4 text-paper" aria-label="Iconos">
         {ICONS.map((name) => (

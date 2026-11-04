@@ -1,5 +1,6 @@
 import type { Metadata, Viewport } from "next";
 import { Archivo, JetBrains_Mono, Permanent_Marker, Rubik_Spray_Paint, Sedgwick_Ave_Display } from "next/font/google";
+import { shortPhrase } from "@/lib/domain";
 import { getPortfolio } from "@/lib/patterns";
 import "./globals.css";
 
@@ -13,13 +14,13 @@ const fontVariables = [spray, tag, marker, archivo, mono].map((font) => font.var
 
 export async function generateMetadata(): Promise<Metadata> {
   const { profile } = await getPortfolio();
-  const title = `${profile.name} · ${profile.role}`;
-  const description = profile.tagline;
+  const title = `${profile.fullName} · ${profile.role}`;
+  const description = `${shortPhrase(profile)} ${profile.goal}. ${profile.location}.`;
   return {
     metadataBase: new URL(process.env.NEXT_PUBLIC_SITE_URL ?? "http://localhost:3000"),
     title: { default: title, template: `%s · ${profile.tag}` },
     description,
-    authors: [{ name: profile.name, url: profile.github || undefined }],
+    authors: [{ name: profile.fullName, url: profile.socials.find((s) => s.kind === "github")?.url }],
     openGraph: { type: "website", locale: "es_CO", title, description, siteName: profile.tag },
     twitter: { card: "summary_large_image", title, description },
   };

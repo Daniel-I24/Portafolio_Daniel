@@ -119,6 +119,6 @@ export class TechIndex<T extends { stack: string[] }> {
 export const byOrder = <T extends { order: number }>(items: readonly T[]): T[] =>
   [...items].sort((a, b) => a.order - b.order);
 
-/** Stable sort by a date, most recent first. */
-export const byDateDesc = <T>(items: readonly T[], date: (item: T) => Date): T[] =>
-  [...items].sort((a, b) => date(b).getTime() - date(a).getTime());
+/** Stable sort by a numeric date key (year, timestamp…), most recent first; ties keep their order. */
+export const byNewest = <T>(items: readonly T[], key: (item: T) => number): T[] =>
+  [...items].sort((a, b) => key(b) - key(a));

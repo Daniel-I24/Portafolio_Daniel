@@ -1,43 +1,56 @@
 import { z } from "zod";
 
-// Labels (`describe`) are UI text, so they stay in Spanish; EntityForm renders fields from them.
+// Field names mirror content/seed.json. Labels (`describe`) are UI text in Spanish; EntityForm renders from them.
+// Seed rows carry no id/order/published: SeedRepository derives them, the database stores them.
 const id = z.string().min(1);
 const order = z.number().int().min(0).default(0).describe("Orden");
 const published = z.boolean().default(true).describe("Publicado");
-const optionalUrl = z.union([z.url(), z.literal("")]).default("");
-const text = (label: string, max = 280) => z.string().trim().max(max).default("").describe(label);
+/** Optional text: null/undefined in the seed or DB become "". */
+const text = (label: string, max = 280) =>
+  z.string().trim().max(max).nullish().transform((value) => value ?? "").describe(label);
+const url = (label: string) =>
+  z.union([z.url(), z.literal("")]).nullish().transform((value) => value ?? "").describe(label);
 
 export const projectKinds = ["web", "mobile", "api", "desktop"] as const;
-export const skillLevels = ["advanced", "intermediate", "learning"] as const;
 export const experienceTypes = ["academic", "work"] as const;
-export const interestKeys = ["volley", "football", "moto", "pool", "music"] as const;
+export const socialKinds = ["github", "linkedin"] as const;
+export const interestSlugs = ["voley", "futbol", "motos", "billar", "musica", "deporte"] as const;
+/** 1 = Aprendiendo · 2 = Intermedio · 3 = Avanzado */
+export const skillLevels = [1, 2, 3] as const;
+
+export const socialSchema = z.object({
+  kind: z.enum(socialKinds).describe("Red"),
+  label: z.string().trim().min(1).max(40).describe("Texto"),
+  url: z.url().describe("Enlace"),
+});
 
 export const profileSchema = z.object({
-  name: z.string().trim().min(2).describe("Nombre completo"),
+  fullName: z.string().trim().min(2).describe("Nombre completo"),
+  displayName: z.string().trim().min(2).max(40).describe("Nombre corto"),
   tag: z.string().trim().min(1).max(12).describe("Tag"),
   role: z.string().trim().min(2).describe("Rol"),
   goal: text("Meta"),
   tagline: text("Frase corta", 160),
-  about: text("Sobre mí", 2000),
   location: text("Ubicación"),
-  university: text("Universidad"),
-  photoUrl: z.string().default("").describe("Foto"),
-  cvUrl: z.string().default("").describe("CV (PDF)"),
-  email: z.union([z.email(), z.literal("")]).default("").describe("Correo"),
-  github: optionalUrl.describe("GitHub"),
-  linkedin: optionalUrl.describe("LinkedIn"),
+  about: text("Sobre mí", 2000),
+  photo: z.string().default("").describe("Foto"),
+  cvUrl: z.string().default("/cv.pdf").describe("CV (PDF)"),
+  email: z.email().describe("Correo"),
+  socials: z.array(socialSchema).default([]).describe("Redes"),
 });
 
 export const projectSchema = z.object({
   id,
+  slug: z.string().trim().regex(/^[a-z0-9-]+$/).describe("Slug"),
   title: z.string().trim().min(2).describe("Título"),
-  summary: text("Resumen", 400),
   kind: z.enum(projectKinds).default("web").describe("Tipo"),
+  summary: text("Resumen", 400),
   stack: z.array(z.string().trim().min(1)).default([]).describe("Tecnologías"),
-  repoUrl: optionalUrl.describe("Repositorio"),
-  liveUrl: optionalUrl.describe("Demo en vivo"),
-  apkUrl: optionalUrl.describe("APK"),
-  imageUrl: z.string().default("").describe("Captura"),
+  repoUrl: url("Repositorio"),
+  liveUrl: url("Demo / enlace"),
+  apkUrl: url("APK"),
+  imageUrl: text("Captura", 500),
+  featured: z.boolean().default(false).describe("Destacado"),
   problem: text("Problema", 1000),
   solution: text("Solución", 1000),
   myRole: text("Mi rol", 600),
@@ -45,17 +58,17 @@ export const projectSchema = z.object({
   gallery: z.array(z.string()).default([]).describe("Galería"),
   githubRepo: text("Repo de GitHub (owner/nombre)", 120),
   stars: z.number().int().min(0).default(0).describe("Estrellas"),
-  year: z.number().int().min(2000).max(2100).describe("Año"),
+  year: z.number().int().min(2000).max(2100).nullish().describe("Año"),
   order,
   published,
 });
 
 export const testimonialSchema = z.object({
   id,
-  author: z.string().trim().min(2).describe("Autor"),
-  relation: text("Relación", 120),
+  name: z.string().trim().min(2).describe("Nombre"),
+  role: text("Cargo o relación", 120),
   quote: z.string().trim().min(10).max(800).describe("Testimonio"),
-  avatarUrl: z.string().default("").describe("Foto"),
+  avatarUrl: text("Foto", 500),
   order,
   published,
 });
@@ -63,30 +76,29 @@ export const testimonialSchema = z.object({
 export const experienceSchema = z.object({
   id,
   type: z.enum(experienceTypes).describe("Tipo"),
-  title: z.string().trim().min(2).describe("Título"),
-  place: text("Lugar", 160),
-  startDate: z.iso.date().describe("Inicio"),
-  endDate: z.union([z.iso.date(), z.literal("")]).default("").describe("Fin"),
-  description: text("Descripción", 800),
+  period: z.string().trim().min(1).max(40).describe("Periodo"),
+  title: z.string().trim().min(2).describe("Cargo o título"),
+  place: text("Institución o empresa", 160),
+  summary: text("Logros", 800),
   order,
   published,
 });
 
 export const skillSchema = z.object({
   id,
+  group: z.string().trim().min(1).max(40).describe("Grupo"),
   name: z.string().trim().min(1).max(40).describe("Nombre"),
-  level: z.enum(skillLevels).describe("Nivel"),
-  category: text("Categoría", 40),
+  level: z.union(skillLevels.map((level) => z.literal(level))).describe("Nivel"),
   order,
   published,
 });
 
 export const interestSchema = z.object({
   id,
-  key: z.enum(interestKeys).describe("Clave"),
+  slug: z.enum(interestSlugs).describe("Tipo"),
   title: z.string().trim().min(2).max(60).describe("Título"),
   note: text("Nota", 200),
-  playlistUrl: optionalUrl.describe("Playlist (Spotify)"),
+  playlistUrl: url("Playlist (Spotify)"),
   order,
   published,
 });
@@ -100,7 +112,6 @@ export const messageSchema = z.object({
   createdAt: z.string(),
 });
 
-
 export const entitySchemas = {
   projects: projectSchema,
   testimonials: testimonialSchema,
@@ -109,6 +120,7 @@ export const entitySchemas = {
   interests: interestSchema,
 } as const;
 
+export type SocialData = z.infer<typeof socialSchema>;
 export type ProfileData = z.infer<typeof profileSchema>;
 export type ProjectData = z.infer<typeof projectSchema>;
 export type TestimonialData = z.infer<typeof testimonialSchema>;
@@ -118,6 +130,8 @@ export type InterestData = z.infer<typeof interestSchema>;
 export type MessageData = z.infer<typeof messageSchema>;
 export type ProjectKind = (typeof projectKinds)[number];
 export type SkillLevel = (typeof skillLevels)[number];
-export type InterestKey = (typeof interestKeys)[number];
+export type InterestSlug = (typeof interestSlugs)[number];
 export type EntityTable = keyof typeof entitySchemas;
 export type EntityRow<T extends EntityTable> = z.infer<(typeof entitySchemas)[T]>;
+/** Shape before parsing (what the seed and the DB hold). */
+export type EntityInput<T extends EntityTable> = z.input<(typeof entitySchemas)[T]>;
