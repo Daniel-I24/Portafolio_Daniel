@@ -5,15 +5,17 @@ export const GITHUB_USER = "Daniel-I24";
 
 export interface RepoSummary {
   fullName: string;
-  name: string;
   description: string;
   stars: number;
   updatedAt: string;
+  /** True when the repo belongs to another account (Daniel is a collaborator). */
+  collaboration: boolean;
 }
 
 interface RawRepo {
   full_name: string;
   name: string;
+  owner: { login: string };
   description: string | null;
   stargazers_count: number;
   homepage: string | null;
@@ -22,9 +24,11 @@ interface RawRepo {
   created_at: string;
   updated_at: string;
   fork: boolean;
+  private: boolean;
 }
 
 interface RawRelease {
+  html_url: string;
   assets: { name: string; browser_download_url: string }[];
 }
 
@@ -44,49 +48,67 @@ async function github<T>(path: string): Promise<T | null> {
   return (await response.json()) as T;
 }
 
-/** Public, non-fork repositories of the portfolio owner, most recently updated first. */
+/** "owner/name" from a full name or any github.com URL (…/tree/main, .git, etc.); null when invalid. */
+export function parseRepo(input: string): string | null {
+  const match = input.trim().match(/^(?:https?:\/\/(?:www\.)?github\.com\/)?([\w.-]+)\/([\w.-]+?)(?:\.git)?(?:[/?#].*)?$/i);
+  return match ? `${match[1]}/${match[2]}` : null;
+}
+
+const isCollaboration = (owner: string) => owner.toLowerCase() !== GITHUB_USER.toLowerCase();
+
+const toSummary = (repo: RawRepo): RepoSummary => ({
+  fullName: repo.full_name,
+  description: repo.description ?? "",
+  stars: repo.stargazers_count,
+  updatedAt: repo.updated_at,
+  collaboration: isCollaboration(repo.owner.login),
+});
+
+/** Own public repos, plus (with a token) public repos where Daniel collaborates. Most recent first. */
 export async function listRepos(): Promise<RepoSummary[]> {
-  const repos = (await github<RawRepo[]>(`/users/${GITHUB_USER}/repos?per_page=100&sort=updated`)) ?? [];
-  return repos
-    .filter((repo) => !repo.fork)
-    .map((repo) => ({
-      fullName: repo.full_name,
-      name: repo.name,
-      description: repo.description ?? "",
-      stars: repo.stargazers_count,
-      updatedAt: repo.updated_at,
-    }));
+  const own = (await github<RawRepo[]>(`/users/${GITHUB_USER}/repos?per_page=100&sort=updated`)) ?? [];
+  const shared = process.env.GITHUB_TOKEN
+    ? ((await github<RawRepo[]>("/user/repos?affiliation=collaborator,organization_member&per_page=100&sort=updated")) ?? [])
+    : [];
+  const unique = new Map([...own, ...shared].filter((r) => !r.fork && !r.private).map((r) => [r.full_name, r]));
+  return [...unique.values()].map(toSummary).sort((a, b) => b.updatedAt.localeCompare(a.updatedAt));
 }
 
-const prettify = (name: string) =>
-  name.replace(/[-_]+/g, " ").replace(/\b\w/g, (char) => char.toUpperCase());
+const prettify = (name: string) => name.replace(/[-_]+/g, " ").replace(/\b\w/g, (char) => char.toUpperCase());
 
-/** URL of the first .apk asset in the latest release, or "" when there is none. */
-async function latestApk(fullName: string): Promise<string> {
-  const release = await github<RawRelease>(`/repos/${fullName}/releases/latest`);
-  return release?.assets.find((asset) => asset.name.endsWith(".apk"))?.browser_download_url ?? "";
-}
+/** "2026-1" / "2026-2" from an ISO date. */
+const semesterOf = (iso: string) => {
+  const date = new Date(iso);
+  return `${date.getFullYear()}-${date.getMonth() < 6 ? 1 : 2}`;
+};
 
-/** Fields that can be prefilled (import) or refreshed (sync) from a repository. */
-export async function repoToProject(fullName: string): Promise<Partial<ProjectData> | null> {
-  if (!/^[\w.-]+\/[\w.-]+$/.test(fullName)) return null;
+/** Fields that can be prefilled (import) or refreshed (sync) from a repository URL or full name. */
+export async function repoToProject(input: string): Promise<Partial<ProjectData> | null> {
+  const fullName = parseRepo(input);
+  if (!fullName) return null;
   const repo = await github<RawRepo>(`/repos/${fullName}`);
-  if (!repo) return null;
-  const [languages, apkUrl] = await Promise.all([
+  if (!repo || repo.private) return null;
+  const [languages, release] = await Promise.all([
     github<Record<string, number>>(`/repos/${fullName}/languages`),
-    latestApk(fullName),
+    github<RawRelease>(`/repos/${fullName}/releases/latest`),
   ]);
-  const stack = [...new Set([...Object.keys(languages ?? {}), ...(repo.topics ?? [])])];
+  const topics = repo.topics ?? [];
+  const apkUrl = release?.assets.find((asset) => asset.name.endsWith(".apk"))?.browser_download_url ?? "";
+  const isGame = topics.some((topic) => /game|unity|godot/i.test(topic));
   return {
     title: prettify(repo.name),
+    slug: repo.name.toLowerCase().replace(/[^a-z0-9-]+/g, "-"),
     summary: repo.description ?? "",
-    stack,
+    stack: [...new Set([...Object.keys(languages ?? {}), ...topics])],
     repoUrl: repo.html_url,
     liveUrl: repo.homepage ?? "",
     apkUrl,
-    kind: apkUrl ? "mobile" : "web",
+    downloadUrl: !apkUrl && release?.assets.length ? release.html_url : "",
+    kind: apkUrl ? "mobile" : isGame ? "game" : "web",
+    collaboration: isCollaboration(repo.owner.login),
     githubRepo: repo.full_name,
     stars: repo.stargazers_count,
+    period: semesterOf(repo.created_at),
     year: new Date(repo.created_at).getFullYear(),
   };
 }

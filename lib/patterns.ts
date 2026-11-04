@@ -7,7 +7,6 @@ import { ENTITY_TABLES, entitySchemas, profileSchema, type EntityInput, type Ent
 import { byNewest, byOrder } from "./structures";
 
 /* ---------- Repository + Strategy: interchangeable data sources ---------- */
-
 export const CACHE_TAGS = ["profile", ...ENTITY_TABLES] as const;
 
 /** Unparsed rows as stored (seed or DB); EntityFactory validates them. */
@@ -17,13 +16,16 @@ export interface Repository { snapshot(): Promise<Snapshot> }
 
 /** Reads content/seed.json; used when Supabase env vars are missing so the build never breaks. */
 export class SeedRepository implements Repository {
+  /** `includeDrafts` is for the admin import, which copies every row (drafts too) into Supabase. */
+  constructor(private readonly includeDrafts = false) {}
+
   async snapshot(): Promise<Snapshot> {
     const seed = (await import("@/content/seed.json")).default as unknown as Snapshot;
     // Seed rows have no id/order: derive them from the slug (or position) and the file order.
     const withMeta = (table: EntityTable) =>
       seed[table]
         .map((row, index) => ({ id: ("slug" in row && row.slug) || `${table}-${index + 1}`, order: index, ...row }))
-        .filter((row) => row.published !== false);
+        .filter((row) => this.includeDrafts || row.published !== false);
     return { profile: seed.profile, ...Object.fromEntries(ENTITY_TABLES.map((t) => [t, withMeta(t)])) } as Snapshot;
   }
 }
@@ -70,7 +72,6 @@ export type Portfolio = ReturnType<typeof EntityFactory.build>;
 export const getPortfolio = async (): Promise<Portfolio> => EntityFactory.build(await getSnapshot());
 
 /* ---------- Strategy: validation rules, combined with Zod ---------- */
-
 export interface ValidationRule { check(value: string): string | null }
 
 export class MinLength implements ValidationRule {
@@ -123,7 +124,6 @@ export const contactSchema = z.object({
 export type ContactInput = z.infer<typeof contactSchema>;
 
 /* ---------- Observer: one IntersectionObserver, many subscribers (scroll spy, reveals) ---------- */
-
 export type SectionListener = (id: string, visible: boolean) => void;
 export class SectionObserver {
   private readonly listeners = new Set<SectionListener>();
