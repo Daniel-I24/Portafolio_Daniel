@@ -94,7 +94,8 @@ export async function repoToProject(input: string): Promise<Partial<ProjectData>
   ]);
   const topics = repo.topics ?? [];
   const apkUrl = release?.assets.find((asset) => asset.name.endsWith(".apk"))?.browser_download_url ?? "";
-  const isGame = topics.some((topic) => /game|unity|godot/i.test(topic));
+  // Topics when present; otherwise ShaderLab (Unity) or GDScript (Godot) in the languages give a game away.
+  const isGame = topics.some((topic) => /game|unity|godot/i.test(topic)) || "ShaderLab" in (languages ?? {}) || "GDScript" in (languages ?? {});
   return {
     title: prettify(repo.name),
     slug: repo.name.toLowerCase().replace(/[^a-z0-9-]+/g, "-"),
