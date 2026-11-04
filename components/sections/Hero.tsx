@@ -7,7 +7,7 @@ import type { ProfileData } from "@/lib/schemas";
 // The animated scene ships in its own chunk; it still server-renders so the name is in the HTML.
 const GraffitiWall = dynamic(() => import("@/components/ui/GraffitiWall"));
 
-export function Hero({ profile }: { profile: ProfileData }) {
+export function Hero({ profile, cvNote }: { profile: ProfileData; cvNote?: string }) {
   return (
     <section id="inicio" className="scroll-mt-16 px-4 pb-20 pt-20 sm:px-6">
       <div className="mx-auto max-w-7xl">
@@ -22,7 +22,7 @@ export function Hero({ profile }: { profile: ProfileData }) {
             <p className="mt-6 text-lg leading-relaxed text-paper sm:text-xl">{shortPhrase(profile)}</p>
             <p className="mt-2 font-mono text-sm text-cement">{profile.location}</p>
             <div className="mt-8 flex flex-wrap items-center gap-5">
-              <SprayButton href={profile.cvUrl} download icon="download">Descargar CV</SprayButton>
+              <SprayButton href={profile.cvUrl} download icon="download" missingNote={cvNote}>Descargar CV</SprayButton>
               <SprayButton href="#proyectos" icon="arrow" variant="secondary">Ver mis proyectos</SprayButton>
             </div>
           </div>

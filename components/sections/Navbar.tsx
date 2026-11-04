@@ -13,7 +13,7 @@ export const SECTIONS = [
 ] as const;
 
 /** Thin fixed bar: tag on the left, anchors from lg up, CV on the right. Mobile navigation lives in BubbleMenu. */
-export function Navbar({ profile }: { profile: ProfileData }) {
+export function Navbar({ profile, cvNote }: { profile: ProfileData; cvNote?: string }) {
   return (
     <header className="fixed inset-x-0 top-0 z-40 border-b-[3px] border-ink bg-asphalt">
       <a href="#contenido" className="sr-only focus:not-sr-only focus:absolute focus:left-4 focus:top-2 focus:bg-mustard focus:px-3 focus:py-1 focus:text-ink">
@@ -34,7 +34,7 @@ export function Navbar({ profile }: { profile: ProfileData }) {
             ))}
           </ul>
         </nav>
-        <SprayButton href={profile.cvUrl} download icon="download" size="sm">
+        <SprayButton href={profile.cvUrl} download icon="download" size="sm" missingNote={cvNote}>
           Descargar CV
         </SprayButton>
       </div>
