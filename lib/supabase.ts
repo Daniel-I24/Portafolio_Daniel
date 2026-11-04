@@ -1,11 +1,11 @@
 import { createBrowserClient, createServerClient } from "@supabase/ssr";
 import { createClient, type SupabaseClient } from "@supabase/supabase-js";
+import { hasSupabase, type Repository, type Snapshot } from "./patterns";
+import { ENTITY_TABLES, type EntityTable } from "./schemas";
+import { toCamel } from "./structures";
 
 const url = process.env.NEXT_PUBLIC_SUPABASE_URL ?? "";
 const anonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY ?? "";
-
-/** False when env vars are missing: the app then falls back to content/seed.json. */
-export const hasSupabase = (): boolean => Boolean(url && anonKey);
 
 /** Browser client with the user's session (admin uploads to Storage). */
 export const browserClient = (): SupabaseClient => createBrowserClient(url, anonKey);
@@ -38,4 +38,19 @@ export async function isAdmin(): Promise<boolean> {
   if (!hasSupabase() || !adminId) return false;
   const { data } = await (await serverClient()).auth.getUser();
   return data.user?.id === adminId;
+}
+
+/** Production source. RLS already limits anonymous reads to published rows. */
+export class SupabaseRepository implements Repository {
+  async snapshot(): Promise<Snapshot> {
+    const db = publicClient();
+    const rows = async (table: EntityTable) => {
+      const { data, error } = await db.from(table).select("*").eq("published", true).order("order");
+      if (error) throw new Error(`Failed to read ${table}`);
+      return (data ?? []).map(toCamel);
+    };
+    const { data: profile } = await db.from("profile").select("*").limit(1).maybeSingle();
+    const [projects, testimonials, experience, skills, interests] = await Promise.all(ENTITY_TABLES.map(rows));
+    return { profile: toCamel(profile ?? {}), projects, testimonials, experience, skills, interests } as Snapshot;
+  }
 }

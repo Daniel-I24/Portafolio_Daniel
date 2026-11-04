@@ -120,6 +120,8 @@ export const entitySchemas = {
   interests: interestSchema,
 } as const;
 
+export const ENTITY_TABLES = Object.keys(entitySchemas) as EntityTable[];
+
 export type SocialData = z.infer<typeof socialSchema>;
 export type ProfileData = z.infer<typeof profileSchema>;
 export type ProjectData = z.infer<typeof projectSchema>;

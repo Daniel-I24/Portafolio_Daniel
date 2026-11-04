@@ -3,21 +3,17 @@ import { z } from "zod";
 import {
   AcademicExperience, Interest, Project, Skill, Testimonial, WorkExperience, type Experience,
 } from "./domain";
-import { entitySchemas, profileSchema, type EntityInput, type EntityRow, type EntityTable } from "./schemas";
-import { byNewest, byOrder, toCamel } from "./structures";
-import { hasSupabase, publicClient } from "./supabase";
+import { ENTITY_TABLES, entitySchemas, profileSchema, type EntityInput, type EntityRow, type EntityTable } from "./schemas";
+import { byNewest, byOrder } from "./structures";
 
 /* ---------- Repository + Strategy: interchangeable data sources ---------- */
 
-export const ENTITY_TABLES = Object.keys(entitySchemas) as EntityTable[];
 export const CACHE_TAGS = ["profile", ...ENTITY_TABLES] as const;
 
 /** Unparsed rows as stored (seed or DB); EntityFactory validates them. */
 export type Snapshot = { profile: z.input<typeof profileSchema> } & { [T in EntityTable]: Partial<EntityInput<T>>[] };
 
-export interface Repository {
-  snapshot(): Promise<Snapshot>;
-}
+export interface Repository { snapshot(): Promise<Snapshot> }
 
 /** Reads content/seed.json; used when Supabase env vars are missing so the build never breaks. */
 export class SeedRepository implements Repository {
@@ -32,48 +28,28 @@ export class SeedRepository implements Repository {
   }
 }
 
-/** Production source. RLS already limits anonymous reads to published rows. */
-export class SupabaseRepository implements Repository {
-  async snapshot(): Promise<Snapshot> {
-    const db = publicClient();
-    const rows = async (table: EntityTable) => {
-      const { data, error } = await db.from(table).select("*").eq("published", true).order("order");
-      if (error) throw new Error(`Failed to read ${table}`);
-      return (data ?? []).map(toCamel);
-    };
-    const { data: profile } = await db.from("profile").select("*").limit(1).maybeSingle();
-    const [projects, testimonials, experience, skills, interests] = await Promise.all(ENTITY_TABLES.map(rows));
-    return { profile: toCamel(profile ?? {}), projects, testimonials, experience, skills, interests } as Snapshot;
-  }
-}
-
-export const repository = (): Repository => (hasSupabase() ? new SupabaseRepository() : new SeedRepository());
+/** Supabase when its env vars exist, else content/seed.json. The lazy import keeps the SDK out of client bundles. */
+export const hasSupabase = (): boolean => Boolean(process.env.NEXT_PUBLIC_SUPABASE_URL && process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY);
+export const repository = async (): Promise<Repository> =>
+  hasSupabase() ? new (await import("./supabase")).SupabaseRepository() : new SeedRepository();
 
 /** Raw snapshot cached by tag; admin saves call revalidateTag() so changes show without redeploy. */
-export const getSnapshot = unstable_cache(() => repository().snapshot(), ["portfolio"], {
-  tags: [...CACHE_TAGS],
-});
+export const getSnapshot = /* @__PURE__ */ unstable_cache(async () => (await repository()).snapshot(), ["portfolio"], { tags: [...CACHE_TAGS] });
 
 /* ---------- Factory: rows → domain subclasses ---------- */
-
-export type Portfolio = ReturnType<typeof EntityFactory.build>;
+const BUILDERS: { [T in EntityTable]: (data: EntityRow<T>) => Project | Testimonial | Experience | Skill | Interest } = {
+  projects: (data) => new Project(data),
+  testimonials: (data) => new Testimonial(data),
+  skills: (data) => new Skill(data),
+  interests: (data) => new Interest(data),
+  experience: (data) => (data.type === "academic" ? new AcademicExperience(data) : new WorkExperience(data)),
+};
 
 export class EntityFactory {
   /** Validates a row with its schema and builds the matching subclass; invalid rows are skipped. */
   static from(table: EntityTable, row: unknown) {
     const parsed = entitySchemas[table].safeParse(row);
-    if (!parsed.success) return null;
-    const data = parsed.data as never;
-    switch (table) {
-      case "projects": return new Project(data);
-      case "testimonials": return new Testimonial(data);
-      case "skills": return new Skill(data);
-      case "interests": return new Interest(data);
-      case "experience": {
-        const row = data as EntityRow<"experience">;
-        return row.type === "academic" ? new AcademicExperience(row) : new WorkExperience(row);
-      }
-    }
+    return parsed.success ? BUILDERS[table](parsed.data as never) : null;
   }
 
   static build(snapshot: Snapshot) {
@@ -90,39 +66,34 @@ export class EntityFactory {
   }
 }
 
+export type Portfolio = ReturnType<typeof EntityFactory.build>;
 export const getPortfolio = async (): Promise<Portfolio> => EntityFactory.build(await getSnapshot());
 
 /* ---------- Strategy: validation rules, combined with Zod ---------- */
 
-export interface ValidationRule {
-  check(value: string): string | null;
-}
-
-export class Required implements ValidationRule {
-  constructor(private readonly message: string) {}
-  check(value: string) { return value.trim() ? null : this.message; }
-}
+export interface ValidationRule { check(value: string): string | null }
 
 export class MinLength implements ValidationRule {
   constructor(private readonly min: number, private readonly message: string) {}
   check(value: string) { return value.trim().length >= this.min ? null : this.message; }
 }
 
+export class Required extends MinLength {
+  constructor(message: string) { super(1, message); }
+}
+
 /** Shared base for rules backed by a Zod format check. */
 abstract class FormatRule implements ValidationRule {
-  protected abstract readonly format: z.ZodType;
-  protected abstract readonly message: string;
+  constructor(private readonly format: z.ZodType, private readonly message: string) {}
   check(value: string) { return this.format.safeParse(value.trim()).success ? null : this.message; }
 }
 
 export class Email extends FormatRule {
-  protected readonly format = z.email();
-  protected readonly message = "Revisa el correo: debe verse como nombre@dominio.com.";
+  constructor() { super(z.email(), "Revisa el correo: debe verse como nombre@dominio.com."); }
 }
 
 export class Url extends FormatRule {
-  protected readonly format = z.url();
-  protected readonly message = "El enlace debe empezar por https://";
+  constructor() { super(z.url(), "El enlace debe empezar por https://"); }
 }
 
 /** First failing message, or null. Used for live validation in the browser. */
@@ -150,3 +121,30 @@ export const contactSchema = z.object({
 });
 
 export type ContactInput = z.infer<typeof contactSchema>;
+
+/* ---------- Observer: one IntersectionObserver, many subscribers (scroll spy, reveals) ---------- */
+
+export type SectionListener = (id: string, visible: boolean) => void;
+export class SectionObserver {
+  private readonly listeners = new Set<SectionListener>();
+  private readonly observer: IntersectionObserver;
+
+  constructor(options: IntersectionObserverInit = { rootMargin: "-45% 0px -50% 0px" }) {
+    this.observer = new IntersectionObserver((entries) => {
+      for (const entry of entries) this.listeners.forEach((notify) => notify(entry.target.id, entry.isIntersecting));
+    }, options);
+  }
+
+  observe(ids: readonly string[]): this {
+    ids.map((id) => document.getElementById(id)).forEach((el) => el && this.observer.observe(el));
+    return this;
+  }
+
+  /** Returns the unsubscribe function. */
+  subscribe(listener: SectionListener): () => void {
+    this.listeners.add(listener);
+    return () => void this.listeners.delete(listener);
+  }
+
+  disconnect(): void { this.listeners.clear(); this.observer.disconnect(); }
+}
