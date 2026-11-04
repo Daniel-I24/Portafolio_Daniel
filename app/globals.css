@@ -1,6 +1,6 @@
 @import "tailwindcss";
 
-@theme {
+@theme static {
   /* Palette "Concreto & Spray" */
   --color-asphalt: #1c1b1a;
   --color-concrete: #5e5b57;
@@ -33,6 +33,20 @@
   --animate-drip: drip 1.6s var(--ease-snap) both;
   --animate-blink: blink 4s steps(1) infinite;
   --animate-wobble: wobble 2.4s ease-in-out infinite;
+}
+
+/* Character art only (skin, hair, metal, shades): two tones per color for cel-shading.
+   `static` always emits them, since the SVG reads them with var() instead of utility classes. */
+@theme static {
+  --color-skin: #d9a27a;
+  --color-skin-shade: #b77d58;
+  --color-hair: #3b2618;
+  --color-hair-shade: #22150c;
+  --color-metal: #8d8a85;
+  --color-paper-shade: #cfc4b3;
+  --color-denim-shade: #22585c;
+  --color-hood: #4a4845;
+  --color-hood-shade: #333230;
 }
 
 @layer base {
