@@ -59,7 +59,7 @@ export class EntityFactory {
       profile: profileSchema.parse(snapshot.profile),
       projects: byOrder(list<Project>("projects")),
       testimonials: byOrder(list<Testimonial>("testimonials")),
-      experience: byNewest(list<Experience>("experience"), (e) => e.year),
+      experience: byNewest(list<Experience>("experience"), (e) => e.sortKey),
       skills: byOrder(list<Skill>("skills")),
       interests: byOrder(list<Interest>("interests")),
     };

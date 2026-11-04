@@ -12,8 +12,16 @@
     "cvUrl": "/cv.pdf",
     "email": "danieliguadev@gmail.com",
     "socials": [
-      { "kind": "github", "label": "GitHub", "url": "https://github.com/Daniel-I24" },
-      { "kind": "linkedin", "label": "LinkedIn", "url": "https://www.linkedin.com/in/ivan-igua-1a60ab1ab" }
+      {
+        "kind": "github",
+        "label": "GitHub",
+        "url": "https://github.com/Daniel-I24"
+      },
+      {
+        "kind": "linkedin",
+        "label": "LinkedIn",
+        "url": "https://www.linkedin.com/in/ivan-igua-1a60ab1ab"
+      }
     ]
   },
   "projects": [
@@ -22,60 +30,182 @@
       "title": "Luma",
       "kind": "web",
       "summary": "App web y Android para descubrir restaurantes y comercios de Pasto: mapa en vivo, pedidos para recoger y recomendaciones con IA.",
-      "stack": ["Angular", "Tailwind CSS", "Supabase", "Capacitor", "MapLibre"],
+      "stack": [
+        "Angular",
+        "Tailwind CSS",
+        "Supabase",
+        "Capacitor",
+        "MapLibre"
+      ],
       "repoUrl": "https://github.com/Daniel-I24/Luma",
       "liveUrl": null,
-      "featured": true
+      "featured": true,
+      "period": "2026-2"
     },
     {
       "slug": "flux",
       "title": "FLUX",
       "kind": "mobile",
       "summary": "Notas y recordatorios por voz para Wear OS. La IA clasifica la idea, detecta la fecha y programa la alarma en el reloj y el celular.",
-      "stack": ["Kotlin", "Compose for Wear OS", "Node.js", "Gemini", "Firebase"],
+      "stack": [
+        "Kotlin",
+        "Compose for Wear OS",
+        "Node.js",
+        "Gemini",
+        "Firebase"
+      ],
       "repoUrl": "https://github.com/Daniel-I24/Flux",
       "liveUrl": "https://github.com/Daniel-I24/Flux/releases",
-      "featured": true
+      "featured": true,
+      "period": "2026-2"
+    },
+    {
+      "slug": "ai-code-tutor",
+      "title": "AI Code Tutor",
+      "kind": "web",
+      "collaboration": true,
+      "period": "2026-1",
+      "featured": true,
+      "summary": "Editor de código educativo con IA: los estudiantes programan en el navegador con un editor tipo VS Code y reciben acompañamiento de un tutor inteligente.",
+      "stack": [
+        "React",
+        "TypeScript",
+        "Tailwind CSS",
+        "Monaco Editor",
+        "Spring Boot",
+        "Spring Security",
+        "JWT",
+        "PostgreSQL"
+      ],
+      "repoUrl": "https://github.com/maajjjoo/ai-code-tutor-frontend",
+      "liveUrl": "https://code-tutor-frontend.vercel.app",
+      "extraLinks": [
+        {
+          "label": "Backend",
+          "url": "https://github.com/Josecampoe/ai-code-tutor-backend"
+        }
+      ]
+    },
+    {
+      "slug": "el-caso-404",
+      "title": "El Caso 404",
+      "kind": "game",
+      "collaboration": true,
+      "period": "2026-2",
+      "featured": true,
+      "summary": "Juego 3D de investigación criminal para Windows: recorres la escena, reúnes evidencias y los sospechosos responden con IA lo que les escribes.",
+      "stack": [
+        "Unity",
+        "C#",
+        "IA conversacional"
+      ],
+      "repoUrl": "https://github.com/Josecampoe/CriminalisticaGame",
+      "downloadUrl": "https://github.com/Josecampoe/CriminalisticaGame/releases/latest"
     },
     {
       "slug": "mm-glow-beauty",
       "title": "M&M Glow Beauty",
       "kind": "api",
       "summary": "Backend para un centro estético de Pasto: citas, inventario, pagos, reseñas y recordatorios por correo y WhatsApp.",
-      "stack": ["Spring Boot", "Spring Security", "JWT", "MongoDB", "Docker"],
+      "stack": [
+        "Spring Boot",
+        "Spring Security",
+        "JWT",
+        "MongoDB",
+        "Docker"
+      ],
       "repoUrl": "https://github.com/Daniel-I24/M-M-Glow-Beauty",
       "liveUrl": null,
-      "featured": true
+      "featured": true,
+      "period": "2026-1"
     },
     {
       "slug": "plataforma-ia",
       "title": "Plataforma IA",
       "kind": "web",
       "summary": "Consumo de IA con control de cuotas: una cadena de proxies limita peticiones por minuto y tokens por mes según el plan.",
-      "stack": ["React", "Vite", "Spring Boot", "Docker"],
+      "stack": [
+        "React",
+        "Vite",
+        "Spring Boot",
+        "Docker"
+      ],
       "repoUrl": "https://github.com/Daniel-I24/PlataformaAIFrontend",
       "liveUrl": "https://plataforma-ai-frontend.vercel.app",
-      "featured": false
+      "featured": false,
+      "period": "2026-1"
+    },
+    {
+      "slug": "novabeat",
+      "title": "NovaBeat",
+      "kind": "web",
+      "period": "2026-1",
+      "summary": "Reproductor de música web con cuentas de usuario, búsqueda por género, cola de reproducción y letras de las canciones.",
+      "stack": [
+        "TypeScript",
+        "Vite",
+        "Firebase Auth",
+        "Firestore"
+      ],
+      "repoUrl": "https://github.com/Daniel-I24/NovaBeat",
+      "liveUrl": "https://novabeat-xi.vercel.app"
     },
     {
       "slug": "sistema-911",
       "title": "Sistema de Emergencias 911",
       "kind": "desktop",
       "summary": "Simulador de despacho: cola de prioridad para las llamadas, Dijkstra para la unidad más cercana y pila para deshacer acciones.",
-      "stack": ["Python", "Tkinter", "Grafos", "Estructuras de datos"],
+      "stack": [
+        "Python",
+        "Tkinter",
+        "Grafos",
+        "Estructuras de datos"
+      ],
       "repoUrl": "https://github.com/Daniel-I24/911-emergency-system",
       "liveUrl": null,
-      "featured": false
+      "featured": false,
+      "period": "2026-2"
+    },
+    {
+      "slug": "gestion-proyectos-state",
+      "title": "Gestión de Proyectos · Patrón State",
+      "kind": "desktop",
+      "period": "2026-1",
+      "summary": "Sistema de gestión de proyectos de software donde el patrón State controla 12 estados de proyecto y 6 de tarea, con vistas para gerente, desarrollador y cliente.",
+      "stack": [
+        "Java",
+        "Patrón State",
+        "POO"
+      ],
+      "repoUrl": "https://github.com/Daniel-I24/pattern-state"
     },
     {
       "slug": "terminal-transportes-pasto",
       "title": "Terminal de Transportes Pasto",
       "kind": "web",
       "summary": "Sitio web responsive de la Terminal de Transportes de Pasto, hecho para el curso de Diseño de Interfaces.",
-      "stack": ["Angular", "TypeScript", "CSS"],
+      "stack": [
+        "Angular",
+        "TypeScript",
+        "CSS"
+      ],
       "repoUrl": "https://github.com/Daniel-I24/TerminalTransportesPasto",
       "liveUrl": "https://terminal-transportes-pasto.vercel.app",
-      "featured": false
+      "featured": false,
+      "period": "2026-2"
+    },
+    {
+      "slug": "gamer-food-freeze",
+      "title": "Gamer Food Freeze",
+      "kind": "web",
+      "period": "2025-1",
+      "published": false,
+      "summary": "Página web para Gamer Food Freeze, restaurante de comidas rápidas y heladería en Pasto.",
+      "stack": [
+        "[PENDIENTE]"
+      ],
+      "liveUrl": "https://share.google/YpdclirscuOQdcW63",
+      "liveLabel": "Ver negocio"
     }
   ],
   "testimonials": [
@@ -96,36 +226,179 @@
     }
   ],
   "experience": [
-    { "type": "academic", "period": "2024 — hoy", "title": "Ingeniería de Software", "place": "Universidad Cooperativa de Colombia · Campus Pasto", "summary": "Meta: especialización en ciberseguridad." },
-    { "type": "academic", "period": "2025", "title": "Fundamentos Matemáticos para Ingeniería", "place": "Universidad Mariana · 20 h", "summary": null },
-    { "type": "academic", "period": "2024", "title": "I Seminario Nacional de Ingeniería de Software", "place": "Universidad Cooperativa de Colombia · 16 h", "summary": null },
-    { "type": "academic", "period": "2024", "title": "Aprendizaje automático: ejemplos prácticos", "place": "IBM SkillsBuild", "summary": null },
-    { "type": "academic", "period": "2023", "title": "Bachiller Académico", "place": "I.E.M. Ciudad de Pasto", "summary": null },
-    { "type": "work", "period": "2026", "title": "Desarrollador full stack · Luma", "place": "Proyecto universitario", "summary": "App web y Android con Angular, Supabase (RLS) e IA." },
-    { "type": "work", "period": "2026", "title": "Desarrollador móvil · FLUX", "place": "Proyecto universitario", "summary": "Wear OS con Kotlin, Compose, Gemini y Firebase App Check." },
-    { "type": "work", "period": "2026", "title": "Desarrollador backend · M&M Glow Beauty", "place": "Proyecto para un negocio real de Pasto", "summary": "API REST con Spring Boot, JWT, MongoDB y Docker." },
-    { "type": "work", "period": "2026", "title": "Desarrollador full stack · Plataforma IA", "place": "Proyecto universitario", "summary": "Control de cuotas de IA con el patrón Proxy." },
-    { "type": "work", "period": "[PENDIENTE año]", "title": "Desarrollador web · Página de restaurante", "place": "Cliente: restaurante de Diana Jojoa", "summary": "[PENDIENTE: nombre del restaurante, URL y qué hiciste]", "published": false }
+    {
+      "type": "academic",
+      "period": "2024 — hoy",
+      "title": "Ingeniería de Software",
+      "place": "Universidad Cooperativa de Colombia · Campus Pasto",
+      "summary": "Meta: especialización en ciberseguridad."
+    },
+    {
+      "type": "academic",
+      "period": "mar. — abr. 2025",
+      "title": "Fundamentos Matemáticos para Ingeniería",
+      "place": "Universidad Mariana · 20 h",
+      "summary": "Curso de extensión de 20 horas del programa de Ingeniería Mecatrónica."
+    },
+    {
+      "type": "academic",
+      "period": "18 — 19 nov. 2024",
+      "title": "I Seminario Nacional de Ingeniería de Software",
+      "place": "Universidad Cooperativa de Colombia · 16 h",
+      "summary": "Seminario nacional de 16 horas realizado en Pasto."
+    },
+    {
+      "type": "academic",
+      "period": "nov. 2024",
+      "title": "Aprendizaje automático: ejemplos prácticos",
+      "place": "IBM SkillsBuild",
+      "summary": "Aplicaciones prácticas del machine learning en sostenibilidad."
+    },
+    {
+      "type": "academic",
+      "period": "dic. 2023",
+      "title": "Bachiller Académico",
+      "place": "I.E.M. Ciudad de Pasto",
+      "summary": "Título de bachiller académico, jornada de la tarde."
+    },
+    {
+      "type": "work",
+      "period": "2026-2",
+      "title": "Desarrollador full stack · Luma",
+      "place": "Proyecto universitario",
+      "summary": "App web y Android con Angular, Supabase (RLS) e IA."
+    },
+    {
+      "type": "work",
+      "period": "2026-2",
+      "title": "Desarrollador móvil · FLUX",
+      "place": "Proyecto universitario",
+      "summary": "Wear OS con Kotlin, Compose, Gemini y Firebase App Check."
+    },
+    {
+      "type": "work",
+      "period": "2026-1",
+      "title": "Desarrollador backend · M&M Glow Beauty",
+      "place": "Proyecto para un negocio real de Pasto",
+      "summary": "API REST con Spring Boot, JWT, MongoDB y Docker."
+    },
+    {
+      "type": "work",
+      "period": "2026-1",
+      "title": "Desarrollador full stack · Plataforma IA",
+      "place": "Proyecto universitario",
+      "summary": "Control de cuotas de IA con el patrón Proxy."
+    },
+    {
+      "type": "work",
+      "period": "2025-1",
+      "title": "Desarrollador web · Gamer Food Freeze",
+      "place": "Cliente: restaurante de comidas rápidas y heladería · Pasto",
+      "summary": "Diseñé y desarrollé la página web del negocio.",
+      "published": true
+    },
+    {
+      "type": "work",
+      "period": "2026-1",
+      "title": "Desarrollador full stack · AI Code Tutor",
+      "place": "Proyecto universitario en colaboración",
+      "summary": "Frontend en React con editor Monaco y backend en Spring Boot con JWT y PostgreSQL."
+    },
+    {
+      "type": "work",
+      "period": "2026-2",
+      "title": "Desarrollador · El Caso 404",
+      "place": "Proyecto universitario en colaboración",
+      "summary": "Juego en Unity con personajes que conversan mediante IA."
+    }
   ],
   "skills": [
-    { "group": "Frontend", "name": "Angular", "level": 3 },
-    { "group": "Frontend", "name": "React / Next.js", "level": 2 },
-    { "group": "Frontend", "name": "Tailwind CSS", "level": 3 },
-    { "group": "Backend", "name": "Spring Boot", "level": 3 },
-    { "group": "Backend", "name": "Node.js · Express", "level": 2 },
-    { "group": "Datos", "name": "PostgreSQL · Supabase", "level": 2 },
-    { "group": "Datos", "name": "MongoDB · Firebase", "level": 2 },
-    { "group": "Móvil", "name": "Kotlin · Jetpack Compose", "level": 2 },
-    { "group": "DevOps", "name": "Docker · Git · Vercel", "level": 2 },
-    { "group": "Seguridad", "name": "JWT · RLS · App Check", "level": 2 },
-    { "group": "Seguridad", "name": "Pentesting", "level": 1 }
+    {
+      "group": "Frontend",
+      "name": "Angular",
+      "level": 3
+    },
+    {
+      "group": "Frontend",
+      "name": "React / Next.js",
+      "level": 2
+    },
+    {
+      "group": "Frontend",
+      "name": "Tailwind CSS",
+      "level": 3
+    },
+    {
+      "group": "Backend",
+      "name": "Spring Boot",
+      "level": 3
+    },
+    {
+      "group": "Backend",
+      "name": "Node.js · Express",
+      "level": 2
+    },
+    {
+      "group": "Datos",
+      "name": "PostgreSQL · Supabase",
+      "level": 2
+    },
+    {
+      "group": "Datos",
+      "name": "MongoDB · Firebase",
+      "level": 2
+    },
+    {
+      "group": "Móvil",
+      "name": "Kotlin · Jetpack Compose",
+      "level": 2
+    },
+    {
+      "group": "DevOps",
+      "name": "Docker · Git · Vercel",
+      "level": 2
+    },
+    {
+      "group": "Seguridad",
+      "name": "JWT · RLS · App Check",
+      "level": 2
+    },
+    {
+      "group": "Seguridad",
+      "name": "Pentesting",
+      "level": 1
+    }
   ],
   "interests": [
-    { "slug": "voley", "title": "Voleibol", "note": "Mi deporte. Lo mío es jugarlo, no verlo." },
-    { "slug": "futbol", "title": "Fútbol", "note": "Jugarlo siempre que se pueda." },
-    { "slug": "motos", "title": "Motos", "note": "Rodar por las carreteras de Nariño." },
-    { "slug": "billar", "title": "Billar", "note": "Paciencia, ángulo y una buena tacada." },
-    { "slug": "musica", "title": "Música", "note": "Rap y hip hop principalmente, pero escucho de todo." },
-    { "slug": "deporte", "title": "Hacer deporte", "note": "Prefiero moverme que mirar desde la tribuna." }
+    {
+      "slug": "voley",
+      "title": "Voleibol",
+      "note": "Mi deporte. Lo mío es jugarlo, no verlo."
+    },
+    {
+      "slug": "futbol",
+      "title": "Fútbol",
+      "note": "Jugarlo siempre que se pueda."
+    },
+    {
+      "slug": "motos",
+      "title": "Motos",
+      "note": "Rodar por las carreteras de Nariño."
+    },
+    {
+      "slug": "billar",
+      "title": "Billar",
+      "note": "Paciencia, ángulo y una buena tacada."
+    },
+    {
+      "slug": "musica",
+      "title": "Música",
+      "note": "Rap y hip hop principalmente, pero escucho de todo."
+    },
+    {
+      "slug": "deporte",
+      "title": "Hacer deporte",
+      "note": "Prefiero moverme que mirar desde la tribuna."
+    }
   ]
 }

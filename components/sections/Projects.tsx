@@ -10,44 +10,40 @@ import type { CardAction, IconName } from "@/lib/domain";
 import type { ProjectData, ProjectKind } from "@/lib/schemas";
 import { TechIndex } from "@/lib/structures";
 
-export type ProjectView = ProjectData & { action: CardAction | null };
+export type ProjectView = ProjectData & { links: CardAction[] };
 
-const KIND_LABEL: Record<ProjectKind, string> = { web: "Web", mobile: "Móvil", api: "API", desktop: "Escritorio" };
+const KIND_LABEL: Record<ProjectKind, string> = { web: "Web", mobile: "Móvil", api: "API", desktop: "Escritorio", game: "Juego" };
 const COVERS: Record<ProjectKind, { icon: IconName; line: string; bg: string }> = {
   web: { icon: "code", line: "https://", bg: "bg-denim" },
   mobile: { icon: "apk", line: "app-release.apk", bg: "bg-hoodie" },
   api: { icon: "shield", line: "GET /api/v1", bg: "bg-mustard" },
   desktop: { icon: "code", line: "python main.py", bg: "bg-concrete" },
+  game: { icon: "download", line: "start-game.exe", bg: "bg-spray-red" },
 };
 const MAX_CHIPS = 10;
 
-function ExternalLink({ href, icon, children, title }: { href: string; icon: IconName; children: ReactNode; title: string }) {
-  return (
-    <a href={href} target="_blank" rel="noopener noreferrer"
-      className="inline-flex items-center gap-2 border-[3px] border-ink bg-paper px-3 py-1.5 text-sm font-extrabold uppercase text-ink shadow-sticker-sm transition-colors duration-150 hover:bg-mustard">
-      <Icon name={icon} size={18} />
-      {children}
-      <span className="sr-only"> de {title} (abre en una pestaña nueva)</span>
-    </a>
-  );
+const ExternalLink = ({ href, icon, children, title }: { href: string; icon: IconName; children: ReactNode; title: string }) => (
+  <a href={href} target="_blank" rel="noopener noreferrer"
+    className="inline-flex items-center gap-2 border-[3px] border-ink bg-paper px-3 py-1.5 text-sm font-extrabold uppercase text-ink shadow-sticker-sm transition-colors duration-150 hover:bg-mustard">
+    <Icon name={icon} size={18} />{children}<span className="sr-only"> de {title} (abre en una pestaña nueva)</span>
+  </a>
+);
+
+/** Every existing link (resolved by Project.links()); the modal also lists the extra ones, e.g. a backend repo. */
+function ProjectLinks({ project, extra = false }: { project: ProjectView; extra?: boolean }) {
+  const extras = extra ? project.extraLinks.map(({ label, url }): CardAction => ({ label, href: url, icon: "github" })) : [];
+  return [...project.links, ...extras].map((link) => (
+    <ExternalLink key={link.href} href={link.href} icon={link.icon} title={project.title}>{link.label}</ExternalLink>
+  ));
 }
 
-function ProjectLinks({ project }: { project: ProjectView }) { // "Código" + demo, APK or README
-  return (
-    <>
-      {project.repoUrl && <ExternalLink href={project.repoUrl} icon="github" title={project.title}>Código</ExternalLink>}
-      {project.action && <ExternalLink href={project.action.href} icon={project.action.icon} title={project.title}>{project.action.label}</ExternalLink>}
-    </>
-  );
-}
+const CollabTag = () => <span className="sticker-cut ml-1 inline-block -rotate-3 bg-denim px-2 py-0.5 font-marker text-xs normal-case text-paper">Colaboración</span>;
 
-function StackTags({ stack }: { stack: string[] }) {
-  return (
-    <ul aria-label="Tecnologías" className="flex flex-wrap gap-1.5">
-      {stack.map((item) => <li key={item} className="border border-ink bg-mustard px-2 py-0.5 font-mono text-xs text-ink">{item}</li>)}
-    </ul>
-  );
-}
+const StackTags = ({ stack }: { stack: string[] }) => (
+  <ul aria-label="Tecnologías" className="flex flex-wrap gap-1.5">
+    {stack.map((item) => <li key={item} className="border border-ink bg-mustard px-2 py-0.5 font-mono text-xs text-ink">{item}</li>)}
+  </ul>
+);
 
 function Cover({ project }: { project: ProjectView }) {
   if (project.imageUrl) {
@@ -98,7 +94,10 @@ export function Projects({ projects }: { projects: ProjectView[] }) {
                 <article className="shape-torn flex h-full flex-col bg-paper text-ink">
                   <Cover project={project} />
                   <div className="flex flex-1 flex-col gap-3 p-5 pb-7">
-                    <p className="font-mono text-xs uppercase text-concrete">{KIND_LABEL[project.kind]}{project.featured && " · destacado"}</p>
+                    <p className="font-mono text-xs uppercase text-concrete">
+                      {[KIND_LABEL[project.kind], project.period, project.featured && "destacado"].filter(Boolean).join(" · ")}
+                      {project.collaboration && <CollabTag />}
+                    </p>
                     <h3 className="font-marker text-2xl leading-tight">{project.title}</h3>
                     <p className="text-sm leading-relaxed">{project.summary}</p>
                     <StackTags stack={project.stack} />
@@ -125,26 +124,26 @@ export function Projects({ projects }: { projects: ProjectView[] }) {
 
 function ProjectDetail({ project }: { project: ProjectView }) {
   const sections = [["Problema", project.problem], ["Solución", project.solution], ["Mi rol", project.myRole], ["Aprendizajes", project.learnings]].filter(([, text]) => text);
+  const note = project.links.find((link) => link.note)?.note;
   return (
     <div className="space-y-5">
       <p className="text-lg leading-relaxed">{project.summary}</p>
+      {project.collaboration && <p className="font-mono text-sm">Proyecto en equipo <CollabTag /></p>}
       {sections.length > 0 ? (
         <dl className="space-y-4">
           {sections.map(([label, text]) => (
-            <div key={label}><dt className="font-marker text-xl text-hoodie">{label}</dt><dd className="mt-1 leading-relaxed">{text}</dd></div>
+            <div key={label}><dt className="font-marker text-xl text-denim">{label}</dt><dd className="mt-1 leading-relaxed">{text}</dd></div>
           ))}
         </dl>
       ) : (
         <p className="font-marker text-concrete">Pronto agrego el detalle completo: problema, solución, mi rol y aprendizajes.</p>
       )}
-      {project.gallery.length > 0 && (
-        <div className="grid grid-cols-2 gap-3">
-          {project.gallery.map((src, i) => <Image key={src} src={src} alt={`${project.title}, captura ${i + 1}`} width={480} height={270} className="border-2 border-ink" />)}
-        </div>
-      )}
+      {project.gallery.length > 0 && <div className="grid grid-cols-2 gap-3">
+        {project.gallery.map((src, i) => <Image key={src} src={src} alt={`${project.title}, captura ${i + 1}`} width={480} height={270} className="border-2 border-ink" />)}
+      </div>}
       <StackTags stack={project.stack} />
-      {project.action?.note && <p className="border-l-4 border-denim bg-denim/15 p-3 text-sm leading-relaxed"><strong>¿Por qué «Documentación»?</strong> {project.action.note}</p>}
-      <div className="flex flex-wrap gap-3"><ProjectLinks project={project} /></div>
+      {note && <p className="border-l-4 border-denim bg-denim/15 p-3 text-sm leading-relaxed"><strong>¿Por qué «Documentación»?</strong> {note}</p>}
+      <div className="flex flex-wrap gap-3"><ProjectLinks project={project} extra /></div>
     </div>
   );
 }

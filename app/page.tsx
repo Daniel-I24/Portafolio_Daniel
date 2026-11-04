@@ -22,7 +22,7 @@ const cvMissing = ({ cvUrl }: ProfileData) =>
 
 // Sections follow the course order: Navbar → Hero → About → Projects → Testimonials → Experience → Contact → extra → Footer.
 // Client sections receive plain views: class instances cannot cross the server/client boundary,
-// so the polymorphic methods (badge, accent, icon, secondaryAction…) are resolved here.
+// so the polymorphic methods (badge, accent, icon, links…) are resolved here.
 export default async function HomePage() {
   const { profile, projects, testimonials, experience, skills, interests } = await getPortfolio();
   const cvNote = cvMissing(profile) ? CV_PENDING : undefined;
@@ -40,7 +40,7 @@ export default async function HomePage() {
           studies={studies ? `${studies.data.title} · ${studies.data.place.split("·")[0].trim()}` : ""}
           interests={interests.map((interest) => interest.data.title)}
         />
-        <Projects projects={projects.map((project) => ({ ...project.data, action: project.secondaryAction() }))} />
+        <Projects projects={projects.map((project) => ({ ...project.data, links: project.links() }))} />
         <Testimonials testimonials={testimonials.map((t) => ({ ...t.data, initials: t.initials }))} />
         <Experience items={experience.map((e) => ({ ...e.data, badge: e.badge(), accent: e.accent(), icon: e.icon() }))} />
         <Contact email={profile.email} socials={socials} />

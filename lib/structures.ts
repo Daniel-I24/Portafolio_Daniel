@@ -115,6 +115,21 @@ export class TechIndex<T extends { stack: string[] }> {
   }
 }
 
+const MONTHS = ["ene", "feb", "mar", "abr", "may", "jun", "jul", "ago", "sep", "oct", "nov", "dic"];
+
+/**
+ * Sortable key for Spanish period labels: "2026-2" (semester), "nov. 2024", "18 — 19 nov. 2024",
+ * "2024 — hoy" (ongoing ranks first). A bare year counts as December.
+ */
+export function periodKey(period: string, now = new Date()): number {
+  const text = normalize(period);
+  if (/\b(hoy|actual)\b/.test(text)) return now.getFullYear() * 100 + 13;
+  const year = Math.max(0, ...(text.match(/\d{4}/g)?.map(Number) ?? []));
+  const semester = text.match(/\d{4}-([12])\b/)?.[1];
+  const month = semester ? Number(semester) * 6 : Math.max(0, ...MONTHS.map((m, i) => (text.includes(m) ? i + 1 : 0))) || 12;
+  return year * 100 + month;
+}
+
 /** Stable sort by `order` ascending (Array#sort is stable since ES2019). */
 export const byOrder = <T extends { order: number }>(items: readonly T[]): T[] =>
   [...items].sort((a, b) => a.order - b.order);

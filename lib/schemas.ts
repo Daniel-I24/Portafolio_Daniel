@@ -11,7 +11,7 @@ const text = (label: string, max = 280) =>
 const url = (label: string) =>
   z.union([z.url(), z.literal("")]).nullish().transform((value) => value ?? "").describe(label);
 
-export const projectKinds = ["web", "mobile", "api", "desktop"] as const;
+export const projectKinds = ["web", "mobile", "api", "desktop", "game"] as const;
 export const experienceTypes = ["academic", "work"] as const;
 export const socialKinds = ["github", "linkedin"] as const;
 export const interestSlugs = ["voley", "futbol", "motos", "billar", "musica", "deporte"] as const;
@@ -47,10 +47,15 @@ export const projectSchema = z.object({
   summary: text("Resumen", 400),
   stack: z.array(z.string().trim().min(1)).default([]).describe("Tecnologías"),
   repoUrl: url("Repositorio"),
-  liveUrl: url("Demo / enlace"),
+  liveUrl: url("Demo / sitio"),
+  liveLabel: text("Texto del botón de demo (opcional)", 30),
   apkUrl: url("APK"),
+  downloadUrl: url("Descarga (juego o instalador)"),
+  extraLinks: z.array(z.object({ label: z.string().trim().min(1).max(30), url: z.url() })).default([]).describe("Otros enlaces (modal)"),
   imageUrl: text("Captura", 500),
   featured: z.boolean().default(false).describe("Destacado"),
+  collaboration: z.boolean().default(false).describe("Colaboración"),
+  period: z.string().trim().max(20).default("").describe("Periodo (ej. 2026-2)"),
   problem: text("Problema", 1000),
   solution: text("Solución", 1000),
   myRole: text("Mi rol", 600),
