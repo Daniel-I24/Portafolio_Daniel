@@ -1,0 +1,128 @@
+{
+  "profile": {
+    "name": "Ivan Daniel Igua Benavides",
+    "tag": "Dani",
+    "role": "Desarrollador Full Stack",
+    "goal": "futuro especialista en ciberseguridad",
+    "tagline": "Construyo apps completas, del dato a la pantalla, y aprendo a romperlas para hacerlas más seguras.",
+    "about": "Soy Daniel, desarrollador full stack de Pasto, Nariño, y estudiante de Ingeniería de Software en la UCC. Me gusta construir productos de punta a punta y entender cómo se protegen. Fuera del código juego vóley y fútbol, salgo en moto, juego billar y escucho rap y hip hop.",
+    "location": "Pasto, Nariño",
+    "university": "Ingeniería de Software · UCC",
+    "photoUrl": "/daniel-sin-hora.webp",
+    "cvUrl": "/cv.pdf",
+    "email": "",
+    "github": "https://github.com/Daniel-I24",
+    "linkedin": ""
+  },
+  "projects": [
+    {
+      "id": "luma",
+      "title": "Luma",
+      "summary": "Proyecto Luma. Completa el resumen, el problema y la demo desde el admin.",
+      "kind": "web",
+      "stack": [],
+      "repoUrl": "",
+      "liveUrl": "",
+      "apkUrl": "",
+      "imageUrl": "",
+      "problem": "",
+      "solution": "",
+      "myRole": "",
+      "learnings": "",
+      "gallery": [],
+      "githubRepo": "",
+      "stars": 0,
+      "year": 2026,
+      "order": 0,
+      "published": true
+    },
+    {
+      "id": "portafolio-graffo",
+      "title": "Portafolio Graffo Edition",
+      "summary": "Este portafolio: una pared de la calle donde se pinta mi vida de developer, con panel de administración propio.",
+      "kind": "web",
+      "stack": ["Next.js", "TypeScript", "Tailwind CSS", "Supabase", "Motion"],
+      "repoUrl": "https://github.com/Daniel-I24/Portafolio_Daniel",
+      "liveUrl": "",
+      "apkUrl": "",
+      "imageUrl": "",
+      "problem": "Quería un portafolio que mostrara quién soy, no una plantilla más.",
+      "solution": "Una web con personajes SVG animados, datos en Supabase y un admin para editar todo sin tocar código.",
+      "myRole": "Diseño, desarrollo y despliegue.",
+      "learnings": "Server Components, RLS en Postgres, Server Actions y animación accesible.",
+      "gallery": [],
+      "githubRepo": "Daniel-I24/Portafolio_Daniel",
+      "stars": 0,
+      "year": 2026,
+      "order": 1,
+      "published": true
+    },
+    {
+      "id": "restaurante-diana-jojoa",
+      "title": "Web del restaurante (pendiente)",
+      "summary": "Sitio web del restaurante de Diana Jojoa. Falta nombre, URL y año.",
+      "kind": "web",
+      "stack": [],
+      "repoUrl": "",
+      "liveUrl": "",
+      "apkUrl": "",
+      "imageUrl": "",
+      "problem": "",
+      "solution": "",
+      "myRole": "",
+      "learnings": "",
+      "gallery": [],
+      "githubRepo": "",
+      "stars": 0,
+      "year": 2026,
+      "order": 2,
+      "published": false
+    }
+  ],
+  "testimonials": [
+    { "id": "catalina-botina", "author": "Catalina Botina", "relation": "", "quote": "Testimonio pendiente: escríbelo desde el admin.", "avatarUrl": "", "order": 0, "published": false },
+    { "id": "diana-jojoa", "author": "Diana Jojoa", "relation": "Cliente · restaurante", "quote": "Testimonio pendiente: escríbelo desde el admin.", "avatarUrl": "", "order": 1, "published": false },
+    { "id": "karol-igua", "author": "Karol Igua", "relation": "", "quote": "Testimonio pendiente: escríbelo desde el admin.", "avatarUrl": "", "order": 2, "published": false }
+  ],
+  "experience": [
+    {
+      "id": "ucc-software",
+      "type": "academic",
+      "title": "Ingeniería de Software",
+      "place": "Universidad Cooperativa de Colombia · Pasto",
+      "startDate": "2023-01-01",
+      "endDate": "",
+      "description": "Formación en desarrollo de software, bases de datos y arquitectura. Revisa la fecha de inicio desde el admin.",
+      "order": 0,
+      "published": true
+    },
+    {
+      "id": "portafolio-work",
+      "type": "work",
+      "title": "Desarrollador Full Stack · proyectos propios",
+      "place": "Pasto, Nariño",
+      "startDate": "2026-01-01",
+      "endDate": "",
+      "description": "Proyectos web y móviles de punta a punta: diseño, API, base de datos y despliegue.",
+      "order": 1,
+      "published": true
+    }
+  ],
+  "skills": [
+    { "id": "typescript", "name": "TypeScript", "level": "intermediate", "category": "Lenguajes", "order": 0, "published": true },
+    { "id": "react", "name": "React", "level": "intermediate", "category": "Frontend", "order": 1, "published": true },
+    { "id": "nextjs", "name": "Next.js", "level": "intermediate", "category": "Frontend", "order": 2, "published": true },
+    { "id": "tailwind", "name": "Tailwind CSS", "level": "advanced", "category": "Frontend", "order": 3, "published": true },
+    { "id": "sql", "name": "SQL / Postgres", "level": "intermediate", "category": "Backend", "order": 4, "published": true },
+    { "id": "supabase", "name": "Supabase", "level": "learning", "category": "Backend", "order": 5, "published": true },
+    { "id": "git", "name": "Git y GitHub", "level": "advanced", "category": "Herramientas", "order": 6, "published": true },
+    { "id": "security", "name": "Ciberseguridad", "level": "learning", "category": "Seguridad", "order": 7, "published": true }
+  ],
+  "interests": [
+    { "id": "volley", "key": "volley", "title": "Voleibol", "note": "Remate primero, pregunto después.", "playlistUrl": "", "order": 0, "published": true },
+    { "id": "football", "key": "football", "title": "Fútbol", "note": "Dominadas hasta que se cae el balón.", "playlistUrl": "", "order": 1, "published": true },
+    { "id": "moto", "key": "moto", "title": "Motos", "note": "Rodando por las carreteras de Nariño.", "playlistUrl": "", "order": 2, "published": true },
+    { "id": "pool", "key": "pool", "title": "Billar", "note": "La 8 siempre al final.", "playlistUrl": "", "order": 3, "published": true },
+    { "id": "music", "key": "music", "title": "Música", "note": "Rap y hip hop, pero escucho de todo.", "playlistUrl": "", "order": 4, "published": true }
+  ]
+}
