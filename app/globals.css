@@ -35,15 +35,23 @@
   --animate-wobble: wobble 2.4s ease-in-out infinite;
 }
 
-/* Character art only (skin, hair, metal, shades): two tones per color for cel-shading.
+/* Character art only, separate from the UI palette: base, shade and light per color for cel-shading.
    `static` always emits them, since the SVG reads them with var() instead of utility classes. */
 @theme static {
-  --color-skin: #d9a27a;
-  --color-skin-shade: #b77d58;
-  --color-hair: #3b2618;
-  --color-hair-shade: #22150c;
-  --color-metal: #8d8a85;
-  --color-paper-shade: #cfc4b3;
+  --color-skin: #c98d68;
+  --color-skin-shade: #a0674a;
+  --color-skin-light: #e3b08a;
+  --color-hair: #3b2719;
+  --color-hair-shade: #1e130b;
+  --color-hair-light: #6e4c33;
+  --color-metal: #9c9da3;
+  --color-metal-shade: #4d4e55;
+  --color-metal-light: #eceef2;
+  --color-cream: #ece2d0;
+  --color-cream-shade: #c8b99f;
+  --color-cream-light: #fbf6ec;
+  --color-iris: #3a2216;
+  --color-lip: #b0705c;
   --color-denim-shade: #22585c;
   --color-hood: #4a4845;
   --color-hood-shade: #333230;

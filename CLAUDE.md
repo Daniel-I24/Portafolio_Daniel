@@ -9,6 +9,7 @@ Next.js 15 (App Router) · TypeScript strict · Tailwind CSS v4 (`@theme` tokens
 - All code, identifiers, comments and commits in **English**. All UI text in **Spanish**.
 - Tailwind is the styling system. No per-component CSS files.
 - Keep the folder structure in `docs/PROMPT.md` §3. Do not add folders. Max 150 lines per file. No duplicated code.
+- Character art lives in `components/characters/` (authorized exception): paths drawn by hand, split into layers when a drawing exceeds 150 lines. No stick limbs.
 - OOP in `lib/domain.ts` (abstract classes, inheritance, polymorphism). Patterns in `lib/patterns.ts`. Data structures in `lib/structures.ts`. React components are functional.
 - Server Components by default; `"use client"` only where needed.
 - Every animation respects `prefers-reduced-motion`.

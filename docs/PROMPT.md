@@ -154,6 +154,7 @@ app/
 components/
   sections/             Hero · About · Projects · Testimonials · Experience · Contact · OffTheClock · Footer
   ui/                   Character · GraffitiWall · BubbleMenu · Sticker · SprayButton · Icon · SectionTitle · Reveal · Modal
+  characters/           hand-drawn character layers (art · DaniBust · DaniFace · DaniHair · …), max 150 lines each
   admin/                EntityTable · EntityForm · GithubImport
 lib/
   domain.ts             abstract classes + models

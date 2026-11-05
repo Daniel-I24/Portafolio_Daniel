@@ -1,7 +1,9 @@
 import { motion } from "motion/react";
 import type { ReactNode } from "react";
 
-/* Shared drawing pieces: every pose is assembled from these, no SVG is duplicated. */
+import { INK, c, line } from "@/components/characters/art";
+
+/* Hooded artist pieces: limbs, props and poses. Dani lives in components/characters. */
 
 export type Pose =
   | "spraying" | "chill" | "laptop" | "volley" | "football" | "riding"
@@ -11,9 +13,6 @@ export type P = [number, number];
 export type Angles = [number, number];
 type PoseDef = { arms: [Angles, Angles]; legs: [Angles, Angles]; drop?: number; back?: ReactNode; head?: ReactNode; front?: (hand: P, live: boolean) => ReactNode };
 
-export const c = (token: string) => `var(--color-${token})`;
-export const INK = c("ink");
-export const line = { fill: "none", stroke: INK, strokeLinecap: "round", strokeLinejoin: "round" } as const;
 export const SHOULDERS: [P, P] = [[54, 112], [106, 112]];
 export const HIPS: [P, P] = [[68, 168], [92, 168]];
 const SIT: [Angles, Angles] = [[-70, 5], [70, -5]];
@@ -86,31 +85,6 @@ export function Limb({ from, angles, len, color, shade, width, foot }: { from: P
       {foot
         ? <ellipse cx={end[0] + (from[0] < 80 ? -4 : 4)} cy={end[1] + 4} rx={12} ry={7} fill={c("paper")} stroke={INK} strokeWidth={4} />
         : <circle cx={end[0]} cy={end[1]} r={7} fill={c("skin")} stroke={INK} strokeWidth={4} />}
-    </g>
-  );
-}
-
-export function DaniHead({ blink }: { blink: boolean }) {
-  return (
-    <g {...line} strokeWidth={5}>
-      <path d="M40 72Q32 30 62 22Q70 6 88 16Q106 8 114 28Q132 38 120 74Z" fill={c("hair")} />
-      <circle cx={46} cy={68} r={7} fill={c("skin")} strokeWidth={4} />
-      <circle cx={114} cy={68} r={7} fill={c("skin")} strokeWidth={4} />
-      <path d="M45 76a3.5 3.5 0 1 0 1 0M115 76a3.5 3.5 0 1 0 1 0" stroke={c("metal")} strokeWidth={2.5} />
-      <ellipse cx={80} cy={66} rx={32} ry={36} fill={c("skin")} stroke="none" />
-      <path d="M97 38q16 24 6 56-4 6-12 8 14-30 6-64z" fill={c("skin-shade")} stroke="none" />
-      <ellipse cx={80} cy={66} rx={32} ry={36} />
-      <path d="M46 58Q48 28 78 28q24-2 36 26-8-6-15-4-6-10-14-2-8-10-15 2-8-8-14 4-6-4-10 4z" fill={c("hair")} strokeWidth={4} />
-      <path d="M90 32q14 4 20 18" stroke={c("hair-shade")} strokeWidth={4} />
-      <g strokeWidth={3}><path d="M57 52q8-3 16 0M87 52q8-3 16 0" /><path d="M80 70q4 7-1 9" strokeWidth={2.5} /><path d="M69 85q11 7 23-1" /></g>
-      <motion.g animate={{ scaleY: blink ? 0.1 : 1 }} transition={{ duration: 0.08 }} style={{ originY: 0.5 }}>
-        <ellipse cx={65} cy={66} rx={2.6} ry={3.4} fill={INK} stroke="none" />
-        <ellipse cx={95} cy={66} rx={2.6} ry={3.4} fill={INK} stroke="none" />
-      </motion.g>
-      <g stroke={c("metal")} strokeWidth={2.5} fill={c("paper")} fillOpacity={0.15}>
-        <rect x={55} y={58} width={20} height={15} rx={3} /><rect x={85} y={58} width={20} height={15} rx={3} />
-        <path d="M75 64q5-3 10 0M55 62l-8 3M105 62l8 3" fill="none" />
-      </g>
     </g>
   );
 }
