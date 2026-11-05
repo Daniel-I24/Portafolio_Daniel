@@ -17,8 +17,8 @@ const COVERS: Record<ProjectKind, { icon: IconName; line: string; bg: string }> 
   web: { icon: "code", line: "https://", bg: "bg-denim" },
   mobile: { icon: "apk", line: "app-release.apk", bg: "bg-hoodie" },
   api: { icon: "shield", line: "GET /api/v1", bg: "bg-mustard" },
-  desktop: { icon: "code", line: "python main.py", bg: "bg-concrete" },
-  game: { icon: "download", line: "start-game.exe", bg: "bg-spray-red" },
+  desktop: { icon: "code", line: "python main.py", bg: "bg-cement" },
+  game: { icon: "download", line: "start-game.exe", bg: "bg-spray-pink" },
 };
 const MAX_CHIPS = 10;
 
@@ -37,11 +37,11 @@ function ProjectLinks({ project, extra = false }: { project: ProjectView; extra?
   ));
 }
 
-const CollabTag = () => <span className="sticker-cut ml-1 inline-block -rotate-3 bg-denim px-2 py-0.5 font-marker text-xs normal-case text-paper">Colaboración</span>;
+const CollabTag = () => <span className="ml-1 inline-block -rotate-2 border-2 border-ink bg-denim px-2 py-0.5 text-sm font-bold normal-case text-ink">Colaboración</span>;
 
 const StackTags = ({ stack }: { stack: string[] }) => (
   <ul aria-label="Tecnologías" className="flex flex-wrap gap-1.5">
-    {stack.map((item) => <li key={item} className="border border-ink bg-mustard px-2 py-0.5 font-mono text-xs text-ink">{item}</li>)}
+    {stack.map((item) => <li key={item} className="border border-ink bg-mustard px-2 py-0.5 font-mono text-sm text-ink">{item}</li>)}
   </ul>
 );
 
@@ -51,10 +51,10 @@ function Cover({ project }: { project: ProjectView }) {
   }
   const cover = COVERS[project.kind];
   return (
-    <div aria-hidden className={`texture-concrete grid aspect-video place-items-center border-b-[3px] border-ink ${cover.bg}`}>
+    <div aria-hidden className={`grid aspect-video place-items-center border-b-[3px] border-ink ${cover.bg}`}>
       <div className="w-3/4 -rotate-2 border-[3px] border-ink bg-paper shadow-sticker">
         <div className="flex gap-1.5 border-b-[3px] border-ink px-2 py-1.5">
-          {["bg-spray-red", "bg-mustard", "bg-slime"].map((dot) => <span key={dot} className={`size-2.5 rounded-full border border-ink ${dot}`} />)}
+          {["bg-spray-pink", "bg-mustard", "bg-slime"].map((dot) => <span key={dot} className={`size-2.5 rounded-full border border-ink ${dot}`} />)}
         </div>
         <p className="flex items-center gap-2 p-3 font-mono text-sm text-ink"><Icon name={cover.icon} size={26} />{cover.line}</p>
       </div>
@@ -78,7 +78,7 @@ export function Projects({ projects }: { projects: ProjectView[] }) {
         <div role="group" aria-label="Filtrar por tecnología" className="mt-10 flex flex-wrap gap-2">
           {chips.map((chip) => (
             <button key={chip ?? "all"} type="button" aria-pressed={tech === chip} onClick={() => setTech(chip)}
-              className={`border-2 border-ink px-3 py-1 font-mono text-sm shadow-sticker-sm transition-colors duration-150 ${tech === chip ? "bg-denim text-paper" : "bg-paper text-ink hover:bg-mustard"}`}>
+              className={`border-2 border-ink px-3 py-1 font-mono text-sm shadow-sticker-sm transition-colors duration-150 ${tech === chip ? "bg-denim text-ink" : "bg-paper text-ink hover:bg-mustard"}`}>
               {chip ?? "Todos"}
             </button>
           ))}
@@ -94,7 +94,7 @@ export function Projects({ projects }: { projects: ProjectView[] }) {
                 <article className="shape-torn flex h-full flex-col bg-paper text-ink">
                   <Cover project={project} />
                   <div className="flex flex-1 flex-col gap-3 p-5 pb-7">
-                    <p className="font-mono text-xs uppercase text-concrete">
+                    <p className="font-mono text-sm uppercase leading-8 text-concrete">
                       {[KIND_LABEL[project.kind], project.period, project.featured && "destacado"].filter(Boolean).join(" · ")}
                       {project.collaboration && <CollabTag />}
                     </p>
@@ -103,7 +103,7 @@ export function Projects({ projects }: { projects: ProjectView[] }) {
                     <StackTags stack={project.stack} />
                     <div className="mt-auto flex flex-wrap items-center gap-3 pt-3">
                       <ProjectLinks project={project} />
-                      <button type="button" onClick={() => setSelected(project)} className="font-mono text-sm text-denim underline decoration-2 underline-offset-4 hover:text-ink">
+                      <button type="button" onClick={() => setSelected(project)} className="font-mono text-sm text-ink underline decoration-denim decoration-2 underline-offset-4 hover:decoration-hoodie">
                         Ver detalle<span className="sr-only"> de {project.title}</span>
                       </button>
                     </div>
@@ -132,11 +132,11 @@ function ProjectDetail({ project }: { project: ProjectView }) {
       {sections.length > 0 ? (
         <dl className="space-y-4">
           {sections.map(([label, text]) => (
-            <div key={label}><dt className="font-marker text-xl text-denim">{label}</dt><dd className="mt-1 leading-relaxed">{text}</dd></div>
+            <div key={label}><dt className="font-marker text-xl text-ink">{label}</dt><dd className="mt-1 leading-relaxed">{text}</dd></div>
           ))}
         </dl>
       ) : (
-        <p className="font-marker text-concrete">Pronto agrego el detalle completo: problema, solución, mi rol y aprendizajes.</p>
+        <p className="text-concrete">Pronto agrego el detalle completo: problema, solución, mi rol y aprendizajes.</p>
       )}
       {project.gallery.length > 0 && <div className="grid grid-cols-2 gap-3">
         {project.gallery.map((src, i) => <Image key={src} src={src} alt={`${project.title}, captura ${i + 1}`} width={480} height={270} className="border-2 border-ink" />)}

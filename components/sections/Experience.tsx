@@ -12,7 +12,7 @@ import type { ExperienceData } from "@/lib/schemas";
 export type ExperienceView = ExperienceData & { badge: string; accent: Accent; icon: IconName };
 
 const ACCENT_BG: Record<Accent, string> = {
-  hoodie: "bg-hoodie", mustard: "bg-mustard", denim: "bg-denim", "spray-red": "bg-spray-red", slime: "bg-slime",
+  hoodie: "bg-hoodie", mustard: "bg-mustard", denim: "bg-denim", "spray-pink": "bg-spray-pink", slime: "bg-slime",
 };
 
 export function Experience({ items }: { items: ExperienceView[] }) {
@@ -41,7 +41,7 @@ export function Experience({ items }: { items: ExperienceView[] }) {
           {groups.map((group, i) => (
             <button key={group} id={`tab-${i}`} role="tab" type="button" aria-selected={group === active} aria-controls="experiencia-panel"
               tabIndex={group === active ? 0 : -1} onClick={() => setActive(group)} onKeyDown={onTabKey}
-              className={`border-[3px] border-ink px-4 py-2 font-marker text-lg shadow-sticker transition-transform duration-150 ${group === active ? "-rotate-2 bg-denim text-paper" : "bg-paper text-ink hover:-rotate-1"}`}>
+              className={`border-[3px] border-ink px-4 py-2 font-marker text-lg shadow-sticker transition-transform duration-150 ${group === active ? "-rotate-2 bg-denim text-ink" : "bg-paper text-ink hover:-rotate-1"}`}>
               {group}
             </button>
           ))}
@@ -64,7 +64,7 @@ export function Experience({ items }: { items: ExperienceView[] }) {
                     <p className={`inline-block -rotate-2 border-2 border-ink px-2 py-0.5 font-mono text-sm font-bold text-ink ${ACCENT_BG[item.accent]}`}>
                       <span className="sr-only">Periodo: </span>{item.period}
                     </p>
-                    <h3 className="mt-3 font-marker text-xl leading-snug sm:text-2xl">{item.title}</h3>
+                    <h3 className="mt-3 text-lg font-extrabold leading-snug sm:text-xl">{item.title}</h3>
                     {item.place && <p className="mt-1 font-mono text-sm text-concrete">{item.place}</p>}
                     {item.summary && <p className="mt-3 leading-relaxed">{item.summary}</p>}
                   </article>

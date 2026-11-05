@@ -12,7 +12,7 @@ export type IconName =
 /** Short hero phrase: the explicit tagline, or the first sentence of "about". */
 export const shortPhrase = (profile: ProfileData): string => profile.tagline || (profile.about.match(/^[^.!?]+[.!?]/)?.[0] ?? "");
 
-export type Accent = "hoodie" | "mustard" | "denim" | "spray-red" | "slime";
+export type Accent = "hoodie" | "mustard" | "denim" | "spray-pink" | "slime";
 
 export type Card = { title: string; subtitle: string; tags: string[] };
 export type CardAction = { label: string; href: string; icon: IconName; note?: string }; // note: why it is the README

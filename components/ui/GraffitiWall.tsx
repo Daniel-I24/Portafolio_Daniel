@@ -48,7 +48,7 @@ export default function GraffitiWall({ name, fullName }: { name: string; fullNam
       className="texture-concrete relative aspect-[4/5] overflow-hidden border-[3px] border-ink bg-concrete shadow-sticker-lg sm:aspect-[16/10] lg:aspect-[16/8]">
       <motion.div aria-hidden style={back} className="texture-cracks absolute -inset-6">
         <div className="shape-splat absolute left-[8%] top-[10%] size-40 bg-denim/50" />
-        <div className="shape-splat absolute right-[6%] top-[4%] size-28 rotate-45 bg-spray-red/35" />
+        <div className="shape-splat absolute right-[6%] top-[4%] size-28 rotate-45 bg-spray-pink/35" />
         <div className="shape-splat absolute bottom-[14%] left-[42%] size-52 -rotate-12 bg-mustard/25" />
       </motion.div>
 

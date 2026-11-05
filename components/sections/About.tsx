@@ -31,7 +31,7 @@ export function About({ profile, skills, studies, interests }: AboutProps) {
             <article className="shape-torn relative -rotate-1 bg-paper px-6 py-10 text-ink sm:px-10">
               <span aria-hidden className="absolute -top-1 left-1/2 h-7 w-28 -translate-x-1/2 rotate-2 bg-mustard/70" />
               <p className="text-lg leading-relaxed sm:text-xl">{profile.about}</p>
-              <p className="mt-6 text-right font-tag text-3xl text-hoodie">— {profile.tag}</p>
+              <p className="mt-6 text-right font-tag text-3xl text-ink">— {profile.tag}</p>
             </article>
           </Reveal>
 
@@ -50,11 +50,11 @@ export function About({ profile, skills, studies, interests }: AboutProps) {
         <div className="relative lg:pt-28">
           <Character pose="chill" title="Dani con la mano en el pelo" className="mx-auto w-48 sm:w-56" />
           <h3 className="sr-only">Datos rápidos</h3>
-          <p className="mt-4 text-center font-mono text-xs text-cement" aria-hidden>arrastra los stickers ↓</p>
+          <p className="mt-4 text-center font-mono text-sm text-cement" aria-hidden>arrastra los stickers ↓</p>
           <dl className="mt-4 flex flex-wrap justify-center gap-5">
             {facts.map((fact) => (
               <Sticker key={fact.label} tone={fact.tone} tilt={fact.tilt} draggable className="max-w-64">
-                <dt className="font-mono text-xs uppercase">{fact.label}</dt>
+                <dt className="font-mono text-sm uppercase">{fact.label}</dt>
                 <dd className="text-lg leading-tight">{fact.value}</dd>
               </Sticker>
             ))}

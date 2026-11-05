@@ -59,7 +59,7 @@ export function EntityTable({ table, rows: initialRows }: { table: Table; rows: 
         </button>
       </div>
       <p role="status" className="mt-3 min-h-6 font-mono text-sm text-mustard">{pending ? "Guardando…" : status}</p>
-      {query && <p className="font-mono text-xs text-cement">El orden por arrastre se desactiva mientras buscas.</p>}
+      {query && <p className="font-mono text-sm text-cement">El orden por arrastre se desactiva mientras buscas.</p>}
 
       <Reorder.Group as="ol" axis="y" values={rows} onReorder={setRows} className="mt-2 space-y-2">
         {visible.map((row) => {
@@ -70,11 +70,11 @@ export function EntityTable({ table, rows: initialRows }: { table: Table; rows: 
               <span aria-hidden className="cursor-grab font-mono text-concrete">⋮⋮</span>
               <div className="min-w-0 grow">
                 <p className="truncate font-semibold">{titleOf(row)}</p>
-                <p className="truncate font-mono text-xs text-concrete">{subtitleOf(row)}</p>
+                <p className="truncate font-mono text-sm text-concrete">{subtitleOf(row)}</p>
               </div>
               <button type="button" role="switch" aria-checked={row.published} aria-label={`Publicado: ${titleOf(row)}`}
                 onClick={() => { setRows(rows.map((r) => (r.id === row.id ? { ...r, published: !r.published } : r))); run(() => setPublished(table, row.id, !row.published)); }}
-                className={`border-2 border-ink px-2 py-1 font-mono text-xs ${row.published ? "bg-slime" : "bg-cement"}`}>
+                className={`border-2 border-ink px-2 py-1 font-mono text-sm ${row.published ? "bg-slime" : "bg-cement"}`}>
                 {row.published ? "Publicado" : "Borrador"}
               </button>
               <button type="button" aria-label={`Subir ${titleOf(row)}`} disabled={!!query || index === 0} onClick={() => move(index, -1)} className={iconButton}>
@@ -87,7 +87,7 @@ export function EntityTable({ table, rows: initialRows }: { table: Table; rows: 
               {confirming === row.id ? (
                 <span className="flex items-center gap-2 text-sm font-semibold">
                   ¿Eliminar?
-                  <button type="button" onClick={() => { setRows(rows.filter((r) => r.id !== row.id)); setConfirming(null); run(() => deleteEntity(table, row.id)); }} className="border-2 border-spray-red bg-ink px-2 py-1 text-paper">Sí</button>
+                  <button type="button" onClick={() => { setRows(rows.filter((r) => r.id !== row.id)); setConfirming(null); run(() => deleteEntity(table, row.id)); }} className="border-2 border-spray-pink bg-ink px-2 py-1 text-paper">Sí</button>
                   <button type="button" onClick={() => setConfirming(null)} className="border-2 border-ink bg-paper px-2 py-1">No</button>
                 </span>
               ) : (
@@ -97,7 +97,7 @@ export function EntityTable({ table, rows: initialRows }: { table: Table; rows: 
           );
         })}
       </Reorder.Group>
-      {visible.length === 0 && <p className="mt-4 font-marker text-paper">{query ? "Nada coincide con la búsqueda." : "Todavía no hay registros."}</p>}
+      {visible.length === 0 && <p className="mt-4 font-semibold text-paper">{query ? "Nada coincide con la búsqueda." : "Todavía no hay registros."}</p>}
 
       <Modal open={editing !== null} onClose={() => setEditing(null)} title={editing === "new" ? "Nuevo registro" : `Editar: ${editing ? titleOf(editing) : ""}`}>
         {editing && (

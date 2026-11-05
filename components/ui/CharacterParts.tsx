@@ -34,8 +34,8 @@ export function SprayMist({ at: [x, y], live, color = "hoodie" }: { at: P; live:
 const SprayCan = ({ at: [x, y], live }: { at: P; live: boolean }) => (
   <g>
     <g strokeWidth={4} stroke={INK} strokeLinejoin="round">
-      <rect x={x - 7} y={y - 22} width={14} height={26} rx={3} fill={c("spray-red")} />
-      <rect x={x - 3} y={y - 28} width={6} height={6} fill={c("cement")} />
+      <rect x={x - 7} y={y - 22} width={14} height={26} rx={3} fill={c("can")} />
+      <rect x={x - 3} y={y - 28} width={6} height={6} fill={c("metal")} />
     </g>
     <SprayMist at={[x + 4, y - 26]} live={live} />
   </g>
@@ -66,7 +66,7 @@ export const POSES: Record<Pose, PoseDef> = {
   },
   headphones: {
     arms: [[-8, 8], [8, -8]], legs: STAND,
-    head: <g {...line}><path d="M44 62Q80-4 116 62" strokeWidth={10} /><path d="M44 62Q80-4 116 62" stroke={c("spray-red")} strokeWidth={5} /><rect x={36} y={56} width={14} height={24} rx={5} fill={c("spray-red")} strokeWidth={4} /><rect x={110} y={56} width={14} height={24} rx={5} fill={c("spray-red")} strokeWidth={4} /></g>,
+    head: <g {...line}><path d="M44 62Q80-4 116 62" strokeWidth={10} /><path d="M44 62Q80-4 116 62" stroke={c("can")} strokeWidth={5} /><rect x={36} y={56} width={14} height={24} rx={5} fill={c("can")} strokeWidth={4} /><rect x={110} y={56} width={14} height={24} rx={5} fill={c("can")} strokeWidth={4} /></g>,
   },
   waving: { arms: [[-12, -4], [150, 175]], legs: STAND },
   sitting: { arms: [[-20, 10], [20, -10]], legs: SIT, drop: 14 },
@@ -83,7 +83,7 @@ export function Limb({ from, angles, len, color, shade, width, foot }: { from: P
       <path d={d} stroke={color} strokeWidth={width} />
       <path d={d} stroke={shade} strokeWidth={width / 3} transform="translate(3 1)" />
       {foot
-        ? <ellipse cx={end[0] + (from[0] < 80 ? -4 : 4)} cy={end[1] + 4} rx={12} ry={7} fill={c("paper")} stroke={INK} strokeWidth={4} />
+        ? <ellipse cx={end[0] + (from[0] < 80 ? -4 : 4)} cy={end[1] + 4} rx={12} ry={7} fill={c("cream")} stroke={INK} strokeWidth={4} />
         : <circle cx={end[0]} cy={end[1]} r={7} fill={c("skin")} stroke={INK} strokeWidth={4} />}
     </g>
   );
@@ -93,6 +93,6 @@ export const HoodedHead = () => (
   <g {...line} strokeWidth={5}>
     <circle cx={80} cy={64} r={42} fill={c("hood")} />
     <ellipse cx={80} cy={72} rx={26} ry={27} fill={INK} />
-    <path d="M52 56q28-36 56 0zM46 58q34-10 68 0l4 8q-38-10-76 0z" fill={c("spray-red")} strokeWidth={4} />
+    <path d="M52 56q28-36 56 0zM46 58q34-10 68 0l4 8q-38-10-76 0z" fill={c("cap")} strokeWidth={4} />
   </g>
 );

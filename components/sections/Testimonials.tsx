@@ -19,7 +19,7 @@ function Avatar({ person, tone, size }: { person: TestimonialView; tone: string;
   if (person.avatarUrl) {
     return <Image src={person.avatarUrl} alt="" width={64} height={64} className={`${box} sticker-cut rounded-full object-cover`} />;
   }
-  return <span aria-hidden className={`${box} ${tone} sticker-cut grid place-items-center rounded-full font-spray text-ink`}>{person.initials}</span>;
+  return <span aria-hidden className={`${box} ${tone} sticker-cut grid place-items-center rounded-full font-extrabold text-ink`}>{person.initials}</span>;
 }
 
 export function Testimonials({ testimonials }: { testimonials: TestimonialView[] }) {

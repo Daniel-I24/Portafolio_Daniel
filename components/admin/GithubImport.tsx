@@ -58,11 +58,11 @@ export function GithubImport({ imported }: { imported: string[] }) {
             <li key={repo.fullName} className="flex flex-wrap items-center gap-3 border-b border-concrete py-2">
               <span className="grow">
                 <span className="font-semibold">{repo.fullName}</span>
-                {repo.collaboration && <span className="ml-2 bg-denim px-1.5 font-mono text-xs text-paper">colaboración</span>}
+                {repo.collaboration && <span className="ml-2 bg-denim px-1.5 font-mono text-sm text-paper">colaboración</span>}
                 <span className="block text-sm text-cement">{repo.description || "Sin descripción"} · ★ {repo.stars}</span>
               </span>
               {known.has(repo.fullName.toLowerCase())
-                ? <span className="font-mono text-xs text-cement">ya importado</span>
+                ? <span className="font-mono text-sm text-cement">ya importado</span>
                 : <button type="button" onClick={() => prefill(repo.fullName)} disabled={pending} className={buttonClass}>Usar</button>}
             </li>
           ))}

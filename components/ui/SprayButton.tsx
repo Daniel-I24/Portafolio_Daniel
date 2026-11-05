@@ -10,7 +10,7 @@ interface SprayButtonProps {
   href: string;
   children: ReactNode;
   icon: IconName;
-  /** primary = hoodie fill with a spray-red hover shadow; secondary = paper. */
+  /** primary = hoodie fill with a spray-pink hover shadow; secondary = paper. */
   variant?: "primary" | "secondary";
   /** Adds the download attribute and the shake + check feedback on click. */
   download?: boolean;
@@ -21,7 +21,7 @@ interface SprayButtonProps {
 }
 
 const VARIANTS = {
-  primary: "bg-hoodie text-ink hover:shadow-[6px_6px_0_var(--color-spray-red)]",
+  primary: "bg-hoodie text-ink hover:shadow-[6px_6px_0_var(--color-spray-pink)]",
   secondary: "bg-paper text-ink hover:bg-mustard hover:shadow-sticker-lg",
 };
 
@@ -68,12 +68,12 @@ export function SprayButton({ href, children, icon, variant = "primary", downloa
       <span>{children}</span>
       <span className="sr-only" aria-live="polite">{done ? "Descarga iniciada" : note ? missingNote : ""}</span>
       {note && (
-        <span aria-hidden className="absolute left-1/2 top-full z-20 mt-3 w-max max-w-52 -translate-x-1/2 -rotate-2 border-2 border-ink bg-paper px-2 py-1 font-marker text-xs normal-case tracking-normal text-ink shadow-sticker-sm">
+        <span aria-hidden className="absolute left-1/2 top-full z-20 mt-3 w-max max-w-52 -translate-x-1/2 -rotate-2 border-2 border-ink bg-paper px-2 py-1 text-sm font-semibold normal-case tracking-normal text-ink shadow-sticker-sm">
           {missingNote}
         </span>
       )}
       {done && (
-        <span aria-hidden className="absolute -top-3 -right-3 grid size-7 place-items-center rounded-full border-2 border-ink bg-slime font-marker text-sm text-ink">
+        <span aria-hidden className="absolute -top-3 -right-3 grid size-7 place-items-center rounded-full border-2 border-ink bg-slime text-sm font-bold text-ink">
           ✓
         </span>
       )}

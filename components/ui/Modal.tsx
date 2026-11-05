@@ -34,7 +34,7 @@ export function Modal({ open, onClose, title, children }: ModalProps) {
     >
       <div className="p-6 sm:p-8">
         <div className="flex items-start justify-between gap-4">
-          <h2 id="modal-title" className="font-spray text-3xl leading-none sm:text-4xl">{title}</h2>
+          <h2 id="modal-title" className="font-marker text-3xl leading-none sm:text-4xl">{title}</h2>
           <button
             type="button"
             onClick={onClose}

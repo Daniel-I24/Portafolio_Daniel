@@ -21,13 +21,13 @@ const ROUTE = "M18 46C30 40 28 26 42 24S60 34 72 22 86 12 88 10";
 
 /** One micro-animation per interest; each plays while its sticker is hovered (variant "active"). */
 const SCENES: Record<InterestSlug, ReactNode> = {
-  voley: <><path d="M10 56h80" {...ink} /><motion.circle cx={50} cy={14} r={9} fill="var(--color-paper)" {...ink} variants={loop({ y: [0, 33, 0, 22, 0] })} /></>,
-  futbol: <><path d="M10 56h80" {...ink} /><motion.circle cx={50} cy={44} r={9} fill="var(--color-paper)" {...ink} variants={loop({ y: [0, -28, 0] }, 0.7)} /></>,
+  voley: <><path d="M10 56h80" {...ink} stroke="var(--color-cement)" /><motion.circle cx={50} cy={14} r={9} fill="var(--color-paper)" {...ink} variants={loop({ y: [0, 33, 0, 22, 0] })} /></>,
+  futbol: <><path d="M10 56h80" {...ink} stroke="var(--color-cement)" /><motion.circle cx={50} cy={44} r={9} fill="var(--color-paper)" {...ink} variants={loop({ y: [0, -28, 0] }, 0.7)} /></>,
   motos: (
     <>
-      <path d="M8 50L20 14 52 6 92 18 84 54 40 58z" fill="var(--color-concrete)" {...ink} />
+      <path d="M8 50L20 14 52 6 92 18 84 54 40 58z" fill="var(--color-asphalt)" {...ink} />
       <motion.path d={ROUTE} fill="none" {...ink} stroke="var(--color-hoodie)" variants={{ rest: { pathLength: 0.15 }, active: { pathLength: 1, transition: { duration: 1.4 } } }} />
-      <circle cx={88} cy={10} r={4} fill="var(--color-spray-red)" {...ink} strokeWidth={2} />
+      <circle cx={88} cy={10} r={4} fill="var(--color-spray-pink)" {...ink} strokeWidth={2} />
     </>
   ),
   billar: (
@@ -42,7 +42,7 @@ const SCENES: Record<InterestSlug, ReactNode> = {
   ),
   musica: (
     <>
-      <rect x={14} y={14} width={72} height={42} rx={6} fill="var(--color-spray-red)" {...ink} />
+      <rect x={14} y={14} width={72} height={42} rx={6} fill="var(--color-spray-pink)" {...ink} />
       {[30, 40, 50, 60, 70].map((x, i) => (
         <motion.rect key={x} x={x - 3} y={24} width={6} height={24} fill="var(--color-mustard)" style={{ originY: 1 }}
           variants={{ rest: { scaleY: 0.4 }, active: { scaleY: [0.3, 1, 0.5, 0.9, 0.3], transition: { duration: 0.8, repeat: Infinity, delay: i * 0.1 } } }} />
@@ -76,7 +76,7 @@ export function OffTheClock({ interests, skills }: { interests: InterestData[]; 
           {interests.map((interest, i) => (
             <motion.li key={interest.id} initial="rest" animate="rest" whileHover={reduced ? undefined : "active"}
               style={{ rotate: TILTS[i % TILTS.length] }}
-              className="sticker-cut flex items-center gap-4 bg-paper p-4 text-ink">
+              className="sticker-cut flex items-center gap-4 bg-concrete p-4 text-paper">
               <Character pose={POSES[interest.slug]} className="w-24 shrink-0" />
               <div className="min-w-0">
                 <svg aria-hidden viewBox="0 0 100 60" className="w-28">{SCENES[interest.slug]}</svg>
@@ -93,14 +93,14 @@ export function OffTheClock({ interests, skills }: { interests: InterestData[]; 
         </ul>
 
         <Reveal className="mt-24">
-          <h3 className="font-spray text-4xl text-paper">Mis latas de habilidades</h3>
+          <h3 className="font-marker text-4xl text-paper">Mis latas de habilidades</h3>
           <p className="mt-2 font-mono text-sm text-cement">Más pintura, más dominio: Avanzado · Intermedio · Aprendiendo.</p>
           <ul className="mt-10 grid grid-cols-1 gap-x-8 gap-y-6 sm:grid-cols-2 lg:grid-cols-4">
             {skills.map((skill) => (
               <li key={skill.id} className="flex items-center gap-3">
                 <SprayCan skill={skill} />
                 <p>
-                  <span className="block font-mono text-xs uppercase text-cement">{skill.group}</span>
+                  <span className="block font-mono text-sm uppercase text-cement">{skill.group}</span>
                   <span className="block font-marker text-lg leading-tight text-paper">{skill.name}</span>
                   <span className="block text-sm font-semibold text-mustard">{skill.levelLabel}</span>
                 </p>

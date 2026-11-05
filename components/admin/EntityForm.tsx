@@ -117,7 +117,7 @@ export function EntityForm({ table, initial = {}, onDone }: EntityFormProps) {
               </label>
             ) : (
               <>
-                <label htmlFor={id} className="font-semibold">{field.label}{field.parts && <span className="ml-2 font-mono text-xs text-concrete">{field.parts.join(" | ")} · uno por línea</span>}</label>
+                <label htmlFor={id} className="font-semibold">{field.label}{field.parts && <span className="ml-2 font-mono text-sm text-concrete">{field.parts.join(" | ")} · uno por línea</span>}</label>
                 {field.kind === "select" ? (
                   <select {...common} value={values[field.key] as string} onChange={(e) => set(field.key, e.target.value)} className={inputClass}>
                     {field.options!.map((option) => <option key={option} value={option}>{option}</option>)}
@@ -128,14 +128,14 @@ export function EntityForm({ table, initial = {}, onDone }: EntityFormProps) {
                   <input {...common} type={field.kind === "list" || field.kind === "text" ? "text" : field.kind} value={values[field.key] as string} onChange={(e) => set(field.key, e.target.value)} className={inputClass} />
                 )}
                 {field.upload && (
-                  <label className="mt-2 inline-flex cursor-pointer items-center gap-2 font-mono text-sm text-denim underline">
+                  <label className="mt-2 inline-flex cursor-pointer items-center gap-2 font-mono text-sm text-ink underline decoration-denim decoration-2">
                     <Icon name="plus" size={16} /> {uploading === field.key ? "Subiendo…" : "Subir archivo"}
                     <input type="file" className="sr-only" onChange={(e) => e.target.files?.[0] && upload(field, e.target.files[0])} />
                   </label>
                 )}
               </>
             )}
-            {error && <p id={`${id}-error`} className="mt-1 border-l-4 border-spray-red pl-2 text-sm font-semibold">{error}</p>}
+            {error && <p id={`${id}-error`} className="mt-1 border-l-4 border-spray-pink pl-2 text-sm font-semibold">{error}</p>}
           </div>
         );
       })}
@@ -143,7 +143,7 @@ export function EntityForm({ table, initial = {}, onDone }: EntityFormProps) {
         <button type="submit" disabled={pending || uploading !== null} className="border-[3px] border-ink bg-hoodie px-5 py-2 font-extrabold uppercase text-ink shadow-sticker disabled:opacity-60">
           {pending ? "Guardando…" : "Guardar"}
         </button>
-        <p role="status" className={`font-semibold ${result?.ok ? "text-denim" : "border-l-4 border-spray-red pl-2"}`}>{result?.message}</p>
+        <p role="status" className={`font-semibold ${result?.ok ? "border-l-4 border-slime pl-2" : "border-l-4 border-spray-pink pl-2"}`}>{result?.message}</p>
       </div>
     </form>
   );

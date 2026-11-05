@@ -74,7 +74,7 @@ export function Character({ pose, variant = "dani", animated = true, className, 
   return frame("-10 -10 180 250", (
     <g transform={`translate(0 ${def.drop ?? 0})`}>
       {def.back}
-      {def.legs.map((angles, i) => <Limb key={i} from={HIPS[i]} angles={angles} len={26} color={c("asphalt")} shade={c("ink")} width={16} foot />)}
+      {def.legs.map((angles, i) => <Limb key={i} from={HIPS[i]} angles={angles} len={26} color={c("trousers")} shade={c("trousers-shade")} width={16} foot />)}
       <motion.g animate={live ? { scale: [1, 1.02, 1] } : undefined} transition={breathe}>
         <g {...line} strokeWidth={5}>
           <path d="M58 104q22 14 44 0-6-8-22-8t-22 8z" fill={c("hood-shade")} />

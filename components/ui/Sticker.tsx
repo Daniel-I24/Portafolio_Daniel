@@ -7,7 +7,7 @@ const TONES = {
   paper: "bg-paper text-ink",
   mustard: "bg-mustard text-ink",
   hoodie: "bg-hoodie text-ink",
-  denim: "bg-denim text-paper",
+  denim: "bg-denim text-ink",
   slime: "bg-slime text-ink",
 };
 
@@ -26,7 +26,7 @@ export function Sticker({ children, tone = "paper", tilt = 0, draggable = false,
   const reduced = useReducedMotion();
   return (
     <motion.div
-      className={`sticker-cut inline-block px-3 py-2 font-marker ${TONES[tone]} ${draggable ? "cursor-grab touch-none active:cursor-grabbing" : ""} ${className}`}
+      className={`sticker-cut inline-block px-3 py-2 font-semibold ${TONES[tone]} ${draggable ? "cursor-grab touch-none active:cursor-grabbing" : ""} ${className}`}
       style={{ rotate: tilt }}
       whileHover={reduced ? undefined : { rotate: tilt - 4, y: -4, scale: 1.04 }}
       transition={{ type: "spring", stiffness: 400, damping: 20 }}

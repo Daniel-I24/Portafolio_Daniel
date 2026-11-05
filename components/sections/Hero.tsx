@@ -13,9 +13,9 @@ export function Hero({ profile, cvNote }: { profile: ProfileData; cvNote?: strin
       <div className="mx-auto max-w-7xl">
         <GraffitiWall name={profile.displayName} fullName={profile.fullName} />
 
-        <div className="mt-12 grid items-start gap-12 md:grid-cols-[1fr_auto] md:gap-16">
+        <div className="mt-12 grid items-start gap-12 md:grid-cols-[minmax(0,1fr)_auto] md:gap-8 lg:gap-16">
           <div className="max-w-2xl">
-            <p className="font-spray text-4xl leading-none text-paper sm:text-6xl">{profile.role}</p>
+            <p className="text-3xl font-extrabold uppercase leading-none tracking-tight text-paper sm:text-4xl lg:text-5xl">{profile.role}</p>
             <p className="mt-5 inline-block -rotate-3 border-[3px] border-ink bg-mustard px-3 py-1 font-marker text-lg text-ink shadow-sticker sm:text-xl">
               {profile.goal}
             </p>

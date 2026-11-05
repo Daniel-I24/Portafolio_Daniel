@@ -103,19 +103,22 @@ Animaciones de los personajes, con Motion:
 
 | Token | Hex | Uso |
 |---|---|---|
-| `asphalt` | `#1C1B1A` | Fondo base de la página. |
-| `concrete` | `#5E5B57` | Paredes y bloques de sección, con textura. |
-| `cement` | `#A8A39B` | Bordes y texto secundario sobre `asphalt`. |
-| `paper` | `#F1EADF` | Texto principal sobre `asphalt`; fondo de stickers y carteles. |
-| `ink` | `#0E0E0E` | Contornos, texto sobre colores claros y sombras duras. |
-| `hoodie` | `#E07A2F` | Marca: CTA principal, mi nombre y resaltes. |
-| `mustard` | `#F2C14E` | Etiquetas de tecnologías y subrayados de marcador. |
-| `spray-red` | `#D7263D` | Poco uso: goteos, el hover del CV, "nuevo". |
-| `denim` | `#2F7378` | Enlaces, línea de tiempo y estados activos. |
+| `asphalt` | `#17181C` | Fondo base de la página. |
+| `concrete` | `#2B2D34` | Paredes y bloques de sección, con textura. |
+| `cement` | `#B9BBC2` | Bordes y texto secundario sobre `asphalt` y `concrete`. |
+| `paper` | `#F7F1E5` | Texto principal sobre fondos oscuros; fondo de stickers y carteles. |
+| `ink` | `#0B0B0D` | Contornos, texto sobre colores claros y sombras duras. |
+| `hoodie` | `#FF6A1F` | Marca: CTA principal, mi nombre y resaltes. |
+| `mustard` | `#FFC62B` | Etiquetas de tecnologías y subrayados de marcador. |
+| `spray-pink` | `#FF3D7F` | Poco uso: goteos, el hover del CV, "nuevo". |
+| `denim` | `#19B8A6` | Línea de tiempo, estados activos y subrayado de enlaces. |
 | `slime` | `#9BD94A` | Solo éxito y el punto "en línea". |
 
-- Todo texto cumple 4.5:1 con su fondo. Sobre `hoodie`, `mustard` y `slime`, el texto va en `ink`.
-- **Sombras duras tipo sticker**: `4px 4px 0 #0E0E0E`. Nada de sombras difusas.
+- Todo texto cumple 4.5:1 con su fondo. Sobre `hoodie`, `mustard`, `denim`, `spray-pink` y `slime`, el texto va en `ink`.
+- `hoodie`, `denim` y `spray-pink` no cumplen sobre `paper`: ahí el texto va en `ink` y el color queda en el fondo o el subrayado.
+- Ningún texto informativo por debajo de 14 px.
+- Los personajes usan tonos propios (`skin`, `hair`, `metal`, `cream`, `hood`, `cap`, `can`…), separados de la interfaz, y sin fondo crema detrás.
+- **Sombras duras tipo sticker**: `4px 4px 0 #0B0B0D`. Nada de sombras difusas.
 - **Texturas**:
   - ruido de concreto con `feTurbulence` en un data URI;
   - grietas sutiles;
@@ -123,9 +126,9 @@ Animaciones de los personajes, con Motion:
 
 ### Tipografía (`next/font/google`)
 
-- `Rubik Spray Paint`: nombre y títulos de sección.
+- `Rubik Spray Paint`: solo el nombre del hero y los títulos de sección.
 - `Sedgwick Ave Display`: el tag **"Dani"**, firmas y detalles a mano.
-- `Permanent Marker`: notas, stickers y subrayados.
+- `Permanent Marker`: solo textos cortos y grandes (18 px o más). Los párrafos y datos largos van en `Archivo`.
 - `Archivo` (400/600/800): párrafos y botones.
 - `JetBrains Mono`: rutas, fechas y datos técnicos.
 

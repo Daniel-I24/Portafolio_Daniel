@@ -17,7 +17,7 @@ const FIELDS: { name: ContactField; label: string; type: string; hint: string; m
   { name: "message", label: "Mensaje", type: "textarea", hint: "Cuéntame tu idea, propuesta o pregunta.", max: 2000 },
 ];
 const EMPTY: Record<ContactField, string> = { name: "", email: "", message: "" };
-const inputClass = "mt-1 w-full border-[3px] border-ink bg-paper px-3 py-2 text-ink shadow-sticker-sm aria-invalid:border-spray-red";
+const inputClass = "mt-1 w-full border-[3px] border-ink bg-paper px-3 py-2 text-ink shadow-sticker-sm aria-invalid:border-spray-pink";
 
 interface ContactProps {
   email: string;
@@ -58,7 +58,7 @@ export function Contact({ email, socials }: ContactProps) {
               <path d="M50 150V80" strokeWidth={10} />
               <path d="M12 82V40a28 28 0 0 1 56 0v42zM40 12h48a28 28 0 0 1 28 28v42H68" fill="var(--color-hoodie)" />
               <path d="M24 52h32" strokeWidth={6} />
-              <path d="M98 30v-24h18v12H98" fill="var(--color-spray-red)" />
+              <path d="M98 30v-24h18v12H98" fill="var(--color-spray-pink)" />
             </svg>
           </Reveal>
           <Reveal delay={0.15} className="mt-10 space-y-4">
@@ -66,7 +66,7 @@ export function Contact({ email, socials }: ContactProps) {
               <a href={`mailto:${email}`} className="inline-flex items-center gap-2 bg-paper px-3 py-2 font-mono text-sm text-ink shadow-sticker">
                 <Icon name="mail" size={20} />{email}
               </a>
-              <button type="button" onClick={copy} className="border-[3px] border-ink bg-mustard px-3 py-1.5 font-marker text-ink shadow-sticker-sm">
+              <button type="button" onClick={copy} className="border-[3px] border-ink bg-mustard px-3 py-1.5 font-marker text-lg text-ink shadow-sticker-sm">
                 {copied ? "¡Copiado!" : "Copiar correo"}
               </button>
               <span className="sr-only" aria-live="polite">{copied ? "Correo copiado" : ""}</span>
