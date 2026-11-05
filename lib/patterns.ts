@@ -32,11 +32,11 @@ export class SeedRepository implements Repository {
 
 /** Supabase when its env vars exist, else content/seed.json. The lazy import keeps the SDK out of client bundles. */
 export const hasSupabase = (): boolean => Boolean(process.env.NEXT_PUBLIC_SUPABASE_URL && process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY);
-export const repository = async (): Promise<Repository> =>
-  hasSupabase() ? new (await import("./supabase")).SupabaseRepository() : new SeedRepository();
+export const repository = async (): Promise<Repository> => hasSupabase() ? new (await import("./supabase")).SupabaseRepository() : new SeedRepository();
 
-/** Raw snapshot cached by tag; admin saves call revalidateTag() so changes show without redeploy. */
-export const getSnapshot = /* @__PURE__ */ unstable_cache(async () => (await repository()).snapshot(), ["portfolio"], { tags: [...CACHE_TAGS] });
+/** Supabase reads are cached by tag (admin saves call revalidateTag()). The seed ships in the bundle: a cached copy would outlive its edits across builds. */
+const cachedSnapshot = /* @__PURE__ */ unstable_cache(async () => (await repository()).snapshot(), ["portfolio"], { tags: [...CACHE_TAGS] });
+export const getSnapshot = async (): Promise<Snapshot> => (hasSupabase() ? cachedSnapshot() : new SeedRepository().snapshot());
 
 /* ---------- Factory: rows → domain subclasses ---------- */
 const BUILDERS: { [T in EntityTable]: (data: EntityRow<T>) => Project | Testimonial | Experience | Skill | Interest } = {
