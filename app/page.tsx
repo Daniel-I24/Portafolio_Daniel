@@ -44,10 +44,7 @@ export default async function HomePage() {
         <Testimonials testimonials={testimonials.map((t) => ({ ...t.data, initials: t.initials }))} />
         <Experience items={experience.map((e) => ({ ...e.data, badge: e.badge(), accent: e.accent(), icon: e.icon() }))} />
         <Contact email={profile.email} socials={socials} />
-        <OffTheClock
-          interests={interests.map((interest) => interest.data)}
-          skills={skills.map((skill) => ({ ...skill.data, levelLabel: skill.levelLabel, fill: skill.fill }))}
-        />
+        <OffTheClock interests={interests.map((interest) => interest.data)} />
       </main>
       <Footer profile={profile} socials={[...socials, { label: "Correo", url: `mailto:${profile.email}`, icon: "mail" }]} />
       <BubbleMenu />

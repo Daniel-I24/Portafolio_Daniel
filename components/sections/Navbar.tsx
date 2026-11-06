@@ -9,7 +9,7 @@ export const SECTIONS = [
   { id: "testimonios", label: "Testimonios", keywords: "opiniones recomendaciones referencias" },
   { id: "experiencia", label: "Experiencia", keywords: "estudios academica laboral universidad trayectoria" },
   { id: "contacto", label: "Contacto", keywords: "correo email mensaje escribir linkedin" },
-  { id: "fuera-del-codigo", label: "Fuera del código", keywords: "gustos hobbies voley futbol motos billar musica rap" },
+  { id: "mas-alla-del-codigo", label: "Más allá del código", keywords: "fuera gustos hobbies voley futbol motos billar musica rap ejercicio" },
 ] as const;
 
 /** Thin fixed bar: tag on the left, anchors from lg up, CV on the right. Mobile navigation lives in BubbleMenu. */

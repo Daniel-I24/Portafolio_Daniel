@@ -289,8 +289,8 @@ Orden: Menú → Hero con CV → Sobre mí → Proyectos → Testimonios → Exp
 
 - **Póster pegado** con el texto `profile.about` de la base de datos.
 - Dani en pose `chill`.
-- **Datos rápidos**: stickers arrastrables (drag con Motion; vuelven a su sitio) con Pasto, Nariño · Ingeniería de Software UCC · meta: ciberseguridad.
-- **Stack**: etiquetas tipo cinta adhesiva, desde la tabla `skills`.
+- **Datos rápidos**: stickers con Pasto, Nariño · Ingeniería de Software UCC · meta: ciberseguridad.
+- **Stack**: solo frameworks y herramientas, agrupados por categoría (etiquetas tipo cinta adhesiva, desde la tabla `skills`). Sin niveles, porcentajes, barras ni lenguajes sueltos.
 
 ### 6.4 Proyectos (`#proyectos`)
 
@@ -326,7 +326,7 @@ Orden: Menú → Hero con CV → Sobre mí → Proyectos → Testimonios → Exp
 - **Al enviar**: rocío de spray + "¡Mensaje enviado!" en `slime`.
 - **Contacto directo**: el correo con botón de copiar, LinkedIn y GitHub.
 
-### 6.8 Sección adicional: "Fuera del código" (`#fuera-del-codigo`)
+### 6.8 Sección adicional: "Más allá del código" (`#mas-alla-del-codigo`)
 
 Muro de stickers con Dani en cada pose y una micro-animación:
 
@@ -335,11 +335,6 @@ Muro de stickers con Dani en cada pose y una micro-animación:
 - **Motos**: recorre un mini-mapa de Nariño con la ruta animada.
 - **Billar**: la bola 8 entra en la buchaca al pasar el cursor.
 - **Música**: un boombox con ecualizador animado y la nota "rap y hip hop, pero escucho de todo". Campo opcional `playlistUrl` con un enlace a Spotify, editable desde el admin.
-
-Debajo, el **panel de habilidades como latas de spray**:
-
-- el nivel de pintura de cada lata indica Avanzado, Intermedio o Aprendiendo;
-- siempre se muestra la palabra del nivel.
 
 ### 6.9 Pie de página (`#footer`)
 
@@ -387,7 +382,7 @@ Debajo, el **panel de habilidades como latas de spray**:
    - `lib/` completo con `SeedRepository`;
    - `Icon` y las cabeceras de seguridad.
 2. **Personajes y hero**: `Character` (todas las poses), `GraffitiWall`, `SprayButton` y `BubbleMenu`.
-3. **Secciones públicas**, leyendo del repositorio: Sobre mí, Proyectos (filtro y modal), Testimonios, Experiencia, Contacto, Fuera del código y Footer.
+3. **Secciones públicas**, leyendo del repositorio: Sobre mí, Proyectos (filtro y modal), Testimonios, Experiencia, Contacto, Más allá del código y Footer.
 4. **Supabase + Admin**:
    - migración con RLS y Storage;
    - Auth con GitHub;

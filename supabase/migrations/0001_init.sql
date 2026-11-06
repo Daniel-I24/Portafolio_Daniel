@@ -48,7 +48,7 @@ create table public.experience (
 
 create table public.skills (
   id text primary key default gen_random_uuid()::text,
-  "group" text not null, name text not null, level smallint not null check (level between 1 and 3),
+  "group" text not null, name text not null,
   "order" integer not null default 0, published boolean not null default true
 );
 

@@ -50,7 +50,7 @@ export function Testimonials({ testimonials }: { testimonials: TestimonialView[]
   return (
     <section id="testimonios" aria-labelledby="testimonios-title" className="scroll-mt-16 px-4 py-24 sm:px-6">
       <div className="mx-auto max-w-5xl">
-        <SectionTitle id="testimonios-title" kicker="lo que dicen en la calle" tone="hoodie">Testimonios</SectionTitle>
+        <SectionTitle id="testimonios-title" kicker="Personas que han trabajado conmigo" tone="hoodie">Testimonios</SectionTitle>
 
         <div role="region" aria-roledescription="carrusel" aria-label="Testimonios" className="mt-14"
           onMouseEnter={() => setHovered(true)} onMouseLeave={() => setHovered(false)}

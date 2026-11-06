@@ -9,7 +9,7 @@ import { browserClient } from "@/lib/supabase";
 // Zod internals are untyped from outside: introspection only reads `def`, `description` and `maxLength`.
 type Kind = "text" | "textarea" | "email" | "url" | "number" | "boolean" | "select" | "list" | "lines";
 type ZodNode = { def: Record<string, never> & { type: string }; description?: string; maxLength?: number | null; format?: string | null };
-type Field = { key: string; label: string; kind: Kind; options?: (string | number)[]; parts?: string[]; upload: boolean };
+type Field = { key: string; label: string; kind: Kind; options?: string[]; parts?: string[]; upload: boolean };
 
 /** Fields whose value is a file in Storage: they get an upload button. */
 const UPLOADS = new Set(["photo", "cvUrl", "imageUrl", "apkUrl", "downloadUrl", "avatarUrl", "gallery"]);
@@ -17,7 +17,7 @@ const HIDDEN = new Set(["id", "order"]); // id is generated; order is set by dra
 const inputClass = "mt-1 w-full border-[3px] border-ink bg-paper px-3 py-2 text-ink";
 
 function unwrap(node: ZodNode): ZodNode {
-  const def = node.def as unknown as { type: string; innerType?: ZodNode; in?: ZodNode; options?: ZodNode[] };
+  const def = node.def as unknown as { type: string; innerType?: ZodNode; in?: ZodNode };
   if (["default", "optional", "nullable"].includes(def.type)) return unwrap(def.innerType!);
   if (def.type === "pipe") return unwrap(def.in!);
   return node;
@@ -28,11 +28,9 @@ function fieldsOf(shape: Record<string, unknown>): Field[] {
   return Object.entries(shape).filter(([key]) => !HIDDEN.has(key)).map(([key, value]) => {
     const outer = value as ZodNode;
     const node = unwrap(outer);
-    const def = node.def as unknown as { type: string; entries?: Record<string, string>; options?: ZodNode[]; element?: ZodNode & { shape?: object } };
+    const def = node.def as unknown as { type: string; entries?: Record<string, string>; element?: ZodNode & { shape?: object } };
     const base = { key, label: outer.description ?? key, upload: UPLOADS.has(key) };
-    const literals = def.options?.every((o) => o.def.type === "literal");
     if (def.type === "enum") return { ...base, kind: "select", options: Object.values(def.entries!) };
-    if (def.type === "union" && literals) return { ...base, kind: "select", options: def.options!.map((o) => (o.def as unknown as { values: number[] }).values[0]) };
     if (def.type === "union") return { ...base, kind: "url" };
     if (def.type === "boolean" || def.type === "number") return { ...base, kind: def.type };
     if (def.type === "array") {
@@ -56,7 +54,6 @@ function fromText(field: Field, text: string | boolean): unknown {
   if (field.kind === "boolean") return text;
   const value = String(text);
   if (field.kind === "number") return value === "" ? undefined : Number(value); // undefined → schema default
-  if (field.kind === "select") return field.options!.find((option) => String(option) === value) ?? value;
   if (field.kind === "list") return value.split(",").map((item) => item.trim()).filter(Boolean);
   if (field.kind === "lines") {
     return value.split("\n").filter((line) => line.trim()).map((line) => {

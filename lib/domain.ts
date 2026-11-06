@@ -1,6 +1,6 @@
 import type {
   ExperienceData, InterestData, InterestSlug, ProfileData, ProjectData, ProjectKind,
-  SkillData, SkillLevel, TestimonialData,
+  SkillData, TestimonialData,
 } from "./schemas";
 import { periodKey } from "./structures";
 
@@ -96,19 +96,9 @@ export class Testimonial extends Entity<TestimonialData> {
   }
 }
 
-const LEVEL_LABELS: Record<SkillLevel, { label: string; fill: number }> = {
-  3: { label: "Avanzado", fill: 0.9 },
-  2: { label: "Intermedio", fill: 0.6 },
-  1: { label: "Aprendiendo", fill: 0.3 },
-};
-
 export class Skill extends Entity<SkillData> {
-  get levelLabel(): string { return LEVEL_LABELS[this.data.level].label; }
-  /** Paint level of the spray can, 0..1. */
-  get fill(): number { return LEVEL_LABELS[this.data.level].fill; }
-
   toCard(): Card {
-    return { title: this.data.name, subtitle: this.levelLabel, tags: [this.data.group] };
+    return { title: this.data.name, subtitle: this.data.group, tags: [] };
   }
 }
 

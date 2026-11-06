@@ -77,5 +77,5 @@ export async function sendMessage(_previous: ContactState, form: FormData): Prom
   } catch {
     // Fall through: never expose provider errors to the visitor.
   }
-  return { status: "error", message: "No pude enviar el mensaje ahora mismo. Escríbeme directo al correo de abajo." };
+  return { status: "error", message: "No pude enviar el mensaje ahora mismo. Escríbeme directamente a mi correo." };
 }

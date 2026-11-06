@@ -15,8 +15,6 @@ export const projectKinds = ["web", "mobile", "api", "desktop", "game"] as const
 export const experienceTypes = ["academic", "work"] as const;
 export const socialKinds = ["github", "linkedin"] as const;
 export const interestSlugs = ["voley", "futbol", "motos", "billar", "musica", "deporte"] as const;
-/** 1 = Aprendiendo · 2 = Intermedio · 3 = Avanzado */
-export const skillLevels = [1, 2, 3] as const;
 
 export const socialSchema = z.object({
   kind: z.enum(socialKinds).describe("Red"),
@@ -91,9 +89,8 @@ export const experienceSchema = z.object({
 
 export const skillSchema = z.object({
   id,
-  group: z.string().trim().min(1).max(40).describe("Grupo"),
+  group: z.string().trim().min(1).max(40).describe("Categoría"),
   name: z.string().trim().min(1).max(40).describe("Nombre"),
-  level: z.union(skillLevels.map((level) => z.literal(level))).describe("Nivel"),
   order,
   published,
 });
@@ -136,7 +133,6 @@ export type SkillData = z.infer<typeof skillSchema>;
 export type InterestData = z.infer<typeof interestSchema>;
 export type MessageData = z.infer<typeof messageSchema>;
 export type ProjectKind = (typeof projectKinds)[number];
-export type SkillLevel = (typeof skillLevels)[number];
 export type InterestSlug = (typeof interestSlugs)[number];
 export type EntityTable = keyof typeof entitySchemas;
 export type EntityRow<T extends EntityTable> = z.infer<(typeof entitySchemas)[T]>;

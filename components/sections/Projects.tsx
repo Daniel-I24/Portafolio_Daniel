@@ -73,7 +73,7 @@ export function Projects({ projects }: { projects: ProjectView[] }) {
   return (
     <section id="proyectos" aria-labelledby="proyectos-title" className="texture-concrete scroll-mt-16 bg-concrete px-4 py-24 sm:px-6">
       <div className="mx-auto max-w-7xl">
-        <SectionTitle id="proyectos-title" kicker="carteles pegados en la pared" tone="mustard">Proyectos</SectionTitle>
+        <SectionTitle id="proyectos-title" kicker="Trabajo seleccionado" tone="mustard">Proyectos</SectionTitle>
 
         <div role="group" aria-label="Filtrar por tecnología" className="mt-10 flex flex-wrap gap-2">
           {chips.map((chip) => (

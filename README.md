@@ -1,6 +1,6 @@
 # Dani · Graffo Edition
 
-Portafolio de **Ivan Daniel Igua Benavides**: una pared de la calle donde se pinta mi vida de developer.
+Portafolio de **Ivan Daniel Igua Benavides**: desarrollador full stack, con identidad visual de graffiti.
 Desarrollador full stack, futuro especialista en ciberseguridad.
 
 ## Stack

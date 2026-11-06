@@ -5,9 +5,9 @@
     "tag": "Dani",
     "role": "Desarrollador Full Stack",
     "goal": "Futuro especialista en ciberseguridad",
-    "tagline": "Pinto ideas en código: web, móvil y APIs, con sello propio.",
+    "tagline": "Desarrollo aplicaciones web, móviles y APIs con arquitectura limpia y atención al detalle.",
     "location": "Pasto, Nariño, Colombia",
-    "about": "Desarrollador full stack en formación. Construyo aplicaciones web, móviles y APIs con arquitectura limpia y patrones de diseño, de la base de datos a la interfaz. Me obsesiona que las cosas funcionen bien, se vean bien y sean seguras. Fuera del código me encuentras en una cancha de vóley o de fútbol, en la moto, en una mesa de billar o con rap en los audífonos. Próxima parada: ciberseguridad.",
+    "about": "Desarrollador full stack en formación. Construyo aplicaciones web, móviles y APIs con arquitectura limpia y patrones de diseño, de la base de datos a la interfaz. Me importa que cada proyecto funcione bien, se vea bien y sea seguro. Fuera del código me encuentras haciendo ejercicio, conduciendo o escuchando música. Mi próxima meta es especializarme en ciberseguridad.",
     "photo": "/daniel-sin-hora.webp",
     "cvUrl": "/cv.pdf",
     "email": "danieliguadev@gmail.com",
@@ -315,90 +315,107 @@
   "skills": [
     {
       "group": "Frontend",
-      "name": "Angular",
-      "level": 3
+      "name": "Angular"
     },
     {
       "group": "Frontend",
-      "name": "React / Next.js",
-      "level": 2
+      "name": "React"
     },
     {
       "group": "Frontend",
-      "name": "Tailwind CSS",
-      "level": 3
+      "name": "Next.js"
+    },
+    {
+      "group": "Frontend",
+      "name": "Tailwind CSS"
     },
     {
       "group": "Backend",
-      "name": "Spring Boot",
-      "level": 3
+      "name": "Spring Boot"
     },
     {
       "group": "Backend",
-      "name": "Node.js · Express",
-      "level": 2
+      "name": "Node.js"
+    },
+    {
+      "group": "Backend",
+      "name": "Express"
     },
     {
       "group": "Datos",
-      "name": "PostgreSQL · Supabase",
-      "level": 2
+      "name": "PostgreSQL"
     },
     {
       "group": "Datos",
-      "name": "MongoDB · Firebase",
-      "level": 2
+      "name": "Supabase"
+    },
+    {
+      "group": "Datos",
+      "name": "MongoDB"
+    },
+    {
+      "group": "Datos",
+      "name": "Firebase"
     },
     {
       "group": "Móvil",
-      "name": "Kotlin · Jetpack Compose",
-      "level": 2
+      "name": "Jetpack Compose"
+    },
+    {
+      "group": "Móvil",
+      "name": "Capacitor"
     },
     {
       "group": "DevOps",
-      "name": "Docker · Git · Vercel",
-      "level": 2
+      "name": "Docker"
+    },
+    {
+      "group": "DevOps",
+      "name": "Git"
+    },
+    {
+      "group": "DevOps",
+      "name": "Vercel"
     },
     {
       "group": "Seguridad",
-      "name": "JWT · RLS · App Check",
-      "level": 2
+      "name": "Spring Security"
     },
     {
       "group": "Seguridad",
-      "name": "Pentesting",
-      "level": 1
+      "name": "App Check"
     }
   ],
   "interests": [
     {
       "slug": "voley",
       "title": "Voleibol",
-      "note": "Mi deporte. Lo mío es jugarlo, no verlo."
+      "note": "Mi deporte favorito; lo disfruto sobre todo en la cancha."
     },
     {
       "slug": "futbol",
       "title": "Fútbol",
-      "note": "Jugarlo siempre que se pueda."
+      "note": "Lo juego siempre que tengo la oportunidad."
     },
     {
       "slug": "motos",
       "title": "Motos",
-      "note": "Rodar por las carreteras de Nariño."
+      "note": "Disfruto recorrer las carreteras de Nariño."
     },
     {
       "slug": "billar",
       "title": "Billar",
-      "note": "Paciencia, ángulo y una buena tacada."
+      "note": "Un juego de paciencia, ángulos y precisión."
     },
     {
       "slug": "musica",
       "title": "Música",
-      "note": "Rap y hip hop principalmente, pero escucho de todo."
+      "note": "Escucho principalmente rap y hip hop, aunque me gusta de todo."
     },
     {
       "slug": "deporte",
-      "title": "Hacer deporte",
-      "note": "Prefiero moverme que mirar desde la tribuna."
+      "title": "Ejercicio",
+      "note": "Prefiero mantenerme activo antes que mirar desde la tribuna."
     }
   ]
 }

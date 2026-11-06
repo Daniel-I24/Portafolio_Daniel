@@ -35,7 +35,7 @@ export function Experience({ items }: { items: ExperienceView[] }) {
   return (
     <section id="experiencia" aria-labelledby="experiencia-title" className="scroll-mt-16 px-4 py-24 sm:px-6">
       <div className="mx-auto max-w-4xl">
-        <SectionTitle id="experiencia-title" kicker="el recorrido, tag por tag">Experiencia</SectionTitle>
+        <SectionTitle id="experiencia-title" kicker="Formación y trayectoria">Experiencia</SectionTitle>
 
         <div role="tablist" aria-label="Tipo de experiencia" className="mt-10 flex flex-wrap gap-3">
           {groups.map((group, i) => (

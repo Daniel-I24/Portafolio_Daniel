@@ -26,8 +26,8 @@ export function SectionTitle({ id, kicker, children, tone = "paper", className =
   const colors = TONES[tone];
   return (
     <Reveal className={className}>
-      <p className="font-marker text-lg text-mustard">{kicker}</p>
-      <h2 id={id} className={`relative inline-block whitespace-nowrap font-spray text-[clamp(2rem,9.5vw,4.5rem)] leading-none ${colors.text}`}>
+      <p className="mb-2 text-lg font-semibold text-mustard">{kicker}</p>
+      <h2 id={id} className={`relative inline-block whitespace-nowrap font-spray text-[clamp(1.75rem,9vw,4.5rem)] leading-none ${colors.text}`}>
         {children}
         {DRIPS.map((drip) => (
           <span

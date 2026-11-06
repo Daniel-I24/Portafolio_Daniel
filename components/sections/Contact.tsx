@@ -51,9 +51,9 @@ export function Contact({ email, socials }: ContactProps) {
     <section id="contacto" aria-labelledby="contacto-title" className="texture-concrete scroll-mt-16 bg-concrete px-4 py-24 sm:px-6">
       <div className="mx-auto grid max-w-6xl items-start gap-14 lg:grid-cols-[1fr_1.2fr]">
         <div>
-          <SectionTitle id="contacto-title" kicker="deja tu mensaje en el buzón" tone="mustard">Contacto</SectionTitle>
+          <SectionTitle id="contacto-title" kicker="Hablemos de tu proyecto" tone="mustard">Contacto</SectionTitle>
           <Reveal delay={0.1} className="mt-10 flex items-end gap-2">
-            <Character pose="waving" title="Dani saludando" className="w-32 sm:w-40" />
+            <Character pose="waving" title="Ilustración de Dani" className="w-32 sm:w-40" />
             <svg aria-hidden viewBox="0 0 120 150" className="w-28 sm:w-32" fill="none" stroke="var(--color-ink)" strokeWidth={5} strokeLinejoin="round">
               <path d="M50 150V80" strokeWidth={10} />
               <path d="M12 82V40a28 28 0 0 1 56 0v42zM40 12h48a28 28 0 0 1 28 28v42H68" fill="var(--color-hoodie)" />
@@ -107,7 +107,7 @@ export function Contact({ email, socials }: ContactProps) {
               );
             })}
             <button type="submit" disabled={pending} className="inline-flex items-center gap-3 border-[3px] border-ink bg-hoodie px-5 py-3 font-extrabold uppercase text-ink shadow-sticker transition-transform duration-150 hover:-translate-y-0.5 active:scale-y-90 disabled:opacity-70">
-              <Icon name="spray" size={22} />{pending ? "Pintando…" : "Enviar mensaje"}
+              <Icon name="spray" size={22} />{pending ? "Enviando…" : "Enviar mensaje"}
             </button>
             <div id="contact-status" role="status" className="relative mt-5 min-h-8">
               {sent && (
