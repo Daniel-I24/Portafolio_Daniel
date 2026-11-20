@@ -1,42 +1,64 @@
-import { SprayButton } from "@/components/ui/SprayButton";
-import type { ProfileData } from "@/lib/schemas";
+"use client";
 
-/** Page sections in order; `keywords` feed the bubble-menu Trie search. */
-export const SECTIONS = [
-  { id: "inicio", label: "Inicio", keywords: "home portada cv" },
-  { id: "sobre-mi", label: "Sobre mí", keywords: "perfil quien soy datos stack habilidades" },
-  { id: "proyectos", label: "Proyectos", keywords: "trabajos apps codigo github demo apk" },
-  { id: "testimonios", label: "Testimonios", keywords: "opiniones recomendaciones referencias" },
-  { id: "experiencia", label: "Experiencia", keywords: "estudios academica laboral universidad trayectoria" },
-  { id: "contacto", label: "Contacto", keywords: "correo email mensaje escribir linkedin" },
-  { id: "mas-alla-del-codigo", label: "Más allá del código", keywords: "fuera gustos hobbies voley futbol motos billar musica rap ejercicio" },
-] as const;
+import { useEffect, useState } from "react";
+import { CvButton } from "@/components/ui/CvButton";
+import { MobileMenu } from "@/components/ui/MobileMenu";
+import { MotionSwitch } from "@/components/ui/MotionProvider";
+import { container, SECTIONS, sectionNumber, type SectionId } from "@/components/ui/Section";
+import { SectionObserver } from "@/lib/patterns";
 
-/** Thin fixed bar: tag on the left, anchors from lg up, CV on the right. Mobile navigation lives in BubbleMenu. */
-export function Navbar({ profile, cvNote }: { profile: ProfileData; cvNote?: string }) {
+interface NavbarProps {
+  initials: string;
+  name: string;
+  cvUrl: string;
+  cvNote?: string;
+}
+
+/** Watches which section crosses the middle of the viewport (Observer pattern in lib/patterns.ts). */
+function useActiveSection(): SectionId {
+  const [active, setActive] = useState<SectionId>("inicio");
+  useEffect(() => {
+    const observer = new SectionObserver().observe(SECTIONS.map((s) => s.id));
+    const off = observer.subscribe((id, visible) => visible && setActive(id as SectionId));
+    return () => { off(); observer.disconnect(); };
+  }, []);
+  return active;
+}
+
+export function Navbar({ initials, name, cvUrl, cvNote }: NavbarProps) {
+  const active = useActiveSection();
+  const current = SECTIONS.find((s) => s.id === active);
+
   return (
-    <header className="fixed inset-x-0 top-0 z-40 border-b-[3px] border-ink bg-asphalt">
-      <a href="#contenido" className="sr-only focus:not-sr-only focus:absolute focus:left-4 focus:top-2 focus:bg-mustard focus:px-3 focus:py-1 focus:text-ink">
+    <header className="fixed inset-x-0 top-0 z-40 border-b border-line bg-paper/90 backdrop-blur-md">
+      <a href="#contenido" className="sr-only rounded-full bg-ink px-4 py-2 text-sm font-semibold text-card focus:not-sr-only focus:absolute focus:left-4 focus:top-3 focus:z-50">
         Saltar al contenido
       </a>
-      <div className="mx-auto flex h-14 max-w-7xl items-center justify-between gap-4 px-4 sm:px-6">
-        <a href="#inicio" className="font-tag text-3xl leading-none text-hoodie transition-transform duration-150 hover:-rotate-3" aria-label={`${profile.tag}, ir al inicio`}>
-          {profile.tag}
+      <div className={`${container} flex h-18 items-center gap-6`}>
+        <a href="#inicio" aria-label={`${name}, ir al inicio`}
+          className="grid size-11 shrink-0 place-items-center rounded-full border-[1.5px] border-ink font-display text-lg font-semibold transition-colors duration-150 hover:bg-ink hover:text-card">
+          {initials}
         </a>
-        <nav aria-label="Secciones" className="hidden lg:block">
-          <ul className="flex items-center gap-1 font-mono text-sm">
+
+        <nav aria-label="Secciones" className="hidden xl:block">
+          <ul className="flex items-center gap-5 text-sm">
             {SECTIONS.map((section) => (
               <li key={section.id}>
-                <a href={`#${section.id}`} className="px-2 py-1 text-paper decoration-mustard decoration-[3px] underline-offset-4 transition-colors duration-150 hover:text-mustard hover:underline">
+                <a href={`#${section.id}`} aria-current={section.id === active ? "location" : undefined}
+                  className="relative py-2 text-muted transition-colors duration-150 after:absolute after:inset-x-0 after:-bottom-0.5 after:h-0.5 after:origin-left after:scale-x-0 after:bg-rust after:transition-transform after:duration-300 hover:text-ink hover:after:scale-x-100 aria-[current]:font-semibold aria-[current]:text-ink aria-[current]:after:scale-x-100">
                   {section.label}
                 </a>
               </li>
             ))}
           </ul>
         </nav>
-        <SprayButton href={profile.cvUrl} download icon="download" size="sm" missingNote={cvNote}>
-          Descargar CV
-        </SprayButton>
+
+        <p className="ml-auto text-sm font-medium tabular-nums tracking-[0.08em] text-muted" aria-label={`Sección ${sectionNumber(active)} de ${SECTIONS.length}: ${current?.label}`}>
+          <span className="text-rust">{sectionNumber(active)}</span> / {String(SECTIONS.length).padStart(2, "0")}
+        </p>
+        <div className="hidden xl:block"><MotionSwitch /></div>
+        <div className="hidden sm:block"><CvButton href={cvUrl} missingNote={cvNote} size="sm" align="right" /></div>
+        <MobileMenu active={active} cvUrl={cvUrl} cvNote={cvNote} />
       </div>
     </header>
   );

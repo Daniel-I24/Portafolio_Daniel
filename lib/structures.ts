@@ -86,13 +86,13 @@ export class CircularQueue<T> {
   }
 }
 
-/** Inverted index technology → items, used by the project filter. */
-export class TechIndex<T extends { stack: string[] }> {
+/** Inverted index tag → items. Tags come from `tagsOf`: technologies, the project kind… Drives the project filter. */
+export class TechIndex<T> {
   private readonly index = new Map<string, Set<T>>();
 
-  constructor(private readonly items: readonly T[]) {
+  constructor(private readonly items: readonly T[], tagsOf: (item: T) => readonly string[]) {
     for (const item of items) {
-      for (const tech of item.stack) {
+      for (const tech of tagsOf(item)) {
         const bucket = this.index.get(tech) ?? new Set<T>();
         bucket.add(item);
         this.index.set(tech, bucket);
@@ -105,6 +105,11 @@ export class TechIndex<T extends { stack: string[] }> {
     return [...this.index.entries()]
       .sort(([a, x], [b, y]) => y.size - x.size || a.localeCompare(b, "es"))
       .map(([tech]) => tech);
+  }
+
+  /** How many items carry the tag; all items when tag is null. */
+  count(tech: string | null): number {
+    return tech ? (this.index.get(tech)?.size ?? 0) : this.items.length;
   }
 
   /** Items using the technology, keeping the original order; all items when tech is null. */
