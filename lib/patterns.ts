@@ -11,7 +11,6 @@ export const CACHE_TAGS = ["profile", ...ENTITY_TABLES] as const;
 
 /** Unparsed rows as stored (seed or DB); EntityFactory validates them. */
 export type Snapshot = { profile: z.input<typeof profileSchema> } & { [T in EntityTable]: Partial<EntityInput<T>>[] };
-
 export interface Repository { snapshot(): Promise<Snapshot> }
 
 /** Reads content/seed.json; used when Supabase env vars are missing so the build never breaks. */
@@ -36,7 +35,11 @@ export const repository = async (): Promise<Repository> => hasSupabase() ? new (
 
 /** Supabase reads are cached by tag (admin saves call revalidateTag()). The seed ships in the bundle: a cached copy would outlive its edits across builds. */
 const cachedSnapshot = /* @__PURE__ */ unstable_cache(async () => (await repository()).snapshot(), ["portfolio"], { tags: [...CACHE_TAGS] });
-export const getSnapshot = async (): Promise<Snapshot> => (hasSupabase() ? cachedSnapshot() : new SeedRepository().snapshot());
+/** Falls back to the seed when Supabase fails or its profile row is missing/invalid (empty DB), so builds never break. */
+export const getSnapshot = async (): Promise<Snapshot> => {
+  const live = hasSupabase() ? await cachedSnapshot().catch((e) => void console.error("Supabase read failed:", e)) : null;
+  return live && profileSchema.safeParse(live.profile).success ? live : new SeedRepository().snapshot();
+};
 
 /* ---------- Factory: rows → domain subclasses ---------- */
 const BUILDERS: { [T in EntityTable]: (data: EntityRow<T>) => Project | Testimonial | Experience | Skill | Interest } = {
@@ -78,17 +81,14 @@ export class MinLength implements ValidationRule {
   constructor(private readonly min: number, private readonly message: string) {}
   check(value: string) { return value.trim().length >= this.min ? null : this.message; }
 }
-
 export class Required extends MinLength {
   constructor(message: string) { super(1, message); }
 }
-
 /** Shared base for rules backed by a Zod format check. */
 abstract class FormatRule implements ValidationRule {
   constructor(private readonly format: z.ZodType, private readonly message: string) {}
   check(value: string) { return this.format.safeParse(value.trim()).success ? null : this.message; }
 }
-
 export class Email extends FormatRule {
   constructor() { super(z.email(), "Revisa el correo: debe verse como nombre@dominio.com."); }
 }
