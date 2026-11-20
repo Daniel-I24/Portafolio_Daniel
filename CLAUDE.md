@@ -1,24 +1,22 @@
 # Portafolio Daniel Igua — project rules
 
-Personal portfolio of Ivan Daniel Igua Benavides ("Dani"), graffiti / urban-cartoon theme. Full build brief: `docs/PROMPT.md`. Content seed: `content/seed.json`.
+Personal portfolio of Ivan Daniel Igua Benavides ("Dani"). Visual direction: **"Papel técnico"** (warm paper, ink, rust accent, editorial serif). Full build brief: `docs/PROMPT.md`. Content seed: `content/seed.json`.
 
 ## Stack
-Next.js 15 (App Router) · TypeScript strict · Tailwind CSS v4 (`@theme` tokens in `app/globals.css`) · Supabase (Postgres, Auth, Storage) · Motion (`motion/react`) · Vercel.
+Next.js 15 (App Router) · TypeScript strict · Tailwind CSS v4 (`@theme` tokens in `app/globals.css`) · Supabase (Postgres, Auth, Storage) · Motion (`motion/react`) · Lenis (smooth scroll) · Vercel.
 
 ## Non-negotiable rules
 - All code, identifiers, comments and commits in **English**. All UI text in **Spanish**.
-- Tailwind is the styling system. No per-component CSS files.
+- Tailwind is the styling system. No per-component CSS files. Keyframes and the few utilities Tailwind lacks live in `app/globals.css`.
 - Keep the folder structure in `docs/PROMPT.md` §3. Do not add folders. Max 150 lines per file. No duplicated code.
-- Character art lives in `components/characters/` (authorized exception): paths drawn by hand, split into layers when a drawing exceeds 150 lines. No stick limbs.
-- Dani's current bust is provisional and full-body poses are paused: final characters may come from an illustrator as layered SVG, so keep the art swappable behind `Character`.
-- OOP in `lib/domain.ts` (abstract classes, inheritance, polymorphism). Patterns in `lib/patterns.ts`. Data structures in `lib/structures.ts`. React components are functional.
+- OOP in `lib/domain.ts` (abstract classes, inheritance, polymorphism). Patterns in `lib/patterns.ts`. Data structures in `lib/structures.ts`. Zod schemas in `lib/schemas.ts`. React components are functional.
 - Server Components by default; `"use client"` only where needed.
-- Every animation respects `prefers-reduced-motion`.
+- Every animation respects `prefers-reduced-motion` **and** the in-page "Animaciones" switch (`useCalm()` in JS, `html[data-motion="off"]` in CSS).
 - Security: Zod validation on the server, `isAdmin()` check in every admin action, RLS on every table, no secrets in client code, security headers in `next.config.ts`.
-- Never use images from the internet. Characters are original inline SVG.
+- Never use images from the internet. Icons are our own paths in `components/ui/Icon.tsx`.
 - Do not alter `public/daniel*.webp` (no filters, no edits).
-- Palette and fonts: only the tokens defined in `docs/PROMPT.md` §2. Avoid generic "AI look" (purple-blue gradients, flat black + single neon, emoji decoration, Inter/Roboto).
-- Legibility: 4.5:1 minimum contrast and no informative text under 14 px. Ink text on `hoodie`, `mustard`, `denim` and `spray-pink`. Rubik Spray Paint only on the hero name and section titles; Permanent Marker only on short, large text.
+- Palette and fonts: only the tokens in `docs/PROMPT.md` §2 (Tailwind defaults are reset). Avoid the generic "AI look" (purple-blue gradients, flat black + single neon, emoji decoration, Inter/Roboto, template layouts).
+- Legibility: 4.5:1 minimum contrast and no informative text under 14 px (`text-sm` is the floor). `marigold` is a background only, always with `ink` text; text on `rust`, `pine` and `ink` is `card`. Fraunces for titles and short display text; IBM Plex Sans for everything else.
 
 ## Workflow
-- Work in the phases of `docs/PROMPT.md` §10. After each phase: `npm run lint` and `npm run build` must pass, then commit with Conventional Commits and stop for review.
+- Work in the phases of `docs/PROMPT.md` §10. After each phase: `npm run lint` and `npm run build` must pass, check 390 / 768 / 1440 / 1920 px, then commit with Conventional Commits and stop for review. Nothing reaches `main` without approval.

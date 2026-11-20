@@ -1,6 +1,6 @@
-# Dani · Graffo Edition
+# Dani · Papel técnico
 
-Portafolio de **Ivan Daniel Igua Benavides**: desarrollador full stack, con identidad visual de graffiti.
+Portafolio de **Ivan Daniel Igua Benavides**: desarrollador full stack. Dirección visual "Papel técnico": papel cálido, tinta, acento óxido y titulares en serif.
 Desarrollador full stack, futuro especialista en ciberseguridad.
 
 ## Stack
@@ -30,8 +30,8 @@ app/                 page.tsx (secciones en orden), layout.tsx, actions.ts (form
   admin/             panel privado: layout (guarda + noindex), page (pestañas), actions (CRUD), login
   auth/callback/     retorno de GitHub OAuth
 components/
-  sections/          Navbar · Hero · About · Projects · Testimonials · Experience · Contact · OffTheClock · Footer
-  ui/                Character · GraffitiWall · BubbleMenu · SprayButton · Sticker · Modal · Reveal · SectionTitle · Icon
+  sections/          Intro · Navbar · Hero · Stats · About · Projects · Testimonials · Experience · OffTheClock · Contact · Footer
+  ui/                Section · Button · CvButton · Icon · Reveal · Modal · MotionProvider (interruptor + Lenis) · MobileMenu · ProjectCard · ContactForm
   admin/             EntityTable · EntityForm (generado desde Zod) · GithubImport
 lib/
   domain.ts          POO: Entity → Project, Testimonial, Skill, Interest, Experience → Academic/Work
@@ -49,7 +49,7 @@ middleware.ts        protege /admin
 
 1. **Proyecto en Supabase.** Crea un proyecto en [supabase.com](https://supabase.com). En *Project Settings → API* copia
    la *Project URL* y la *anon public key* en `NEXT_PUBLIC_SUPABASE_URL` y `NEXT_PUBLIC_SUPABASE_ANON_KEY`.
-2. **Migración.** En *SQL Editor* pega y ejecuta `supabase/migrations/0001_init.sql`.
+2. **Migración.** En *SQL Editor* pega y ejecuta `supabase/migrations/0001_init.sql` y después `0002_profile_stats.sql` (disponibilidad y semestre del perfil).
 3. **GitHub OAuth App.** En GitHub → *Settings → Developer settings → OAuth Apps → New OAuth App*:
    - *Homepage URL*: la URL del sitio (o `http://localhost:3000`).
    - *Authorization callback URL*: `https://<tu-proyecto>.supabase.co/auth/v1/callback`.

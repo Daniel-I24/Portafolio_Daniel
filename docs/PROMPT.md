@@ -1,4 +1,4 @@
-# Prompt de construcción — Portafolio "Dani · Graffo Edition"
+# Prompt de construcción — Portafolio "Dani · Papel técnico"
 
 > Pega este archivo completo en Claude Code, abierto en la raíz del repositorio.
 > El contenido real está en `content/seed.json`. Las reglas permanentes están en `CLAUDE.md`.
@@ -7,20 +7,20 @@
 
 ## 0. Rol y reglas
 
-Actúa como desarrollador full stack senior y director de arte. Construye mi portafolio en este repositorio con:
+Actúa como desarrollador full stack senior y diseñador de producto. Construye mi portafolio en este repositorio con:
 
 - **Next.js 15 (App Router)**, **TypeScript estricto** y **Tailwind CSS v4** (requisito principal del curso).
 - **Supabase**: Postgres, Auth y Storage.
-- **Motion** (`motion/react`) para las animaciones.
+- **Motion** (`motion/react`) para las animaciones y **Lenis** para el scroll suave.
 - Despliegue en **Vercel**.
 
 Reglas obligatorias (también en `CLAUDE.md`):
 
 1. Código 100 % en **inglés**; interfaz 100 % en **español**.
-2. Tailwind es el sistema de estilos: los tokens van con `@theme` en `app/globals.css`. Solo los keyframes, las texturas y las utilidades que Tailwind no cubre van en ese mismo archivo, dentro de `@layer utilities`.
+2. Tailwind es el sistema de estilos: los tokens van con `@theme` en `app/globals.css`. Solo los keyframes y las utilidades que Tailwind no cubre van en ese mismo archivo, dentro de `@layer utilities`.
 3. **Pocos archivos y carpetas** (estructura del punto 3, sin agregar más). Máximo **150 líneas por archivo**. **Cero código repetido.**
 4. **POO** en la capa de dominio (clases abstractas, herencia, polimorfismo), **patrones** y **estructuras de datos** donde aporten (punto 4). Componentes de React funcionales.
-5. **Rendimiento**: Lighthouse ≥ 95. Server Components por defecto. `"use client"` solo donde haya interacción. `next/font`, `next/image`, y `dynamic()` para la escena del hero y el cursor.
+5. **Rendimiento**: Lighthouse ≥ 95. Server Components por defecto. `"use client"` solo donde haya interacción. `next/font` y `next/image`.
 6. **Seguridad**:
    - cabeceras CSP, HSTS, X-Frame-Options, Referrer-Policy y Permissions-Policy;
    - validación con Zod en el servidor;
@@ -32,7 +32,7 @@ Reglas obligatorias (también en `CLAUDE.md`):
    - HTML semántico y foco visible;
    - `aria-*` correctos;
    - teclado completo;
-   - `prefers-reduced-motion` en **todas** las animaciones.
+   - `prefers-reduced-motion` y el interruptor "Animaciones" en **todas** las animaciones.
 8. Trabaja **por fases** (punto 10). Al cerrar cada una:
    - `npm run lint` y `npm run build` deben pasar sin errores ni warnings;
    - haz **commits pequeños con Conventional Commits** (`feat:`, `fix:`, `chore:`, `docs:`);
@@ -40,103 +40,53 @@ Reglas obligatorias (también en `CLAUDE.md`):
 
 ---
 
-## 1. Concepto: "Graffo Edition"
+## 1. Concepto: "Papel técnico"
 
-El portafolio es **una pared de la calle donde se pinta mi vida de developer**, al estilo graffiti y cómic urbano:
+El portafolio se siente como **un cuaderno de ingeniería bien editado**: papel cálido, tinta, un acento óxido y titulares en serif con carácter. Muestra mi profesión (full stack, futuro especialista en ciberseguridad) y mi vida (vóley, fútbol, motos, billar, música, ejercicio) sin personajes ni ilustraciones: la foto real, tipografía y color hacen el trabajo.
 
-- personajes graffo con contorno negro grueso y sombreado plano (cel-shading);
-- hoodies, sneakers y latas de spray;
-- goteos, stickers y cinta adhesiva;
-- letras bubble y wildstyle.
+- Composición editorial: índice numerado por sección ("03 — Sobre mí"), mucho aire y alineación a la izquierda.
+- Tarjetas con borde fino y sombra suave solo al pasar el cursor.
+- Proyectos sin captura: un espacio limpio de color con el tipo, el periodo y el nombre. **Nada de ventanas o pantallas falsas.**
 
-Tiene que mostrar mi profesión (full stack, futuro especialista en ciberseguridad) **y** mi vida (vóley, fútbol, motos, billar, rap y hip hop).
-
-**Prohibido**, porque es lo que hace que una web parezca hecha por IA:
+**Prohibido**, porque es lo que hace que una web parezca hecha por IA o por plantilla:
 
 - degradados morado-azul;
 - fondo negro plano con un solo neón;
-- tarjetas iguales con `rounded-xl` y sombra difusa;
 - emojis como decoración;
-- todo centrado;
 - Inter o Roboto;
-- iconos genéricos de librería.
-
-### Personajes (originales, SVG inline, sin imágenes de internet)
-
-**"Dani"** es mi avatar. Está basado en mi foto `public/daniel-sin-hora.webp`, pero en estilo cartoon:
-
-- pelo castaño oscuro, abundante y despeinado, con flequillo;
-- **gafas rectangulares de marco metálico delgado**;
-- **aretes pequeños de aro en ambas orejas**;
-- sonrisa leve y confiada;
-- hoodie color crema (`paper`) con cordones;
-- jean `denim` y sneakers.
-
-Estilo de dibujo: contorno `ink` de 5–6 px con `stroke-linejoin: round`, dos tonos por color y cabeza grande.
-
-Dani tiene estas poses (todas comparten piezas, sin duplicar SVG), en `components/ui/Character.tsx` con la prop `pose`:
-
-- `spraying`: pintando con lata;
-- `chill`: mano en el pelo, como en mi foto;
-- `laptop`: sentado con el portátil;
-- `volley`: rematando;
-- `football`: dominando el balón;
-- `riding`: en moto;
-- `pool`: apuntando con el taco;
-- `headphones`: con audífonos, moviendo la cabeza al ritmo.
-
-**"El Encapuchado"** es el personaje secundario: hoodie gris oscuro, gorra y sin cara visible. Pinta el graffiti pequeño.
-
-Animaciones de los personajes, con Motion:
-
-- respiración en reposo (scale 1 → 1.02);
-- parpadeo aleatorio cada 3–5 s;
-- brazo con la lata que sube y baja, con partículas de spray;
-- salto con squash & stretch al pasar el cursor;
-- con reduced motion, quedan estáticos.
+- iconos de librería genéricos (los iconos son trazos propios en `Icon`);
+- imágenes de internet.
 
 ---
 
-## 2. Paleta, tipografía e iconografía
+## 2. Paleta, tipografía y escalas
 
-### Paleta "Concreto & Spray" (tokens `@theme`)
+### Paleta (tokens `@theme`; los colores por defecto de Tailwind se eliminan)
 
-| Token | Hex | Uso |
-|---|---|---|
-| `asphalt` | `#17181C` | Fondo base de la página. |
-| `concrete` | `#2B2D34` | Paredes y bloques de sección, con textura. |
-| `cement` | `#B9BBC2` | Bordes y texto secundario sobre `asphalt` y `concrete`. |
-| `paper` | `#F7F1E5` | Texto principal sobre fondos oscuros; fondo de stickers y carteles. |
-| `ink` | `#0B0B0D` | Contornos, texto sobre colores claros y sombras duras. |
-| `hoodie` | `#FF6A1F` | Marca: CTA principal, mi nombre y resaltes. |
-| `mustard` | `#FFC62B` | Etiquetas de tecnologías y subrayados de marcador. |
-| `spray-pink` | `#FF3D7F` | Poco uso: goteos, el hover del CV, "nuevo". |
-| `denim` | `#19B8A6` | Línea de tiempo, estados activos y subrayado de enlaces. |
-| `slime` | `#9BD94A` | Solo éxito y el punto "en línea". |
+| Token | Hex | Uso | Contraste |
+|---|---|---|---|
+| `paper` | `#F2EEE5` | Fondo de la página. | — |
+| `card` | `#FBF9F4` | Superficies elevadas; texto sobre `rust`, `pine` e `ink`. | — |
+| `line` | `#D9D3C5` | Bordes y reglas. Nunca texto. | — |
+| `ink` | `#191B18` | Texto principal. | 14.97:1 sobre `paper` |
+| `muted` | `#4A4F49` | Texto secundario. | 7.24:1 sobre `paper` |
+| `rust` | `#A13A1A` | Acento, botón principal, índices. | 5.78:1 sobre `paper`; `card` sobre `rust` 6.37:1 |
+| `rust-deep` | `#7E2C12` | Hover de superficies `rust`. | — |
+| `pine` | `#2D5A4D` | Estados (disponible, académica, colaboración). | 6.76:1 sobre `paper` |
+| `marigold` | `#E9B949` | Solo fondo (insignia "Destacado", etiqueta de la foto), siempre con texto `ink`. | `ink` sobre `marigold` 9.49:1 |
 
-- Todo texto cumple 4.5:1 con su fondo. Sobre `hoodie`, `mustard`, `denim`, `spray-pink` y `slime`, el texto va en `ink`.
-- `hoodie`, `denim` y `spray-pink` no cumplen sobre `paper`: ahí el texto va en `ink` y el color queda en el fondo o el subrayado.
-- Ningún texto informativo por debajo de 14 px.
-- Los personajes usan tonos propios (`skin`, `hair`, `metal`, `cream`, `hood`, `cap`, `can`…), separados de la interfaz, y sin fondo crema detrás.
-- **Sombras duras tipo sticker**: `4px 4px 0 #0B0B0D`. Nada de sombras difusas.
-- **Texturas**:
-  - ruido de concreto con `feTurbulence` en un data URI;
-  - grietas sutiles;
-  - manchas de spray con bordes irregulares.
+- Todo texto cumple 4.5:1. Ningún texto informativo por debajo de 14 px: `text-sm` es el mínimo y `text-xs` no existe.
+- Sombra: `shadow-lift`, suave, solo en hover y en elementos flotantes.
 
 ### Tipografía (`next/font/google`)
 
-- `Rubik Spray Paint`: solo el nombre del hero y los títulos de sección.
-- `Sedgwick Ave Display`: el tag **"Dani"**, firmas y detalles a mano.
-- `Permanent Marker`: solo textos cortos y grandes (18 px o más). Los párrafos y datos largos van en `Archivo`.
-- `Archivo` (400/600/800): párrafos y botones.
-- `JetBrains Mono`: rutas, fechas y datos técnicos.
+- **Fraunces** (variable, eje óptico `opsz`): nombre del hero, títulos de sección y de tarjeta, cifras y frases cortas destacadas.
+- **IBM Plex Sans** (400/500/600): párrafos, botones, etiquetas y datos.
 
-### Iconografía
+### Escalas
 
-Iconos SVG propios con look de marcador: trazo irregular de 2.5 px, extremos redondeados y sombra dura de 2 px. Un solo componente `Icon` con un mapa de paths:
-
-`spray`, `github`, `linkedin`, `mail`, `download`, `apk`, `arrow`, `volley`, `football`, `moto`, `pool`, `music`, `shield`, `code`, `edit`, `trash`, `plus`, `logout`.
+- **Tipografía**, tercera mayor (1.25) sobre 17 px: `sm` 14 · `base` 17 · `lg` 21 · `xl` 27 · `2xl` 33 · `3xl` 42 · `4xl` 52 · `hero` clamp(60–136 px).
+- **Espaciado**, base 4 px (escala de Tailwind): 4 · 8 · 12 · 16 · 24 · 32 · 48 · 64 · 96 · 128. Secciones con 80 px arriba y abajo en móvil y 96 px desde `sm`. Contenedor de 1240 px con márgenes de 16 / 32 / 48 px.
 
 ---
 
@@ -144,9 +94,10 @@ Iconos SVG propios con look de marcador: trazo irregular de 2.5 px, extremos red
 
 ```
 app/
-  layout.tsx            fonts, metadata/OG, <html lang="es" className="scroll-smooth">
-  page.tsx              public portfolio: composes sections in order
-  globals.css           @theme tokens, textures, keyframes
+  layout.tsx            fonts, metadata, pre-paint script (motion switch + intro), <html lang="es">
+  page.tsx              public portfolio: composes sections in order inside MotionProvider
+  globals.css           @theme tokens, type scale, intro and entrance keyframes, motion-off rules
+  icon.svg              "DI" monogram favicon
   actions.ts            public server action: contact form
   admin/
     layout.tsx          server-side admin guard + noindex
@@ -155,9 +106,8 @@ app/
     login/page.tsx      "Entrar con GitHub"
   auth/callback/route.ts  Supabase OAuth callback
 components/
-  sections/             Hero · About · Projects · Testimonials · Experience · Contact · OffTheClock · Footer
-  ui/                   Character · GraffitiWall · BubbleMenu · Sticker · SprayButton · Icon · SectionTitle · Reveal · Modal
-  characters/           hand-drawn character layers (art · DaniBust · DaniFace · DaniHair · …), max 150 lines each
+  sections/             Intro · Navbar · Hero · Stats · About · Projects · Testimonials · Experience · OffTheClock · Contact · Footer
+  ui/                   Section · Button · CvButton · Icon · Reveal · Modal · MotionProvider · MobileMenu · ProjectCard · ContactForm
   admin/                EntityTable · EntityForm · GithubImport
 lib/
   domain.ts             abstract classes + models
@@ -167,7 +117,7 @@ lib/
   supabase.ts           server/browser clients + isAdmin()
   github.ts             GitHub REST client (server only)
 content/seed.json       initial content (already in the repo)
-supabase/migrations/0001_init.sql   tables, RLS, storage bucket, seed
+supabase/migrations/    0001_init.sql (tables, RLS, storage) · 0002_profile_stats.sql (availability, semester)
 middleware.ts           refreshes the session and protects /admin
 next.config.ts          security headers, images
 .env.example
@@ -189,22 +139,24 @@ next.config.ts          security headers, images
   - `web` → "Demo en vivo";
   - `mobile` → "Descargar APK";
   - `api` → "Documentación";
-  - `desktop` → "Ver código".
+  - `desktop` → "Ver código";
+  - `game` → "Descargar juego".
+- `KIND_LABELS` da el nombre visible de cada tipo (filtros, tarjetas y la cifra de plataformas).
 
 **`lib/patterns.ts`**
 
 - **Repository** (interfaz) con dos implementaciones intercambiables (Strategy):
   - `SupabaseRepository`, para producción;
-  - `SeedRepository`, que lee `content/seed.json` y se usa como fallback si faltan las variables de entorno, así el build nunca se rompe.
+  - `SeedRepository`, que lee `content/seed.json` y se usa como respaldo si faltan las variables de entorno, si Supabase falla o si la tabla `profile` está vacía: así el build nunca se rompe.
 - **Factory**: `EntityFactory.from(row)` crea la subclase correcta.
 - **Strategy**: `ValidationRule` (`Required`, `Email`, `Url`, `MinLength`), combinada con Zod.
-- **Observer**: `SectionObserver` envuelve `IntersectionObserver` para el scroll spy y las revelaciones.
+- **Observer**: `SectionObserver` envuelve `IntersectionObserver` para el indicador de sección del menú.
 
 **`lib/structures.ts`**
 
-- `Trie`: buscador del menú burbuja y de la tabla del admin.
-- `CircularQueue<T>`: carrusel de testimonios.
-- `TechIndex`, un `Map<string, Set<Project>>`: filtro de proyectos por tecnología.
+- `Trie`: buscador de la tabla del admin.
+- `CircularQueue<T>`: reservada para el carrusel o marquesina de la fase de animaciones avanzadas.
+- `TechIndex`, un `Map<string, Set<T>>` con la función que da las etiquetas de cada elemento: filtro de proyectos por tipo, con contador.
 - Ordenamiento estable por `order` y por fecha, de lo más reciente a lo más antiguo.
 
 **Datos**
@@ -246,123 +198,43 @@ next.config.ts          security headers, images
 
 ## 6. Web pública: secciones en orden (requisito del curso)
 
-Orden: Menú → Hero con CV → Sobre mí → Proyectos → Testimonios → Experiencia → Contacto → **sección adicional** → Pie de página. Un componente por sección, cada uno con su `id`.
+Un componente por sección, cada uno con su `id`. `SECTIONS` (en `components/ui/Section.tsx`) define el orden, las anclas, el índice "01 / 08" y los enlaces del footer.
 
-### 6.1 Menú: barra mínima + `BubbleMenu`
-
-- **Barra fija y delgada**:
-  - a la izquierda, el tag **"Dani"** en `Sedgwick Ave Display` y color `hoodie`;
-  - a la derecha, el botón "Descargar CV".
-- **Lata de spray flotante** (abajo a la derecha). Al hacer clic:
-  - suelta una mancha;
-  - despliega **burbujas en abanico** con letras bubble, una por sección, con spring y escalonadas cada 40 ms.
-- La burbuja de la sección activa gotea pintura.
-- Incluye un buscador con el Trie.
-- Se cierra con `Esc`, con clic afuera o al elegir una sección.
-- En móvil cumple la función del menú hamburguesa: `role="menu"`, foco atrapado y navegación con flechas.
-
-### 6.2 Hero (`#inicio`): un graffiti que pinta otro graffiti
-
-**Escena**:
-
-1. Dani (`spraying`), sobre una escalera, pinta **"DANIEL IGUA"** en letras wildstyle sobre una pared de concreto. Primero se dibuja el contorno con `stroke-dashoffset`, luego se rellena en `hoodie` y `mustard` y caen goteos.
-2. Al mismo tiempo, el Encapuchado pinta en la pared un **mini-Dani**. Al terminar, el mini-Dani cobra vida: parpadea y saluda.
-
-**Debajo de la escena**:
-
-- el rol "Desarrollador Full Stack";
-- un sticker rotado que dice "futuro especialista en ciberseguridad";
-- una frase corta.
-
-**Botones** (`SprayButton`):
-
-- "Descargar CV": al pasar el cursor suelta spray; al hacer clic, la lata se agita y aparece ✓;
-- "Ver mis proyectos".
-
-**Además**:
-
-- **Mi foto real** (`daniel-sin-hora.webp`) como **sticker pegado con cinta**, troquelado blanco y rotado 3°. **No apliques filtros ni la modifiques.**
-- **Parallax suave** con el mouse en 3 capas.
-- Con reduced motion, la escena aparece ya terminada.
-
-### 6.3 Sobre mí (`#sobre-mi`)
-
-- **Póster pegado** con el texto `profile.about` de la base de datos.
-- Dani en pose `chill`.
-- **Datos rápidos**: stickers con Pasto, Nariño · Ingeniería de Software UCC · meta: ciberseguridad.
-- **Stack**: solo frameworks y herramientas, agrupados por categoría (etiquetas tipo cinta adhesiva, desde la tabla `skills`). Sin niveles, porcentajes, barras ni lenguajes sueltos.
-
-### 6.4 Proyectos (`#proyectos`)
-
-- Cada proyecto es un **cartel pegado** con:
-  - borde de papel rasgado (`clip-path`);
-  - captura o, si no tiene, una ilustración SVG del dominio;
-  - título;
-  - resumen;
-  - tecnologías;
-  - "Código" + la acción de su tipo.
-- **Hover**: el cartel se despega (rota −2° y aparece la sombra dura).
-- **Filtro por tecnología** con chips; los carteles se reordenan con `layout`.
-- **Modal** con el detalle: problema, solución, mi rol, aprendizajes y galería.
-- **Grid**: 1, 2 o 3 columnas según el ancho.
-- Los APK se descargan desde `apkUrl`.
-
-### 6.5 Testimonios (`#testimonios`)
-
-- **Bocadillos de cómic** que salen de personajes pequeños.
-- **Carrusel** con `CircularQueue`: flechas, swipe, rotación cada 6 s y pausa al pasar el cursor.
-- Datos en `content/seed.json`: Catalina Botina, Diana Jojoa y Karol Igua.
-
-### 6.6 Experiencia (`#experiencia`)
-
-- **Pestañas** "Proyectos / laboral" y "Académica".
-- **Línea de tiempo pintada con spray**, que se dibuja con el scroll (`useScroll` + `pathLength`).
-- Cada hito es un **tag** con su fecha.
-
-### 6.7 Contacto (`#contacto`)
-
-- **Buzón pintado** con Dani saludando.
-- **Formulario**: nombre, correo y mensaje, con validación en vivo y mensajes que explican cómo corregir. Se guarda en `messages` y me llega por correo (Resend o Formspree).
-- **Al enviar**: rocío de spray + "¡Mensaje enviado!" en `slime`.
-- **Contacto directo**: el correo con botón de copiar, LinkedIn y GitHub.
-
-### 6.8 Sección adicional: "Más allá del código" (`#mas-alla-del-codigo`)
-
-Muro de stickers con Dani en cada pose y una micro-animación:
-
-- **Voleibol**: remata y el balón rebota.
-- **Fútbol**: hace dominadas.
-- **Motos**: recorre un mini-mapa de Nariño con la ruta animada.
-- **Billar**: la bola 8 entra en la buchaca al pasar el cursor.
-- **Música**: un boombox con ecualizador animado y la nota "rap y hip hop, pero escucho de todo". Campo opcional `playlistUrl` con un enlace a Spotify, editable desde el admin.
-
-### 6.9 Pie de página (`#footer`)
-
-- Franja de pared con el tag grande, enlaces rápidos y redes.
-- "© {año automático} Ivan Daniel Igua Benavides · Pasto, Nariño" · "Hecho con Next.js + Tailwind CSS".
-- "Volver arriba" como una lata que sale disparada.
-- Un mini-Dani sentado en el borde balancea los pies.
+1. **Intro** (solo la primera visita de la sesión): cortina `ink` con el monograma, el nombre y una barra que se llena; luego sube y el hero entra escalonado. Botón "Saltar intro" y enlace "Saltar al contenido". Funciona con CSS aunque no haya JS; se omite con reduced motion o con las animaciones apagadas.
+2. **Menú fijo**: monograma "DI", anclas con subrayado `rust` en la sección actual, indicador "01 / 08", interruptor "Animaciones: sí/no", "Descargar CV" y, por debajo de 1280 px, menú a pantalla completa (foco atrapado, `Esc` para cerrar). Enlace "Saltar al contenido" al inicio del documento.
+3. **Hero** (`#inicio`): insignia de disponibilidad (`profile.availability`), nombre grande en Fraunces (apellido en cursiva `rust`), rol y meta, frase corta, "Ver proyectos" y "Descargar CV", ubicación y mi foto real (`daniel-sin-hora.webp`, sin filtros) en un marco de papel con mi nombre completo en una etiqueta `marigold`.
+4. **Cifras clave** (`#cifras`): semestre (`profile.semester`), proyectos publicados y plataformas (tipos de proyecto distintos), todo leído de los datos.
+5. **Sobre mí** (`#sobre-mi`): `profile.about`, foto, datos rápidos (ubicación, estudio, meta) y el stack agrupado por categoría desde `skills`. Sin niveles, porcentajes ni barras.
+6. **Proyectos** (`#proyectos`): filtros por tipo con contador, tarjetas con portada (captura o espacio limpio con tipo, periodo y nombre), insignias "Destacado" y "Colaboración", tecnologías, "Código" + la acción de su tipo y el detalle en un modal (problema, solución, mi rol, aprendizajes, galería y enlaces extra).
+7. **Testimonios** (`#testimonios`): 3 tarjetas con avatar (foto o iniciales), nombre, cargo y texto.
+8. **Experiencia** (`#experiencia`): pestañas "Académica" y "Laboral" (con contador y flechas del teclado) sobre una línea de tiempo.
+9. **Más allá del código** (`#mas-alla-del-codigo`): galería en mosaico con un mosaico por gusto (icono propio, título y nota; enlace a la playlist si existe).
+10. **Contacto** (`#contacto`): correo con botón copiar, GitHub, LinkedIn y formulario con validación en vivo (las mismas reglas que el servidor), contador de caracteres por campo, honeypot, límite de envíos y confirmación.
+11. **Footer**: nombre, rol y ubicación, enlaces rápidos, redes, "© {año} Ivan Daniel Igua Benavides", "Hecho con Next.js + Tailwind" y "Volver arriba".
 
 ---
 
-## 7. Movimiento y efectos
+## 7. Movimiento
 
-- `Reveal` reutilizable: entra con fade, translate y una leve rotación, con `whileInView` y `once: true`.
-- **Transición de spray**: un brochazo que barre la pantalla al navegar desde el menú (500 ms).
-- **Cursor de boquilla de spray** en escritorio, con un rastro corto de pintura. Desactivado en pantallas táctiles y con reduced motion.
-- **Microinteracciones**:
-  - squash al presionar los botones;
-  - stickers que se despegan;
-  - goteos en los títulos al entrar.
-- **Tiempos**: 150 ms en hover, 300 ms en menús y 600 ms en entradas. Easing `[0.16, 1, 0.3, 1]`; springs en las burbujas y los personajes.
+**Fase actual (base):**
+
+- `Reveal`: entrada con opacidad y desplazamiento de 24 px al entrar en pantalla, escalonada 70 ms por elemento.
+- Scroll suave con **Lenis** (las anclas descuentan la altura del menú).
+- Hover cuidado: botones que suben 2 px y mueven su icono, tarjetas que se elevan con `shadow-lift`, subrayados que crecen.
+- Transición intro → página: la cortina sube y el hero entra escalonado detrás.
+- Interruptor "Animaciones" (guardado en `localStorage`): apaga Motion (`MotionConfig`), Lenis y las animaciones CSS.
+- `prefers-reduced-motion`: mismo efecto que el interruptor apagado.
+- Tiempos: 150 ms en hover, 300 ms en menús y 600 ms en entradas. Easing `cubic-bezier(0.16, 1, 0.3, 1)`.
+
+**Siguiente fase:** animaciones avanzadas, efectos 3D y transiciones entre secciones.
 
 ---
 
 ## 8. Calidad
 
 - **TypeScript `strict`**; `lint` y `build` limpios.
-- **SEO**: metadata completa, imagen OG con `next/og` y favicon con el tag "Dani".
-- **Responsive**: revisa 360, 768, 1280 y 1920 px, sin scroll horizontal.
+- **SEO**: metadata completa e `app/icon.svg` con el monograma "DI". Imagen OG con `next/og`: pendiente.
+- **Responsive**: revisa 390, 768, 1440 y 1920 px, sin solapamientos, recortes ni scroll horizontal y con distancias equilibradas.
 - **README.md**: stack, cómo correrlo, estructura, configuración del admin y despliegue.
 
 ---
@@ -372,27 +244,12 @@ Muro de stickers con Dani en cada pose y una micro-animación:
 - Demo de Luma (`liveUrl`).
 - El proyecto web del restaurante de Diana Jojoa: nombre, URL y año. Ya está como borrador en `content/seed.json`.
 - `public/cv.pdf`: lo subo yo desde el admin.
+- Correr `supabase/migrations/0002_profile_stats.sql` en Supabase: agrega `availability` (insignia del hero) y `semester` (cifras clave) al perfil.
 
 ---
 
 ## 10. Fases
 
-1. **Base**:
-   - scaffold de Next.js, Tailwind v4 con `@theme`, fuentes y texturas;
-   - `lib/` completo con `SeedRepository`;
-   - `Icon` y las cabeceras de seguridad.
-2. **Personajes y hero**: `Character` (todas las poses), `GraffitiWall`, `SprayButton` y `BubbleMenu`.
-3. **Secciones públicas**, leyendo del repositorio: Sobre mí, Proyectos (filtro y modal), Testimonios, Experiencia, Contacto, Más allá del código y Footer.
-4. **Supabase + Admin**:
-   - migración con RLS y Storage;
-   - Auth con GitHub;
-   - dashboard, `EntityTable`, `EntityForm` e importación desde GitHub;
-   - `SupabaseRepository` y `revalidateTag`.
-5. **Pulido**:
-   - transiciones y cursor;
-   - accesibilidad y reduced motion;
-   - Lighthouse ≥ 95;
-   - README;
-   - guía para desplegar en Vercel.
-
-Empieza por la **Fase 1**.
+1. **Estructura nueva "Papel técnico"** (esta fase): tokens y fuentes, intro, menú, todas las secciones, movimiento base, panel `/admin` con la nueva paleta, revisión en 390 / 768 / 1440 / 1920 px.
+2. **Animaciones avanzadas**: efectos 3D, transiciones entre secciones y microinteracciones de mayor nivel, siempre con reduced motion y el interruptor.
+3. **Pulido**: imagen OG, Lighthouse ≥ 95, README y guía de despliegue en Vercel.
