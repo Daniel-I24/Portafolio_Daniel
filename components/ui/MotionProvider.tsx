@@ -3,10 +3,14 @@
 import Lenis from "lenis";
 import { MotionConfig } from "motion/react";
 import { createContext, useContext, useEffect, useState, type ReactNode } from "react";
+import { buttonClass } from "./Button";
 import { Icon } from "./Icon";
 
 /** Height of the fixed menu: anchor jumps stop below it. */
 export const HEADER_OFFSET = 80;
+
+/** The running smooth-scroll instance (null while motion is off), for jumps that must not glide. */
+export const smoothScroll: { current: Lenis | null } = { current: null };
 
 type MotionPrefs = { enabled: boolean; toggle: () => void };
 const MotionContext = createContext<MotionPrefs>({ enabled: true, toggle: () => {} });
@@ -34,7 +38,8 @@ export function MotionProvider({ children }: { children: ReactNode }) {
   useEffect(() => {
     if (!enabled) return;
     const lenis = new Lenis({ autoRaf: true, anchors: { offset: -HEADER_OFFSET } });
-    return () => lenis.destroy();
+    smoothScroll.current = lenis;
+    return () => { smoothScroll.current = null; lenis.destroy(); };
   }, [enabled]);
 
   const toggle = () => {
@@ -59,8 +64,7 @@ export function MotionProvider({ children }: { children: ReactNode }) {
 export function MotionSwitch({ className = "" }: { className?: string }) {
   const { enabled, toggle } = useMotionPrefs();
   return (
-    <button type="button" onClick={toggle} aria-pressed={!enabled}
-      className={`inline-flex items-center gap-2 rounded-full border border-line px-3.5 py-2.5 text-sm font-medium text-ink transition-colors duration-150 hover:border-ink ${className}`}>
+    <button type="button" onClick={toggle} aria-pressed={!enabled} className={`${buttonClass("quiet", "sm")} ${className}`}>
       <Icon name={enabled ? "pause" : "play"} size={16} />
       {enabled ? "Pausar animaciones" : "Activar animaciones"}
     </button>

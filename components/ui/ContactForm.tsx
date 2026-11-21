@@ -77,7 +77,7 @@ export function ContactForm() {
         );
       })}
 
-      <button type="submit" disabled={pending} className={buttonClass("solid")}>
+      <button type="submit" disabled={pending} data-magnetic className={buttonClass("solid")}>
         <span>{pending ? "Enviando…" : "Enviar mensaje"}</span>
         <ButtonIcon name="arrow" />
       </button>

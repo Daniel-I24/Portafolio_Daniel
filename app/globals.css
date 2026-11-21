@@ -3,15 +3,19 @@
 /* Direction A · "Papel técnico". Defaults are reset so only these tokens exist. */
 @theme {
   --color-*: initial;
-  --color-paper: #f2eee5;    /* page background */
-  --color-card: #fbf9f4;     /* raised surfaces; text on rust/pine */
-  --color-line: #d9d3c5;     /* borders and rules only, never text */
-  --color-ink: #191b18;      /* 14.97:1 on paper */
-  --color-muted: #4a4f49;    /* 7.24:1 on paper */
-  --color-rust: #a13a1a;     /* 5.78:1 on paper · accent, primary button */
-  --color-rust-deep: #7e2c12; /* hover of rust surfaces */
-  --color-pine: #2d5a4d;     /* 6.76:1 on paper · states, academic */
-  --color-marigold: #e9b949; /* background only, with ink text (9.49:1) */
+  --color-paper: #f2eee5;      /* page background */
+  --color-card: #fbf9f4;       /* raised surfaces; text on rust/pine/ink */
+  --color-line: #d9d3c5;       /* borders and rules only, never text */
+  --color-ink: #191b18;        /* 14.97:1 on paper */
+  --color-muted: #4a4f49;      /* 7.24:1 on paper */
+  --color-rust: #b23614;       /* 5.29:1 on paper · card on rust 5.82:1 */
+  --color-rust-deep: #86270c;  /* fill of rust surfaces · card on it 8.64:1 */
+  --color-pine: #23604e;       /* 6.35:1 on paper */
+  --color-marigold: #f2b640;   /* background only, with ink text (9.53:1) */
+  /* Light family, decoration only (glows, borders, marquee on ink): never text on paper. */
+  --color-terracotta: #d0502f;
+  --color-coral: #f2775a;      /* 6.24:1 on ink */
+  --color-amber: #f4a62a;      /* 8.53:1 on ink */
 
   --font-*: initial;
   --font-display: var(--font-fraunces), Georgia, serif;
@@ -19,30 +23,28 @@
 
   /* Major third (1.25) over 17 px; nothing informative below 14 px. */
   --text-*: initial;
-  --text-sm: 0.875rem;
-  --text-sm--line-height: 1.5;
-  --text-base: 1.0625rem;
-  --text-base--line-height: 1.65;
-  --text-lg: 1.3125rem;
-  --text-lg--line-height: 1.45;
-  --text-xl: 1.6875rem;
-  --text-xl--line-height: 1.25;
-  --text-2xl: 2.0625rem;
-  --text-2xl--line-height: 1.15;
-  --text-3xl: 2.625rem;
-  --text-3xl--line-height: 1.08;
-  --text-4xl: 3.25rem;
-  --text-4xl--line-height: 1.02;
-  --text-hero: clamp(3.75rem, 9.6vw, 8.5rem);
-  --text-hero--line-height: 0.92;
+  --text-sm: 0.875rem;   --text-sm--line-height: 1.5;
+  --text-base: 1.0625rem; --text-base--line-height: 1.65;
+  --text-lg: 1.3125rem;  --text-lg--line-height: 1.45;
+  --text-xl: 1.6875rem;  --text-xl--line-height: 1.25;
+  --text-2xl: 2.0625rem; --text-2xl--line-height: 1.15;
+  --text-3xl: 2.625rem;  --text-3xl--line-height: 1.08;
+  --text-4xl: 3.25rem;   --text-4xl--line-height: 1.02;
+  --text-hero: clamp(3.75rem, 9.6vw, 8.5rem); --text-hero--line-height: 0.92;
 
   --shadow-lift: 0 1px 2px rgb(25 27 24 / 0.06), 0 18px 36px -18px rgb(25 27 24 / 0.3);
+  --shadow-glow: 0 0 0 1px rgb(242 119 90 / 0.35), 0 10px 30px -8px rgb(208 80 47 / 0.55);
 
   /* Motion: 150 ms hover · 300 ms menus · 600 ms entrances */
   --ease-soft: cubic-bezier(0.16, 1, 0.3, 1);
   --default-transition-duration: 150ms;
   --default-transition-timing-function: cubic-bezier(0.16, 1, 0.3, 1);
   --animate-rise: rise 0.8s var(--ease-soft) both;
+  --animate-sheen: sheen 0.9s var(--ease-soft);
+  --animate-drift-a: drift-a 17s ease-in-out infinite;
+  --animate-drift-b: drift-b 13s ease-in-out infinite;
+  --animate-drift-c: drift-c 19s ease-in-out infinite;
+  --animate-sway: sway 9s ease-in-out infinite;
 }
 
 @layer base {
@@ -52,24 +54,16 @@
     -webkit-tap-highlight-color: transparent;
     --intro-delay: 1.35s;
   }
-
   html[data-intro="seen"] { --intro-delay: 0s; }
   html[data-intro="skip"] { --intro-delay: 0.15s; }
 
-  body {
-    font-family: var(--font-sans);
-    overflow-x: hidden;
-  }
+  /* The page surface lives on <html> (body stays transparent) so the cursor light can sit between the two.
+     Paper grain: a static, very faint noise tile, never an overlay on text. */
+  html { background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='3' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 .1 0 0 0 0 .08 0 0 0 0 .05 0 0 0 .07 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E"); }
+  body { font-family: var(--font-sans); overflow-x: hidden; }
 
-  :focus-visible {
-    outline: 3px solid var(--color-rust);
-    outline-offset: 3px;
-  }
-
-  ::selection {
-    background: var(--color-marigold);
-    color: var(--color-ink);
-  }
+  :focus-visible { outline: 3px solid var(--color-rust); outline-offset: 3px; }
+  ::selection { background: var(--color-marigold); color: var(--color-ink); }
 
   /* Lenis */
   html.lenis, html.lenis body { height: auto; }
@@ -79,30 +73,62 @@
 
 @layer utilities {
   /* Hero items enter after the intro curtain; --i staggers them. */
-  .enter {
-    animation: var(--animate-rise);
+  .enter, .letter, .draw, .ink-in, .unblur, .sharpen, .swash {
     animation-delay: calc(var(--intro-delay) + var(--i, 0) * 90ms);
+    animation-fill-mode: both;
+    animation-timing-function: var(--ease-soft);
   }
+  .enter { animation-name: rise; animation-duration: 0.8s; }
+  /* Name: letters rise inside a mask; --i is the letter position. */
+  .letter { animation-name: letter; animation-duration: 0.9s; animation-delay: calc(var(--intro-delay) + 150ms + var(--i) * 45ms); }
+  /* "Igua": an outline wipes in like a pen stroke, then the ink fills it and a swash is drawn below. */
+  .draw { animation-name: draw; animation-duration: 1.1s; }
+  .ink-in { animation-name: ink-in; animation-duration: 0.7s; }
+  .swash { animation-name: swash; animation-duration: 0.9s; }
+  /* Role: a pre-blurred copy (text-shadow, no filter) fades out while the sharp one fades in. */
+  .unblur { animation-name: unblur; animation-duration: 1s; }
+  .sharpen { animation-name: sharpen; animation-duration: 1s; }
 
   .intro-curtain { animation: curtain 0.6s var(--ease-soft) 0.8s forwards; }
   html[data-intro="skip"] .intro-curtain { animation-delay: 0s; animation-duration: 0.4s; }
   html[data-intro="seen"] .intro-curtain { display: none; }
-
   .intro-bar { animation: bar 0.8s var(--ease-soft) both; transform-origin: left; }
+
+  /* Touch screens: the hero photo sways gently instead of following a cursor. */
+  @media (hover: none) { .sway { animation: var(--animate-sway); } }
 }
 
-@keyframes rise {
-  from { opacity: 0; transform: translateY(24px); }
-  to { opacity: 1; transform: none; }
+@keyframes rise { from { opacity: 0; transform: translateY(24px); } to { opacity: 1; transform: none; } }
+@keyframes letter { from { transform: translateY(110%); } to { transform: none; } }
+@keyframes draw { from { clip-path: inset(-30% 102% -30% -8%); } to { clip-path: inset(-30% -8% -30% -8%); } }
+@keyframes ink-in { from { opacity: 0; } to { opacity: 1; } }
+@keyframes swash { from { stroke-dashoffset: 1.1; } to { stroke-dashoffset: 0; } }
+@keyframes unblur { from { opacity: 1; } to { opacity: 0; } }
+@keyframes sharpen { from { opacity: 0; transform: scale(1.02); } to { opacity: 1; transform: none; } }
+@keyframes curtain { to { transform: translateY(-100%); visibility: hidden; } }
+@keyframes bar { from { transform: scaleX(0); } to { transform: scaleX(1); } }
+@keyframes sheen {
+  from { opacity: 1; transform: translateX(-160%) skewX(-20deg); }
+  to { opacity: 1; transform: translateX(420%) skewX(-20deg); }
 }
-
-@keyframes curtain {
-  to { transform: translateY(-100%); visibility: hidden; }
+/* Glow layers: start and end at rest, so with motion off the light stays still. */
+@keyframes drift-a {
+  0%, 100% { transform: translate(0, 0) scale(1); opacity: 0.9; }
+  50% { transform: translate(14%, -10%) scale(1.15); opacity: 0.55; }
 }
-
-@keyframes bar {
-  from { transform: scaleX(0); }
-  to { transform: scaleX(1); }
+@keyframes drift-b {
+  0%, 100% { transform: translate(0, 0) scale(1); opacity: 0.6; }
+  50% { transform: translate(-16%, 12%) scale(0.9); opacity: 1; }
+}
+@keyframes drift-c {
+  0%, 100% { transform: translate(0, 0) rotate(0deg); opacity: 0.75; }
+  33% { transform: translate(10%, 14%) rotate(40deg); opacity: 0.4; }
+  66% { transform: translate(-12%, -6%) rotate(-30deg); opacity: 0.95; }
+}
+@keyframes sway {
+  0%, 100% { transform: rotateX(0deg) rotateY(0deg); }
+  25% { transform: rotateX(3deg) rotateY(-5deg); }
+  75% { transform: rotateX(-2deg) rotateY(5deg); }
 }
 
 /* Same rules for the OS setting (unless the visitor turned animations back on) and for the in-page switch. */
@@ -115,7 +141,6 @@
     scroll-behavior: auto !important;
   }
 }
-
 html[data-motion="off"] *, html[data-motion="off"] *::before, html[data-motion="off"] *::after {
   animation-duration: 0.01ms !important;
   animation-delay: 0s !important;

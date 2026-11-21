@@ -35,7 +35,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
       <head>
         <script dangerouslySetInnerHTML={{ __html: PREFS_SCRIPT }} />
       </head>
-      <body className="min-h-dvh bg-paper text-ink antialiased">{children}</body>
+      <body className="min-h-dvh text-ink antialiased">{children}</body>
     </html>
   );
 }

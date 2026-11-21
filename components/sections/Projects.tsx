@@ -42,7 +42,7 @@ export function Projects({ projects }: { projects: ProjectView[] }) {
   const visible = index.filter(kind);
 
   return (
-    <Section id="proyectos" title="Proyectos" lead="Web, móvil, escritorio, videojuegos y APIs: lo que he construido, solo y en equipo."
+    <Section id="proyectos" glow title="Proyectos" lead="Web, móvil, escritorio, videojuegos y APIs: lo que he construido, solo y en equipo."
       aside={<KindFilter index={index} value={kind} onChange={setKind} />}>
       <p className="sr-only" aria-live="polite">{`Mostrando ${visible.length} proyectos`}</p>
       <motion.ul layout={!calm} className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">

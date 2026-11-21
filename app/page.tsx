@@ -11,7 +11,10 @@ import { OffTheClock } from "@/components/sections/OffTheClock";
 import { Projects } from "@/components/sections/Projects";
 import { Stats } from "@/components/sections/Stats";
 import { Testimonials } from "@/components/sections/Testimonials";
+import { Ambient } from "@/components/ui/Ambient";
+import { Marquee } from "@/components/ui/Marquee";
 import { MotionProvider } from "@/components/ui/MotionProvider";
+import { SectionCurtain } from "@/components/ui/SectionCurtain";
 import { KIND_LABELS } from "@/lib/domain";
 import { getPortfolio } from "@/lib/patterns";
 import type { ProfileData } from "@/lib/schemas";
@@ -24,7 +27,7 @@ const cvMissing = ({ cvUrl }: ProfileData) =>
 
 const initialsOf = (name: string) => name.split(/\s+/).slice(0, 2).map((word) => word[0]).join("").toUpperCase();
 
-// Order: intro → menu → hero → key figures → about → projects → testimonials → experience → beyond code → contact → footer.
+// Order: intro → menu → hero → LED band → key figures → about → projects → testimonials → experience → beyond code → contact → footer.
 // Client sections receive plain views: class instances cannot cross the server/client boundary,
 // so the polymorphic methods (badge, accent, icon, links…) are resolved here.
 export default async function HomePage() {
@@ -41,6 +44,7 @@ export default async function HomePage() {
       <Navbar initials={initialsOf(profile.displayName)} name={profile.displayName} cvUrl={profile.cvUrl} cvNote={cvNote} />
       <main id="contenido" tabIndex={-1} className="overflow-x-clip outline-none">
         <Hero profile={profile} cvNote={cvNote} />
+        <Marquee text={profile.role} />
         <Stats projects={projects.length} platforms={platforms} techs={techs} techGroups={techGroups} />
         <About profile={profile} skills={skills.map((skill) => skill.data)} />
         <Projects projects={projects.map((project) => ({ ...project.data, links: project.links() }))} />
@@ -49,6 +53,8 @@ export default async function HomePage() {
         <OffTheClock interests={interests.map((interest) => ({ ...interest.data, icon: interest.icon }))} />
         <Contact email={profile.email} socials={socials} />
       </main>
+      <SectionCurtain />
+      <Ambient />
       <Footer profile={profile} socials={[...socials, { label: "Correo", url: `mailto:${profile.email}`, icon: "mail" }]} />
     </MotionProvider>
   );

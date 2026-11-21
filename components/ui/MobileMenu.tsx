@@ -7,6 +7,7 @@ import { CvButton } from "./CvButton";
 import { Icon } from "./Icon";
 import { MotionSwitch } from "./MotionProvider";
 import { SECTIONS, sectionNumber, type SectionId } from "./Section";
+import { goToSection } from "./SectionCurtain";
 
 interface MobileMenuProps {
   active: SectionId;
@@ -69,7 +70,7 @@ export function MobileMenu({ active, cvUrl, cvNote }: MobileMenuProps) {
               <ol className="divide-y divide-line border-y border-line">
                 {SECTIONS.map((section) => (
                   <li key={section.id}>
-                    <a href={`#${section.id}`} onClick={() => close(false)} aria-current={section.id === active ? "location" : undefined}
+                    <a href={`#${section.id}`} onClick={(event) => { close(false); goToSection(event, section.id); }} aria-current={section.id === active ? "location" : undefined}
                       className="flex items-baseline gap-4 py-3.5 font-display text-xl text-ink transition-colors duration-150 hover:text-rust aria-[current]:text-rust">
                       <span className="font-sans text-sm tabular-nums text-muted">{sectionNumber(section.id)}</span>
                       {section.label}

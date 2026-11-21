@@ -70,13 +70,18 @@ El portafolio se siente como **un cuaderno de ingeniería bien editado**: papel 
 | `line` | `#D9D3C5` | Bordes y reglas. Nunca texto. | — |
 | `ink` | `#191B18` | Texto principal. | 14.97:1 sobre `paper` |
 | `muted` | `#4A4F49` | Texto secundario. | 7.24:1 sobre `paper` |
-| `rust` | `#A13A1A` | Acento, botón principal, índices. | 5.78:1 sobre `paper`; `card` sobre `rust` 6.37:1 |
-| `rust-deep` | `#7E2C12` | Hover de superficies `rust`. | — |
-| `pine` | `#2D5A4D` | Estados (académica, colaboración). | 6.76:1 sobre `paper` |
-| `marigold` | `#E9B949` | Solo fondo (insignia "Destacado", etiqueta de la foto), siempre con texto `ink`. | `ink` sobre `marigold` 9.49:1 |
+| `rust` | `#B23614` | Acento, botón principal, índices. | 5.29:1 sobre `paper`; `card` sobre `rust` 5.82:1 |
+| `rust-deep` | `#86270C` | Relleno de botones `rust` al pasar el cursor. | `card` encima 8.64:1 |
+| `pine` | `#23604E` | Estados (académica, colaboración). | 6.35:1 sobre `paper` |
+| `marigold` | `#F2B640` | Solo fondo (insignia "Destacado", etiqueta de la foto), siempre con texto `ink`. | `ink` sobre `marigold` 9.53:1 |
+| `terracotta` | `#D0502F` | Solo luz y decoración (resplandores, bordes, separadores). Nunca texto sobre `paper`. | — |
+| `coral` | `#F2775A` | Solo luz y decoración; texto únicamente sobre `ink` (franja LED). | 6.24:1 sobre `ink` |
+| `amber` | `#F4A62A` | Solo luz y decoración; texto únicamente sobre `ink` (franja LED). | 8.53:1 sobre `ink` |
 
 - Todo texto cumple 4.5:1. Ningún texto informativo por debajo de 14 px: `text-sm` es el mínimo y `text-xs` no existe.
-- Sombra: `shadow-lift`, suave, solo en hover y en elementos flotantes.
+- Sombras: `shadow-lift`, suave, en hover y en elementos flotantes; `shadow-glow`, brillo cálido de los botones al pasar el cursor.
+- Familia de luz (`rust` → `terracotta` → `coral` → `amber`): resplandores con degradados radiales que ya vienen difuminados; nunca se anima `filter: blur`. Los resplandores no tocan texto con menos de 4.5:1.
+- Grano de papel: textura de ruido estática y muy tenue en el fondo de `<html>`, nunca encima del texto.
 
 ### Tipografía (`next/font/google`)
 
@@ -108,6 +113,7 @@ app/
 components/
   sections/             Intro · Navbar · Hero · Stats · About · Projects · Testimonials · Experience · OffTheClock · Contact · Footer
   ui/                   Section · Button · CvButton · Icon · Reveal · Modal · MotionProvider · MobileMenu · ProjectCard · ContactForm
+                        · Glow · TiltPhoto · Marquee · Ambient · SectionCurtain
   admin/                EntityTable · EntityForm · GithubImport
 lib/
   domain.ts             abstract classes + models
@@ -201,7 +207,7 @@ next.config.ts          security headers, images
 Un componente por sección, cada uno con su `id`. `SECTIONS` (en `components/ui/Section.tsx`) define el orden, las anclas, el índice "01 / 08" y los enlaces del footer.
 
 1. **Intro** (solo la primera visita de la sesión): cortina `ink` con el monograma, el nombre y una barra que se llena; luego sube y el hero entra escalonado. Botón "Saltar intro" y enlace "Saltar al contenido". Funciona con CSS aunque no haya JS; se omite con reduced motion o con las animaciones apagadas.
-2. **Menú fijo**: monograma "DI", anclas con subrayado `rust` en la sección actual, indicador "01 / 08", interruptor "Animaciones: sí/no", "Descargar CV" y, por debajo de 1280 px, menú a pantalla completa (foco atrapado, `Esc` para cerrar). Enlace "Saltar al contenido" al inicio del documento.
+2. **Menú fijo**: monograma "DI", anclas con subrayado `rust` en la sección actual, indicador "01 / 08", interruptor "Pausar animaciones / Activar animaciones" (`aria-pressed`), "Descargar CV" y, por debajo de 1280 px, menú a pantalla completa (foco atrapado, `Esc` para cerrar). Enlace "Saltar al contenido" al inicio del documento.
 3. **Hero** (`#inicio`): nombre grande en Fraunces (apellido en cursiva `rust`), rol y meta, frase corta, "Ver proyectos" y "Descargar CV", ubicación y mi foto real (`daniel-sin-hora.webp`, sin filtros) en un marco de papel con mi nombre completo en una etiqueta `marigold`.
 4. **Cifras clave** (`#cifras`): proyectos publicados, plataformas (tipos de proyecto distintos) y tecnologías del stack, todo leído de los datos.
 5. **Sobre mí** (`#sobre-mi`): `profile.about`, foto, datos rápidos (ubicación, estudio, meta) y el stack agrupado por categoría desde `skills`. Sin niveles, porcentajes ni barras.
@@ -222,11 +228,22 @@ Un componente por sección, cada uno con su `id`. `SECTIONS` (en `components/ui/
 - Scroll suave con **Lenis** (las anclas descuentan la altura del menú).
 - Hover cuidado: botones que suben 2 px y mueven su icono, tarjetas que se elevan con `shadow-lift`, subrayados que crecen.
 - Transición intro → página: la cortina sube y el hero entra escalonado detrás.
-- Interruptor "Animaciones" (guardado en `localStorage`): apaga Motion (`MotionConfig`), Lenis y las animaciones CSS.
+- Interruptor "Pausar / Activar animaciones" (guardado en `localStorage`): activadas por defecto salvo con `prefers-reduced-motion`; apagado detiene Motion (`MotionConfig`), Lenis y las animaciones CSS.
 - `prefers-reduced-motion`: mismo efecto que el interruptor apagado.
 - Tiempos: 150 ms en hover, 300 ms en menús y 600 ms en entradas. Easing `cubic-bezier(0.16, 1, 0.3, 1)`.
 
-**Siguiente fase:** animaciones avanzadas, efectos 3D y transiciones entre secciones.
+**Fase 4 · Parte 1 (luz, color, botones y hero):**
+
+- `Glow`: luz de neón detrás de la foto del hero (capas radiales `rust`, `terracotta`, `coral` y `amber` que se desplazan y se mezclan en ciclos de 13 a 19 s, solo con `transform` y `opacity`). Proyectos y "Más allá del código" llevan una versión tenue.
+- `TiltPhoto`: la foto se inclina en 3D hacia el cursor, con un brillo que lo sigue y una sombra que se desplaza al lado contrario. En pantallas táctiles, una oscilación suave.
+- `Ambient`: luz cálida que sigue al cursor en escritorio, origen del relleno de los botones y atracción magnética.
+- `Marquee`: franja tipo anuncio LED bajo el hero ("DESARROLLADOR FULL STACK"), sin saltos, que frena al pasar el cursor y se detiene con el interruptor.
+- Botones: el fondo se rellena desde el lado por donde entra el cursor, el icono se desplaza, cruza un destello, los principales son magnéticos, los secundarios tienen borde con brillo y el foco de teclado es grueso y visible.
+- Hero: el nombre entra letra por letra con máscara, "Igua" se dibuja con un trazo y un subrayado, y el rol pasa de borroso a nítido (una copia difuminada con `text-shadow` que se desvanece). En móvil la foto va arriba, más pequeña.
+- `SectionCurtain`: al navegar desde el menú, una cortina `rust` con "04 — Proyectos" cubre la pantalla, salta a la sección y se levanta (≈ 800 ms, máximo 900). Se salta con clic o `Esc` y mueve el foco a la sección.
+- Sin animaciones (interruptor o `prefers-reduced-motion`), todo queda visible y quieto: cada ciclo de luz empieza y termina en reposo.
+
+**Fase 4 · Parte 2:** cifras, títulos, stack, proyectos, testimonios, experiencia, contacto, barra de progreso y cursor.
 
 ---
 

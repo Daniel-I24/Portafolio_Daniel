@@ -13,7 +13,7 @@ interface ContactProps {
 /** Direct channels (email with copy, GitHub, LinkedIn) next to the validated form. */
 export function Contact({ email, socials }: ContactProps) {
   return (
-    <Section id="contacto" title="Hablemos" lead="¿Tienes un proyecto, una práctica o una pregunta? Escríbeme y te respondo." surface="card">
+    <Section id="contacto" title="Hablemos" lead="¿Tienes un proyecto o una pregunta? Escríbeme y te respondo." surface="card">
       <div className="grid items-start gap-12 lg:grid-cols-[0.85fr_1.15fr] lg:gap-20">
         <Reveal className="space-y-10">
           <div>

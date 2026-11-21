@@ -5,6 +5,7 @@ import { CvButton } from "@/components/ui/CvButton";
 import { MobileMenu } from "@/components/ui/MobileMenu";
 import { MotionSwitch } from "@/components/ui/MotionProvider";
 import { container, SECTIONS, sectionNumber, type SectionId } from "@/components/ui/Section";
+import { goToSection } from "@/components/ui/SectionCurtain";
 import { SectionObserver } from "@/lib/patterns";
 
 interface NavbarProps {
@@ -44,7 +45,7 @@ export function Navbar({ initials, name, cvUrl, cvNote }: NavbarProps) {
           <ul className="flex items-center gap-5 text-sm">
             {SECTIONS.map((section) => (
               <li key={section.id}>
-                <a href={`#${section.id}`} aria-current={section.id === active ? "location" : undefined}
+                <a href={`#${section.id}`} onClick={(event) => goToSection(event, section.id)} aria-current={section.id === active ? "location" : undefined}
                   className="relative py-2 text-muted transition-colors duration-150 after:absolute after:inset-x-0 after:-bottom-0.5 after:h-0.5 after:origin-left after:scale-x-0 after:bg-rust after:transition-transform after:duration-300 hover:text-ink hover:after:scale-x-100 aria-[current]:font-semibold aria-[current]:text-ink aria-[current]:after:scale-x-100">
                   {section.label}
                 </a>

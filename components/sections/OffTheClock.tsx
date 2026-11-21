@@ -15,7 +15,7 @@ const TONES = ["bg-pine text-card", "bg-rust text-card", "bg-marigold text-ink",
 /** Even grid of current interests: same-sized tiles, each with its own icon, title and note. */
 export function OffTheClock({ interests }: { interests: InterestView[] }) {
   return (
-    <Section id="mas-alla-del-codigo" title="Más allá del código" lead="Lo que disfruto cuando no estoy programando.">
+    <Section id="mas-alla-del-codigo" glow title="Más allá del código" lead="Lo que disfruto cuando no estoy programando.">
       <ul className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
         {interests.map((interest, i) => (
           <Reveal as="li" key={interest.id} index={i}
