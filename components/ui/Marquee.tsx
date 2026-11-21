@@ -8,12 +8,12 @@ const CRAWL = 0.08; // share of the speed kept under the cursor
 const BRAKE_MS = 450;
 const COPIES = 4; // per half: enough to cover a 1920 px screen twice
 
-/** Words alternate filled and outlined, in the coral → amber tones (6.2:1 and 8.5:1 on ink). */
+/** Words alternate filled and outlined in the light tones (ice 17:1, sky 10:1 on abyss), lit like LED tubes. */
 const STYLES = [
-  "text-amber",
-  "text-transparent [-webkit-text-stroke:1.5px_var(--color-coral)]",
-  "text-coral",
-  "text-transparent [-webkit-text-stroke:1.5px_var(--color-amber)]",
+  "text-ice [text-shadow:0_0_18px_var(--color-steel)]",
+  "text-transparent [-webkit-text-stroke:1.5px_var(--color-sky)]",
+  "text-sky [text-shadow:0_0_18px_var(--color-navy)]",
+  "text-transparent [-webkit-text-stroke:1.5px_var(--color-mist)]",
 ];
 
 /**
@@ -55,13 +55,13 @@ export function Marquee({ text }: { text: string }) {
   const items = Array.from({ length: COPIES }, (_, i) => (
     <span key={i} className="flex shrink-0 items-center">
       <span className={`px-6 sm:px-10 ${STYLES[i % STYLES.length]}`}>{text}</span>
-      <span className="size-3 rotate-45 bg-terracotta sm:size-4" />
+      <span className="size-3 rotate-45 bg-steel shadow-glow sm:size-4" />
     </span>
   ));
 
   return (
     <div aria-hidden onPointerEnter={() => brakeTo(CRAWL)} onPointerLeave={() => brakeTo(1)}
-      className="overflow-hidden border-y border-ink bg-ink py-5 sm:py-7">
+      className="overflow-hidden border-y border-line bg-abyss/80 py-5 sm:py-7">
       <div ref={track} className="flex w-max font-display text-3xl font-semibold uppercase leading-none tracking-[0.02em] whitespace-nowrap [font-variation-settings:'opsz'_144] will-change-transform sm:text-4xl lg:text-[4.5rem]">
         <div className="flex">{items}</div>
         <div className="flex">{items}</div>

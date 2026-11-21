@@ -19,15 +19,15 @@ export default async function AdminLayout({ children }: { children: React.ReactN
   if (!hasSupabase()) {
     return (
       <main className="mx-auto max-w-2xl px-4 py-24">
-        <h1 className="font-display font-semibold text-4xl text-ink">Admin sin conectar</h1>
-        <p className="mt-4 text-ink">
-          Faltan <code className="text-rust">NEXT_PUBLIC_SUPABASE_URL</code> y{" "}
-          <code className="text-rust">NEXT_PUBLIC_SUPABASE_ANON_KEY</code>. Sigue la guía del README.
+        <h1 className="font-display font-semibold text-4xl text-ice">Admin sin conectar</h1>
+        <p className="mt-4 text-ice">
+          Faltan <code className="text-sky">NEXT_PUBLIC_SUPABASE_URL</code> y{" "}
+          <code className="text-sky">NEXT_PUBLIC_SUPABASE_ANON_KEY</code>. Sigue la guía del README.
         </p>
       </main>
     );
   }
   if (path !== "/admin/login" && !(await isAdmin())) redirect("/admin/login");
 
-  return <div className="min-h-dvh bg-paper text-ink">{children}</div>;
+  return <div className="min-h-dvh bg-abyss text-ice">{children}</div>;
 }

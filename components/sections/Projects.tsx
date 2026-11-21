@@ -24,9 +24,9 @@ function KindFilter({ index, value, onChange }: { index: TechIndex<ProjectView>;
         const pressed = value === kind;
         return (
           <button key={kind ?? "all"} type="button" aria-pressed={pressed} onClick={() => onChange(kind)}
-            className={`inline-flex items-center gap-2 rounded-full border px-4 py-2.5 text-sm font-semibold transition-colors duration-150 ${pressed ? "border-ink bg-ink text-card" : "border-line bg-card text-ink hover:border-ink"}`}>
+            className={`inline-flex items-center gap-2 rounded-full border px-4 py-2.5 text-sm font-semibold transition-colors duration-150 ${pressed ? "border-ice bg-ice text-abyss" : "border-line bg-deep text-ice hover:border-steel"}`}>
             {kind ? KIND_LABELS[kind] : "Todos"}
-            <span className={`rounded-full px-2 py-0.5 text-sm tabular-nums ${pressed ? "bg-card text-ink" : "bg-paper text-muted"}`}>{index.count(kind)}</span>
+            <span className={`rounded-full px-2 py-0.5 text-sm tabular-nums ${pressed ? "bg-deep text-ice" : "bg-abyss text-mist"}`}>{index.count(kind)}</span>
           </button>
         );
       })}
@@ -42,7 +42,7 @@ export function Projects({ projects }: { projects: ProjectView[] }) {
   const visible = index.filter(kind);
 
   return (
-    <Section id="proyectos" glow title="Proyectos" lead="Web, móvil, escritorio, videojuegos y APIs: lo que he construido, solo y en equipo."
+    <Section id="proyectos" title="Proyectos" lead="Web, móvil, escritorio, videojuegos y APIs: lo que he construido, solo y en equipo."
       aside={<KindFilter index={index} value={kind} onChange={setKind} />}>
       <p className="sr-only" aria-live="polite">{`Mostrando ${visible.length} proyectos`}</p>
       <motion.ul layout={!calm} className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">

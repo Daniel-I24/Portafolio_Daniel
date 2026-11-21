@@ -1,6 +1,6 @@
 # Portafolio Daniel Igua — project rules
 
-Personal portfolio of Ivan Daniel Igua Benavides ("Dani"). Visual direction: **"Papel técnico"** (warm paper, ink, rust accent, editorial serif). Full build brief: `docs/PROMPT.md`. Content seed: `content/seed.json`.
+Personal portfolio of Ivan Daniel Igua Benavides ("Dani"). Visual direction: **"Noche azul"** (deep navy, lava-lamp backdrop, LED light, editorial serif). Full build brief: `docs/PROMPT.md`. Content seed: `content/seed.json`.
 
 ## Stack
 Next.js 15 (App Router) · TypeScript strict · Tailwind CSS v4 (`@theme` tokens in `app/globals.css`) · Supabase (Postgres, Auth, Storage) · Motion (`motion/react`) · Lenis (smooth scroll) · Vercel.
@@ -16,7 +16,7 @@ Next.js 15 (App Router) · TypeScript strict · Tailwind CSS v4 (`@theme` tokens
 - Never use images from the internet. Icons are our own paths in `components/ui/Icon.tsx`.
 - Do not alter `public/daniel*.webp` (no filters, no edits).
 - Palette and fonts: only the tokens in `docs/PROMPT.md` §2 (Tailwind defaults are reset). Avoid the generic "AI look" (purple-blue gradients, flat black + single neon, emoji decoration, Inter/Roboto, template layouts).
-- Legibility: 4.5:1 minimum contrast and no informative text under 14 px (`text-sm` is the floor). `marigold` is a background only, always with `ink` text; text on `rust`, `pine` and `ink` is `card`. Fraunces for titles and short display text; IBM Plex Sans for everything else.
+- Legibility: 4.5:1 minimum contrast and no informative text under 14 px (`text-sm` is the floor). Text colors are `ice`, `mist` and `sky` (never `steel` or `sky` on `slate`); on `mist`/`ice` fills the text is `abyss`. Fraunces for titles and short display text; IBM Plex Sans for everything else.
 
 ## Workflow
 - Work in the phases of `docs/PROMPT.md` §10. After each phase: `npm run lint` and `npm run build` must pass, check 390 / 768 / 1440 / 1920 px, then commit with Conventional Commits and stop for review. Nothing reaches `main` without approval.

@@ -14,7 +14,7 @@ type Field = { key: string; label: string; kind: Kind; options?: string[]; parts
 /** Fields whose value is a file in Storage: they get an upload button. */
 const UPLOADS = new Set(["photo", "cvUrl", "imageUrl", "apkUrl", "downloadUrl", "avatarUrl", "gallery"]);
 const HIDDEN = new Set(["id", "order"]); // id is generated; order is set by drag & drop in EntityTable
-const inputClass = "mt-1 w-full rounded-xl border border-line bg-card px-3 py-2 text-ink";
+const inputClass = "mt-1 w-full rounded-xl border border-line bg-deep px-3 py-2 text-ice";
 
 function unwrap(node: ZodNode): ZodNode {
   const def = node.def as unknown as { type: string; innerType?: ZodNode; in?: ZodNode };
@@ -109,12 +109,12 @@ export function EntityForm({ table, initial = {}, onDone }: EntityFormProps) {
           <div key={field.key} className={wide ? "sm:col-span-2" : ""}>
             {field.kind === "boolean" ? (
               <label className="flex items-center gap-3 font-semibold">
-                <input {...common} type="checkbox" checked={values[field.key] as boolean} onChange={(e) => set(field.key, e.target.checked)} className="size-5 accent-rust" />
+                <input {...common} type="checkbox" checked={values[field.key] as boolean} onChange={(e) => set(field.key, e.target.checked)} className="size-5 accent-sky" />
                 {field.label}
               </label>
             ) : (
               <>
-                <label htmlFor={id} className="font-semibold">{field.label}{field.parts && <span className="ml-2 text-sm text-muted">{field.parts.join(" | ")} · uno por línea</span>}</label>
+                <label htmlFor={id} className="font-semibold">{field.label}{field.parts && <span className="ml-2 text-sm text-mist">{field.parts.join(" | ")} · uno por línea</span>}</label>
                 {field.kind === "select" ? (
                   <select {...common} value={values[field.key] as string} onChange={(e) => set(field.key, e.target.value)} className={inputClass}>
                     {field.options!.map((option) => <option key={option} value={option}>{option}</option>)}
@@ -125,22 +125,22 @@ export function EntityForm({ table, initial = {}, onDone }: EntityFormProps) {
                   <input {...common} type={field.kind === "list" || field.kind === "text" ? "text" : field.kind} value={values[field.key] as string} onChange={(e) => set(field.key, e.target.value)} className={inputClass} />
                 )}
                 {field.upload && (
-                  <label className="mt-2 inline-flex cursor-pointer items-center gap-2 text-sm text-ink underline decoration-pine decoration-2">
+                  <label className="mt-2 inline-flex cursor-pointer items-center gap-2 text-sm text-ice underline decoration-sky decoration-2">
                     <Icon name="plus" size={16} /> {uploading === field.key ? "Subiendo…" : "Subir archivo"}
                     <input type="file" className="sr-only" onChange={(e) => e.target.files?.[0] && upload(field, e.target.files[0])} />
                   </label>
                 )}
               </>
             )}
-            {error && <p id={`${id}-error`} className="mt-1 border-l-4 border-rust pl-2 text-sm font-semibold">{error}</p>}
+            {error && <p id={`${id}-error`} className="mt-1 border-l-4 border-sky pl-2 text-sm font-semibold">{error}</p>}
           </div>
         );
       })}
       <div className="flex items-center gap-4 sm:col-span-2">
-        <button type="submit" disabled={pending || uploading !== null} className="rounded-full bg-rust px-5 py-2.5 font-semibold text-card hover:bg-rust-deep disabled:opacity-60">
+        <button type="submit" disabled={pending || uploading !== null} className="rounded-full bg-navy px-5 py-2.5 font-semibold text-ice hover:bg-slate disabled:opacity-60">
           {pending ? "Guardando…" : "Guardar"}
         </button>
-        <p role="status" className={`font-semibold ${result?.ok ? "border-l-4 border-pine pl-2" : "border-l-4 border-rust pl-2"}`}>{result?.message}</p>
+        <p role="status" className={`font-semibold ${result?.ok ? "border-l-4 border-sky pl-2" : "border-l-4 border-sky pl-2"}`}>{result?.message}</p>
       </div>
     </form>
   );

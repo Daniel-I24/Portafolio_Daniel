@@ -6,7 +6,7 @@ import type { TestimonialData } from "@/lib/schemas";
 export type TestimonialView = TestimonialData & { initials: string };
 
 /** Avatar tones for people without a photo; text color keeps 4.5:1 on each. */
-const TONES = ["bg-pine text-card", "bg-marigold text-ink", "bg-rust text-card"];
+const TONES = ["bg-navy text-ice", "bg-mist text-abyss", "bg-slate text-ice"];
 
 function Avatar({ person, tone }: { person: TestimonialView; tone: string }) {
   if (person.avatarUrl) {
@@ -18,20 +18,20 @@ function Avatar({ person, tone }: { person: TestimonialView; tone: string }) {
 export function Testimonials({ testimonials }: { testimonials: TestimonialView[] }) {
   if (testimonials.length === 0) return null;
   return (
-    <Section id="testimonios" title="Testimonios" lead="Personas que han trabajado conmigo o han usado lo que construyo." surface="card">
+    <Section id="testimonios" title="Testimonios" lead="Personas que han trabajado conmigo o han usado lo que construyo." surface="raised">
       <ul className="grid gap-6 md:grid-cols-2 lg:grid-cols-3 md:max-lg:[&>li:last-child:nth-child(odd)]:col-span-2">
         {testimonials.map((person, i) => (
           <Reveal as="li" key={person.id} index={i} className="h-full">
-            <figure className="flex h-full flex-col rounded-3xl border border-line bg-paper p-7 transition-[border-color,translate] duration-300 hover:-translate-y-1 hover:border-ink sm:p-8">
-              <span aria-hidden className="font-display text-4xl leading-none text-rust">“</span>
-              <blockquote className="mt-2 flex-1 text-ink">
+            <figure className="flex h-full flex-col rounded-3xl border border-line bg-abyss p-7 transition-[border-color,translate] duration-300 hover:-translate-y-1 hover:border-steel sm:p-8">
+              <span aria-hidden className="font-display text-4xl leading-none text-sky">“</span>
+              <blockquote className="mt-2 flex-1 text-ice">
                 <p>{person.quote}</p>
               </blockquote>
               <figcaption className="mt-8 flex items-center gap-4 border-t border-line pt-6">
                 <Avatar person={person} tone={TONES[i % TONES.length]} />
                 <span>
                   <span className="block font-semibold">{person.name}</span>
-                  {person.role && <span className="block text-sm text-muted">{person.role}</span>}
+                  {person.role && <span className="block text-sm text-mist">{person.role}</span>}
                 </span>
               </figcaption>
             </figure>

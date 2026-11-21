@@ -12,7 +12,7 @@ export type IconName =
 /** Short hero phrase: the explicit tagline, or the first sentence of "about". */
 export const shortPhrase = (profile: ProfileData): string => profile.tagline || (profile.about.match(/^[^.!?]+[.!?]/)?.[0] ?? "");
 
-export type Accent = "rust" | "pine";
+export type Accent = "sky" | "mist";
 
 export type Card = { title: string; subtitle: string; tags: string[] };
 export type CardAction = { label: string; href: string; icon: IconName };
@@ -126,12 +126,12 @@ export abstract class Experience extends Entity<ExperienceData> {
 
 export class AcademicExperience extends Experience {
   badge(): string { return "Académica"; }
-  accent(): Accent { return "pine"; }
+  accent(): Accent { return "sky"; }
   icon(): IconName { return "shield"; }
 }
 
 export class WorkExperience extends Experience {
   badge(): string { return "Laboral"; }
-  accent(): Accent { return "rust"; }
+  accent(): Accent { return "mist"; }
   icon(): IconName { return "code"; }
 }

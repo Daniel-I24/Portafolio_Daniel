@@ -16,7 +16,7 @@ const TABS = [
 ] as const;
 type TabId = (typeof TABS)[number]["id"];
 
-const smallButton = "rounded-lg border border-line bg-card px-2 py-1 text-sm text-ink hover:bg-marigold";
+const smallButton = "rounded-lg border border-line bg-deep px-2 py-1 text-sm text-ice hover:bg-mist";
 
 // Form-friendly wrappers: <form action> needs void-returning server actions.
 async function seedAction() { "use server"; await importSeed(); revalidatePath("/admin"); }
@@ -38,7 +38,7 @@ export default async function AdminPage({ searchParams }: { searchParams: Promis
   return (
     <main className="mx-auto max-w-5xl px-4 py-10">
       <header className="flex flex-wrap items-center justify-between gap-4">
-        <h1 className="font-display font-semibold text-4xl text-rust">Panel de Dani</h1>
+        <h1 className="font-display font-semibold text-4xl text-sky">Panel de Dani</h1>
         <div className="flex gap-3">
           <Link href="/" className={smallButton}>Ver sitio</Link>
           <form action={signOut}><button type="submit" className={`${smallButton} inline-flex items-center gap-1`}><Icon name="logout" size={14} /> Salir</button></form>
@@ -48,23 +48,23 @@ export default async function AdminPage({ searchParams }: { searchParams: Promis
       <nav aria-label="Secciones del panel" className="mt-6 flex flex-wrap gap-2">
         {TABS.map((t) => (
           <Link key={t.id} href={`/admin?tab=${t.id}`} aria-current={t.id === tab ? "page" : undefined}
-            className={`rounded-xl border border-line px-3 py-1.5 font-display font-semibold text-lg ${t.id === tab ? "bg-ink text-card" : "bg-card text-ink hover:bg-marigold"}`}>
+            className={`rounded-xl border border-line px-3 py-1.5 font-display font-semibold text-lg ${t.id === tab ? "bg-ice text-abyss" : "bg-deep text-ice hover:bg-slate"}`}>
             {t.label}
           </Link>
         ))}
       </nav>
 
       {!count && (
-        <form action={seedAction} className="mt-6 border-l-4 border-marigold bg-card p-4">
-          <p>La base está vacía. ¿Importo el contenido inicial de <code className="text-rust">content/seed.json</code>?</p>
+        <form action={seedAction} className="mt-6 border-l-4 border-mist bg-deep p-4">
+          <p>La base está vacía. ¿Importo el contenido inicial de <code className="text-sky">content/seed.json</code>?</p>
           <button type="submit" className={`${smallButton} mt-3`}>Importar seed.json</button>
         </form>
       )}
-      {error && <p role="alert" className="mt-6 border-l-4 border-rust pl-3">No se pudieron leer los datos. ¿Corriste la migración?</p>}
+      {error && <p role="alert" className="mt-6 border-l-4 border-sky pl-3">No se pudieron leer los datos. ¿Corriste la migración?</p>}
 
       <section className="mt-8 space-y-6">
         {tab === "profile" && (
-          <div className="bg-card p-6 text-ink"><EntityForm table="profile" initial={rows[0] ?? {}} /></div>
+          <div className="bg-deep p-6 text-ice"><EntityForm table="profile" initial={rows[0] ?? {}} /></div>
         )}
         {tab === "projects" && <GithubImport imported={rows.map((row) => String(row.githubRepo ?? "")).filter(Boolean)} />}
         {tab !== "profile" && tab !== "messages" && (
@@ -81,10 +81,10 @@ function Messages({ messages }: { messages: MessageData[] }) {
   return (
     <ul className="space-y-3">
       {messages.map((message) => (
-        <li key={message.id} className={`rounded-xl border border-line p-4 text-ink ${message.read ? "bg-line" : "bg-card"}`}>
+        <li key={message.id} className={`rounded-xl border border-line p-4 text-ice ${message.read ? "bg-line" : "bg-deep"}`}>
           <p className="font-semibold">
             {message.name} · <a href={`mailto:${message.email}`} className="underline">{message.email}</a>
-            {!message.read && <span className="ml-2 rounded-full bg-rust px-2 text-sm text-card">nuevo</span>}
+            {!message.read && <span className="ml-2 rounded-full bg-navy px-2 text-sm text-ice">nuevo</span>}
           </p>
           <p className="text-sm">{new Date(message.createdAt).toLocaleString("es-CO", { timeZone: "America/Bogota" })}</p>
           <p className="mt-2 whitespace-pre-line">{message.body}</p>
@@ -95,7 +95,7 @@ function Messages({ messages }: { messages: MessageData[] }) {
             <details className="text-sm">
               <summary className={`${smallButton} cursor-pointer list-none`}>Eliminar</summary>
               <form action={removeMessage.bind(null, message.id)} className="mt-2 flex items-center gap-2">
-                ¿Seguro? <button type="submit" className="rounded-lg bg-rust px-2 py-1 text-card">Sí, eliminar</button>
+                ¿Seguro? <button type="submit" className="rounded-lg bg-navy px-2 py-1 text-ice">Sí, eliminar</button>
               </form>
             </details>
           </div>

@@ -4,10 +4,10 @@ import { Icon } from "./Icon";
 
 /** Each variant sets its own surface and the `--fill` color that floods in from the cursor side. */
 const VARIANTS = {
-  solid: "bg-rust text-card [--fill:var(--color-rust-deep)] hover:shadow-glow",
+  solid: "bg-mist text-abyss [--fill:var(--color-ice)] hover:shadow-glow",
   outline:
-    "border-[1.5px] border-transparent text-ink [--fill:var(--color-ink)] [background:linear-gradient(var(--color-card),var(--color-card))_padding-box,linear-gradient(115deg,var(--color-rust),var(--color-coral),var(--color-amber),var(--color-terracotta))_border-box] hover:text-card hover:shadow-glow",
-  quiet: "border border-line bg-card text-ink [--fill:var(--color-paper)] hover:border-ink",
+    "border-[1.5px] border-transparent text-ice [--fill:var(--color-navy)] [background:linear-gradient(var(--color-deep),var(--color-deep))_padding-box,linear-gradient(115deg,var(--color-steel),var(--color-mist),var(--color-sky),var(--color-steel))_border-box] hover:shadow-glow",
+  quiet: "border border-line bg-deep text-ice [--fill:var(--color-slate)] hover:border-steel",
 };
 
 const SIZES = { md: "gap-2.5 px-6 py-3.5 text-base", sm: "gap-2 px-4 py-2.5 text-sm" };
@@ -26,7 +26,7 @@ export const buttonClass = (variant: ButtonVariant = "solid", size: keyof typeof
     "btn group relative isolate inline-flex items-center justify-center overflow-hidden rounded-full font-semibold",
     "[transform:translate3d(var(--mx,0px),var(--my,0px),0)] transition-[color,box-shadow,border-color,transform,scale] duration-300 ease-(--ease-soft)",
     "before:pointer-events-none before:absolute before:top-(--y,50%) before:left-(--x,50%) before:-z-10 before:aspect-square before:w-[280%] before:-translate-1/2 before:scale-0 before:rounded-full before:bg-(--fill) before:transition-transform before:duration-500 before:ease-(--ease-soft) hover:before:scale-100",
-    "after:pointer-events-none after:absolute after:inset-y-0 after:left-0 after:w-1/4 after:bg-linear-to-r after:from-transparent after:via-card/45 after:to-transparent after:opacity-0 hover:after:animate-sheen",
+    "after:pointer-events-none after:absolute after:inset-y-0 after:left-0 after:w-1/4 after:bg-linear-to-r after:from-transparent after:via-ice/50 after:to-transparent after:opacity-0 hover:after:animate-sheen",
     "active:scale-[0.97] focus-visible:outline-[3px] focus-visible:outline-offset-4 disabled:pointer-events-none disabled:opacity-70",
     VARIANTS[variant],
     SIZES[size],

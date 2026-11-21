@@ -10,12 +10,12 @@ export type InterestView = InterestData & { icon: IconName };
  * Tile colors in turn, all solid so every interest carries the same weight; each pair keeps text at 4.5:1 or more.
  * A cycle of four never puts two equal colors side by side on one, two or three columns.
  */
-const TONES = ["bg-pine text-card", "bg-rust text-card", "bg-marigold text-ink", "bg-ink text-card"];
+const TONES = ["bg-navy text-ice", "bg-slate text-ice", "bg-mist text-abyss", "bg-deep text-ice border border-steel"];
 
 /** Even grid of current interests: same-sized tiles, each with its own icon, title and note. */
 export function OffTheClock({ interests }: { interests: InterestView[] }) {
   return (
-    <Section id="mas-alla-del-codigo" glow title="Más allá del código" lead="Lo que disfruto cuando no estoy programando.">
+    <Section id="mas-alla-del-codigo" title="Más allá del código" lead="Lo que disfruto cuando no estoy programando.">
       <ul className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
         {interests.map((interest, i) => (
           <Reveal as="li" key={interest.id} index={i}

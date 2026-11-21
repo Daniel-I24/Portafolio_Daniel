@@ -40,7 +40,7 @@ export function goToSection(event: MouseEvent<HTMLAnchorElement>, id: SectionId)
 
 type Phase = { id: SectionId; step: "cover" | "lift"; fast?: boolean };
 
-/** Rust curtain with the section number and name: rises, the page jumps behind it, then it lifts. Click or Esc skips. */
+/** Navy curtain with the section number and name: rises, the page jumps behind it, then it lifts. Click or Esc skips. */
 export function SectionCurtain() {
   const [phase, setPhase] = useState<Phase | null>(null);
   const arrived = useRef(false);
@@ -76,7 +76,7 @@ export function SectionCurtain() {
       initial={{ y: "100%" }} animate={{ y: lifting ? "-100%" : "0%" }}
       transition={{ duration: lifting && phase.fast ? 0.2 : COVER, ease: EASE, delay: lifting && !phase.fast ? HOLD / 1000 : 0 }}
       onAnimationComplete={() => (lifting ? setPhase(null) : land())}
-      className="fixed inset-0 z-[70] grid cursor-pointer place-items-center bg-rust px-4 text-card">
+      className="fixed inset-0 z-[70] grid cursor-pointer place-items-center bg-navy px-4 text-ice">
       <p className="text-center font-display text-3xl font-semibold tracking-tight [font-variation-settings:'opsz'_144] sm:text-4xl lg:text-[5rem] lg:leading-none">
         <span className="tabular-nums">{sectionNumber(phase.id)}</span> — {label}
       </p>

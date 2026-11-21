@@ -9,7 +9,7 @@ import type { RepoSummary } from "@/lib/github";
 import type { ProjectData } from "@/lib/schemas";
 import { EntityForm } from "./EntityForm";
 
-const buttonClass = "inline-flex items-center gap-2 rounded-xl border border-line bg-card px-3 py-2 font-semibold text-ink hover:bg-marigold disabled:opacity-60";
+const buttonClass = "inline-flex items-center gap-2 rounded-xl border border-line bg-deep px-3 py-2 font-semibold text-ice hover:bg-mist disabled:opacity-60";
 
 /** Lists own repos (and, with a token, shared ones) or takes any pasted repo URL, then prefills a project. */
 export function GithubImport({ imported }: { imported: string[] }) {
@@ -44,13 +44,13 @@ export function GithubImport({ imported }: { imported: string[] }) {
         <label className="grow">
           <span className="sr-only">URL del repositorio</span>
           <input value={input} onChange={(e) => setInput(e.target.value)} required placeholder="https://github.com/usuario/repo (también de colaboraciones)"
-            className="w-full rounded-xl border border-line bg-card px-3 py-2 text-ink" />
+            className="w-full rounded-xl border border-line bg-deep px-3 py-2 text-ice" />
         </label>
         <button type="submit" disabled={pending} className={buttonClass}><Icon name="download" size={18} /> Importar</button>
         <button type="button" onClick={load} disabled={pending} className={buttonClass}>Mis repos</button>
         <button type="button" onClick={sync} disabled={pending} className={buttonClass}>Sincronizar</button>
       </form>
-      <p role="status" className="mt-2 min-h-6 text-sm text-rust">{pending ? "Consultando GitHub…" : status}</p>
+      <p role="status" className="mt-2 min-h-6 text-sm text-sky">{pending ? "Consultando GitHub…" : status}</p>
 
       {repos && repos.length > 0 && (
         <ul className="mt-2 max-h-72 space-y-1 overflow-y-auto">
@@ -58,11 +58,11 @@ export function GithubImport({ imported }: { imported: string[] }) {
             <li key={repo.fullName} className="flex flex-wrap items-center gap-3 border-b border-line py-2">
               <span className="grow">
                 <span className="font-semibold">{repo.fullName}</span>
-                {repo.collaboration && <span className="ml-2 rounded bg-pine px-1.5 text-sm text-card">colaboración</span>}
-                <span className="block text-sm text-muted">{repo.description || "Sin descripción"} · ★ {repo.stars}</span>
+                {repo.collaboration && <span className="ml-2 rounded bg-navy px-1.5 text-sm text-ice">colaboración</span>}
+                <span className="block text-sm text-mist">{repo.description || "Sin descripción"} · ★ {repo.stars}</span>
               </span>
               {known.has(repo.fullName.toLowerCase())
-                ? <span className="text-sm text-muted">ya importado</span>
+                ? <span className="text-sm text-mist">ya importado</span>
                 : <button type="button" onClick={() => prefill(repo.fullName)} disabled={pending} className={buttonClass}>Usar</button>}
             </li>
           ))}

@@ -1,21 +1,17 @@
 @import "tailwindcss";
 
-/* Direction A · "Papel técnico". Defaults are reset so only these tokens exist. */
+/* Blue night theme. Defaults are reset so only these tokens exist. Ratios measured on abyss. */
 @theme {
   --color-*: initial;
-  --color-paper: #f2eee5;      /* page background */
-  --color-card: #fbf9f4;       /* raised surfaces; text on rust/pine/ink */
-  --color-line: #d9d3c5;       /* borders and rules only, never text */
-  --color-ink: #191b18;        /* 14.97:1 on paper */
-  --color-muted: #4a4f49;      /* 7.24:1 on paper */
-  --color-rust: #b23614;       /* 5.29:1 on paper · card on rust 5.82:1 */
-  --color-rust-deep: #86270c;  /* fill of rust surfaces · card on it 8.64:1 */
-  --color-pine: #23604e;       /* 6.35:1 on paper */
-  --color-marigold: #f2b640;   /* background only, with ink text (9.53:1) */
-  /* Light family, decoration only (glows, borders, marquee on ink): never text on paper. */
-  --color-terracotta: #d0502f;
-  --color-coral: #f2775a;      /* 6.24:1 on ink */
-  --color-amber: #f4a62a;      /* 8.53:1 on ink */
+  --color-abyss: #021a2a;  /* page background (deep navy) */
+  --color-deep: #042a41;   /* surfaces */
+  --color-slate: #365c73;  /* raised surfaces; only ice/mist text on it (6.9 / 5.55:1) */
+  --color-navy: #004671;   /* accent fill; ice text 9.58:1 */
+  --color-line: #1b4560;   /* borders and rules only, never text */
+  --color-steel: #7298af;  /* light, borders and large shapes only (fails 4.5:1 on slate/navy) */
+  --color-sky: #9cc9e6;    /* accent text 10.06:1 · never on slate */
+  --color-mist: #c2e8ff;   /* secondary text 13.75:1 */
+  --color-ice: #eaffff;    /* main text 17.1:1 · abyss on ice/mist as dark text */
 
   --font-*: initial;
   --font-display: var(--font-fraunces), Georgia, serif;
@@ -32,38 +28,32 @@
   --text-4xl: 3.25rem;   --text-4xl--line-height: 1.02;
   --text-hero: clamp(3.75rem, 9.6vw, 8.5rem); --text-hero--line-height: 0.92;
 
-  --shadow-lift: 0 1px 2px rgb(25 27 24 / 0.06), 0 18px 36px -18px rgb(25 27 24 / 0.3);
-  --shadow-glow: 0 0 0 1px rgb(242 119 90 / 0.35), 0 10px 30px -8px rgb(208 80 47 / 0.55);
+  --shadow-lift: 0 1px 2px rgb(0 8 16 / 0.4), 0 18px 40px -18px rgb(0 8 16 / 0.8);
+  --shadow-glow: 0 0 0 1px rgb(194 232 255 / 0.35), 0 8px 30px -6px rgb(114 152 175 / 0.7);
+  --shadow-led: 0 0 2px var(--color-ice), 0 0 10px var(--color-mist), 0 0 28px var(--color-steel), inset 0 0 8px rgb(194 232 255 / 0.6);
 
-  /* Motion: 150 ms hover · 300 ms menus · 600 ms entrances */
   --ease-soft: cubic-bezier(0.16, 1, 0.3, 1);
   --default-transition-duration: 150ms;
   --default-transition-timing-function: cubic-bezier(0.16, 1, 0.3, 1);
-  --animate-rise: rise 0.8s var(--ease-soft) both;
   --animate-sheen: sheen 0.9s var(--ease-soft);
-  --animate-drift-a: drift-a 17s ease-in-out infinite;
-  --animate-drift-b: drift-b 13s ease-in-out infinite;
-  --animate-drift-c: drift-c 19s ease-in-out infinite;
   --animate-sway: sway 9s ease-in-out infinite;
+  --animate-pulse-led: pulse-led 6s ease-in-out infinite;
 }
 
 @layer base {
   html {
-    background-color: var(--color-paper);
-    color: var(--color-ink);
+    background-color: var(--color-abyss);
+    color: var(--color-ice);
+    color-scheme: dark;
     -webkit-tap-highlight-color: transparent;
-    --intro-delay: 1.35s;
+    --intro-delay: 1.15s;
   }
   html[data-intro="seen"] { --intro-delay: 0s; }
-  html[data-intro="skip"] { --intro-delay: 0.15s; }
-
-  /* The page surface lives on <html> (body stays transparent) so the cursor light can sit between the two.
-     Paper grain: a static, very faint noise tile, never an overlay on text. */
-  html { background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='3' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 .1 0 0 0 0 .08 0 0 0 0 .05 0 0 0 .07 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E"); }
+  html[data-intro="skip"] { --intro-delay: 0.1s; }
   body { font-family: var(--font-sans); overflow-x: hidden; }
 
-  :focus-visible { outline: 3px solid var(--color-rust); outline-offset: 3px; }
-  ::selection { background: var(--color-marigold); color: var(--color-ink); }
+  :focus-visible { outline: 3px solid var(--color-mist); outline-offset: 3px; }
+  ::selection { background: var(--color-mist); color: var(--color-abyss); }
 
   /* Lenis */
   html.lenis, html.lenis body { height: auto; }
@@ -72,79 +62,83 @@
 }
 
 @layer utilities {
-  /* Hero items enter after the intro curtain; --i staggers them. */
+  /* Hero entrance after the loader dissolves; --i staggers it. Transform only: the hero is painted under the loader. */
   .enter, .letter, .draw, .ink-in, .unblur, .sharpen, .swash {
     animation-delay: calc(var(--intro-delay) + var(--i, 0) * 90ms);
     animation-fill-mode: both;
     animation-timing-function: var(--ease-soft);
   }
   .enter { animation-name: rise; animation-duration: 0.8s; }
-  /* Name: letters rise inside a mask; --i is the letter position. */
   .letter { animation-name: letter; animation-duration: 0.9s; animation-delay: calc(var(--intro-delay) + 150ms + var(--i) * 45ms); }
-  /* "Igua": an outline wipes in like a pen stroke, then the ink fills it and a swash is drawn below. */
   .draw { animation-name: draw; animation-duration: 1.1s; }
   .ink-in { animation-name: ink-in; animation-duration: 0.7s; }
   .swash { animation-name: swash; animation-duration: 0.9s; }
-  /* Role: a pre-blurred copy (text-shadow, no filter) fades out while the sharp one fades in. */
   .unblur { animation-name: unblur; animation-duration: 1s; }
   .sharpen { animation-name: sharpen; animation-duration: 1s; }
 
-  .intro-curtain { animation: curtain 0.6s var(--ease-soft) 0.8s forwards; }
-  html[data-intro="skip"] .intro-curtain { animation-delay: 0s; animation-duration: 0.4s; }
-  html[data-intro="seen"] .intro-curtain { display: none; }
-  .intro-bar { animation: bar 0.8s var(--ease-soft) both; transform-origin: left; }
+  /* Lava lamp: pre-softened shapes, each on its own slow cycle (inline duration/delay). Paused in hidden tabs. */
+  .lava-blob { animation: lava var(--d, 30s) ease-in-out var(--delay, 0s) infinite; }
+  .lava-blob:nth-child(even) { animation-name: lava-b; }
+  html[data-tab="hidden"] .lava-blob, html[data-tab="hidden"] .animate-pulse-led { animation-play-state: paused; }
+
+  /* Loader: shapes gather into the monogram while the counter runs to 100, then everything dissolves (≤ 1.6 s). */
+  .loader { animation: loader-out 0.4s ease-in 1.15s forwards; }
+  .loader-gather { animation: gather 0.75s var(--ease-soft) both; }
+  .loader-mark { animation: mark 0.5s var(--ease-soft) 0.45s both; }
+  .loader-count { counter-reset: n var(--n); animation: count 1.05s linear both; }
+  .loader-count::after { content: counter(n); }
+  html[data-intro="skip"] .loader { animation-delay: 0s; animation-duration: 0.25s; }
+  html[data-intro="seen"] .loader { display: none; }
 
   /* Touch screens: the hero photo sways gently instead of following a cursor. */
   @media (hover: none) { .sway { animation: var(--animate-sway); } }
 }
 
-@keyframes rise { from { opacity: 0; transform: translateY(24px); } to { opacity: 1; transform: none; } }
+@property --n { syntax: "<integer>"; initial-value: 0; inherits: false; }
+
+@keyframes rise { from { transform: translateY(28px); } to { transform: none; } }
 @keyframes letter { from { transform: translateY(110%); } to { transform: none; } }
 @keyframes draw { from { clip-path: inset(-30% 102% -30% -8%); } to { clip-path: inset(-30% -8% -30% -8%); } }
 @keyframes ink-in { from { opacity: 0; } to { opacity: 1; } }
 @keyframes swash { from { stroke-dashoffset: 1.1; } to { stroke-dashoffset: 0; } }
 @keyframes unblur { from { opacity: 1; } to { opacity: 0; } }
-@keyframes sharpen { from { opacity: 0; transform: scale(1.02); } to { opacity: 1; transform: none; } }
-@keyframes curtain { to { transform: translateY(-100%); visibility: hidden; } }
-@keyframes bar { from { transform: scaleX(0); } to { transform: scaleX(1); } }
+@keyframes sharpen { from { transform: scale(1.02); } to { transform: none; } }
 @keyframes sheen {
   from { opacity: 1; transform: translateX(-160%) skewX(-20deg); }
   to { opacity: 1; transform: translateX(420%) skewX(-20deg); }
-}
-/* Glow layers: start and end at rest, so with motion off the light stays still. */
-@keyframes drift-a {
-  0%, 100% { transform: translate(0, 0) scale(1); opacity: 0.9; }
-  50% { transform: translate(14%, -10%) scale(1.15); opacity: 0.55; }
-}
-@keyframes drift-b {
-  0%, 100% { transform: translate(0, 0) scale(1); opacity: 0.6; }
-  50% { transform: translate(-16%, 12%) scale(0.9); opacity: 1; }
-}
-@keyframes drift-c {
-  0%, 100% { transform: translate(0, 0) rotate(0deg); opacity: 0.75; }
-  33% { transform: translate(10%, 14%) rotate(40deg); opacity: 0.4; }
-  66% { transform: translate(-12%, -6%) rotate(-30deg); opacity: 0.95; }
 }
 @keyframes sway {
   0%, 100% { transform: rotateX(0deg) rotateY(0deg); }
   25% { transform: rotateX(3deg) rotateY(-5deg); }
   75% { transform: rotateX(-2deg) rotateY(5deg); }
 }
+/* LED light breathes slowly; rest (100 %) is full light. */
+@keyframes pulse-led { 0%, 100% { opacity: 1; } 50% { opacity: 0.6; } }
+/* Wax rises stretched, flattens at the top, sinks back round. 0 % = 100 % = rest, so with motion off it is still. */
+@keyframes lava {
+  0%, 100% { transform: translate3d(0, 0, 0) scale(1, 1); opacity: 0.85; }
+  30% { transform: translate3d(4vw, -28vh, 0) scale(0.82, 1.35); opacity: 1; }
+  55% { transform: translate3d(-3vw, -46vh, 0) scale(1.25, 0.8); opacity: 0.7; }
+  80% { transform: translate3d(2vw, -18vh, 0) scale(0.95, 1.12); opacity: 0.95; }
+}
+@keyframes lava-b {
+  0%, 100% { transform: translate3d(0, 0, 0) scale(1, 1); opacity: 0.75; }
+  35% { transform: translate3d(-6vw, 30vh, 0) scale(1.3, 0.78); opacity: 1; }
+  65% { transform: translate3d(5vw, 42vh, 0) scale(0.85, 1.3); opacity: 0.6; }
+}
+@keyframes gather { from { transform: translate(var(--fx), var(--fy)) scale(0.6); } to { transform: none; } }
+@keyframes mark { from { opacity: 0; transform: scale(0.85); } to { opacity: 1; transform: none; } }
+@keyframes count { to { --n: 100; } }
+@keyframes loader-out { to { opacity: 0; transform: scale(1.06); visibility: hidden; } }
 
 /* Same rules for the OS setting (unless the visitor turned animations back on) and for the in-page switch. */
 @media (prefers-reduced-motion: reduce) {
   html:not([data-motion="on"]) *, html:not([data-motion="on"]) *::before, html:not([data-motion="on"]) *::after {
-    animation-duration: 0.01ms !important;
-    animation-delay: 0s !important;
-    animation-iteration-count: 1 !important;
-    transition-duration: 0.01ms !important;
-    scroll-behavior: auto !important;
+    animation-duration: 0.01ms !important; animation-delay: 0s !important; animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important; scroll-behavior: auto !important;
   }
 }
 html[data-motion="off"] *, html[data-motion="off"] *::before, html[data-motion="off"] *::after {
-  animation-duration: 0.01ms !important;
-  animation-delay: 0s !important;
-  animation-iteration-count: 1 !important;
-  transition-duration: 0.01ms !important;
-  scroll-behavior: auto !important;
+  animation-duration: 0.01ms !important; animation-delay: 0s !important; animation-iteration-count: 1 !important;
+  transition-duration: 0.01ms !important; scroll-behavior: auto !important;
 }

@@ -35,6 +35,13 @@ export function MotionProvider({ children }: { children: ReactNode }) {
     setEnabled(motion ? motion === "on" : !matchMedia("(prefers-reduced-motion: reduce)").matches);
   }, []);
 
+  // Hidden tab: CSS loops (lava, LED pulse) pause via html[data-tab="hidden"].
+  useEffect(() => {
+    const sync = () => { document.documentElement.dataset.tab = document.hidden ? "hidden" : "visible"; };
+    document.addEventListener("visibilitychange", sync);
+    return () => document.removeEventListener("visibilitychange", sync);
+  }, []);
+
   useEffect(() => {
     if (!enabled) return;
     const lenis = new Lenis({ autoRaf: true, anchors: { offset: -HEADER_OFFSET } });

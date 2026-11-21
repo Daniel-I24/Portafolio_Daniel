@@ -9,7 +9,7 @@ const plex = IBM_Plex_Sans({ weight: ["400", "500", "600"], subsets: ["latin"], 
 
 /**
  * Runs before paint: sets the animations state (the saved choice, else off only with OS reduced motion)
- * and skips the intro on repeat visits or with animations off, so neither flashes before hydration.
+ * and skips the loader on repeat visits or with animations off, so neither flashes before hydration.
  */
 const PREFS_SCRIPT = `try{var d=document.documentElement,m=localStorage.getItem("motion");d.dataset.motion=m==="on"||m==="off"?m:matchMedia("(prefers-reduced-motion: reduce)").matches?"off":"on";if(sessionStorage.getItem("intro")||d.dataset.motion==="off")d.dataset.intro="seen"}catch(e){}`;
 
@@ -27,7 +27,7 @@ export async function generateMetadata(): Promise<Metadata> {
   };
 }
 
-export const viewport: Viewport = { themeColor: "#f2eee5", colorScheme: "light" };
+export const viewport: Viewport = { themeColor: "#021a2a", colorScheme: "dark" };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
@@ -35,7 +35,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
       <head>
         <script dangerouslySetInnerHTML={{ __html: PREFS_SCRIPT }} />
       </head>
-      <body className="min-h-dvh text-ink antialiased">{children}</body>
+      <body className="min-h-dvh text-ice antialiased">{children}</body>
     </html>
   );
 }

@@ -63,6 +63,6 @@ export function Ambient() {
   if (calm) return null;
   return (
     <div ref={light} aria-hidden
-      className="pointer-events-none fixed left-0 top-0 -z-10 size-[600px] rounded-full bg-[radial-gradient(closest-side,rgb(242_119_90/0.16),rgb(244_166_42/0.06)_55%,transparent)] opacity-0 transition-opacity duration-500 max-lg:hidden" />
+      className="pointer-events-none fixed left-0 top-0 -z-10 size-[600px] rounded-full bg-[radial-gradient(closest-side,rgb(194_232_255/0.08),rgb(114_152_175/0.05)_55%,transparent)] opacity-0 transition-opacity duration-500 max-lg:hidden" />
   );
 }
