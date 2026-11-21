@@ -15,7 +15,7 @@ export const shortPhrase = (profile: ProfileData): string => profile.tagline || 
 export type Accent = "rust" | "pine";
 
 export type Card = { title: string; subtitle: string; tags: string[] };
-export type CardAction = { label: string; href: string; icon: IconName; note?: string }; // note: why it is the README
+export type CardAction = { label: string; href: string; icon: IconName };
 
 type EntityMeta = { id: string; order: number; published: boolean };
 
@@ -54,14 +54,6 @@ const LINK_ORDER: LinkSpec[] = [
   { label: "Descargar", icon: "download", url: (p) => p.downloadUrl },
 ];
 
-const NO_DEMO_NOTES: Record<ProjectKind, string> = {
-  web: "La demo pública todavía no está desplegada: el README explica cómo correr el proyecto en local.",
-  mobile: "Todavía no hay un APK publicado: el README explica cómo compilar e instalar la app.",
-  api: "Es una API sin interfaz web pública: el README documenta cómo ejecutarla y probar sus endpoints.",
-  desktop: "Es una aplicación de escritorio, no corre en el navegador: el README explica cómo instalarla y ejecutarla.",
-  game: "El juego todavía no tiene una versión descargable: el README explica cómo compilarlo y ejecutarlo.",
-};
-
 export class Project extends Entity<ProjectData> {
   get stack(): string[] { return this.data.stack; }
   get kind(): ProjectKind { return this.data.kind; }
@@ -80,7 +72,7 @@ export class Project extends Entity<ProjectData> {
       return [{ label: href === this.liveUrl && this.data.liveLabel ? this.data.liveLabel : label, icon, href }];
     });
     if (links.length < 2 && this.repoUrl) {
-      links.push({ label: "Documentación", icon: "code", href: `${this.repoUrl}#readme`, note: NO_DEMO_NOTES[this.kind] });
+      links.push({ label: "Documentación", icon: "code", href: `${this.repoUrl}#readme` });
     }
     return links;
   }

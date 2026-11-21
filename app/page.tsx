@@ -12,7 +12,7 @@ import { Projects } from "@/components/sections/Projects";
 import { Stats } from "@/components/sections/Stats";
 import { Testimonials } from "@/components/sections/Testimonials";
 import { MotionProvider } from "@/components/ui/MotionProvider";
-import { AcademicExperience, KIND_LABELS } from "@/lib/domain";
+import { KIND_LABELS } from "@/lib/domain";
 import { getPortfolio } from "@/lib/patterns";
 import type { ProfileData } from "@/lib/schemas";
 
@@ -31,9 +31,9 @@ export default async function HomePage() {
   const { profile, projects, testimonials, experience, skills, interests } = await getPortfolio();
   const cvNote = cvMissing(profile) ? CV_PENDING : undefined;
   const socials = profile.socials.map(({ label, url, kind }) => ({ label, url, icon: kind }));
-  const studies = experience.find((item) => item instanceof AcademicExperience);
-  const studiesLine = studies ? `${studies.data.title} · ${studies.data.place.split("·")[0].trim()}` : "";
   const platforms = [...new Set(projects.map((project) => project.kind))].map((kind) => KIND_LABELS[kind]);
+  const techs = new Set(skills.map((skill) => skill.data.name.toLowerCase())).size;
+  const techGroups = [...new Set(skills.map((skill) => skill.data.group))];
 
   return (
     <MotionProvider>
@@ -41,8 +41,8 @@ export default async function HomePage() {
       <Navbar initials={initialsOf(profile.displayName)} name={profile.displayName} cvUrl={profile.cvUrl} cvNote={cvNote} />
       <main id="contenido" tabIndex={-1} className="overflow-x-clip outline-none">
         <Hero profile={profile} cvNote={cvNote} />
-        <Stats semester={profile.semester} studies={studiesLine} projects={projects.length} platforms={platforms} />
-        <About profile={profile} skills={skills.map((skill) => skill.data)} studies={studiesLine} />
+        <Stats projects={projects.length} platforms={platforms} techs={techs} techGroups={techGroups} />
+        <About profile={profile} skills={skills.map((skill) => skill.data)} />
         <Projects projects={projects.map((project) => ({ ...project.data, links: project.links() }))} />
         <Testimonials testimonials={testimonials.map((t) => ({ ...t.data, initials: t.initials }))} />
         <Experience items={experience.map((e) => ({ ...e.data, badge: e.badge(), accent: e.accent(), icon: e.icon() }))} />

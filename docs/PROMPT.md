@@ -72,7 +72,7 @@ El portafolio se siente como **un cuaderno de ingeniería bien editado**: papel 
 | `muted` | `#4A4F49` | Texto secundario. | 7.24:1 sobre `paper` |
 | `rust` | `#A13A1A` | Acento, botón principal, índices. | 5.78:1 sobre `paper`; `card` sobre `rust` 6.37:1 |
 | `rust-deep` | `#7E2C12` | Hover de superficies `rust`. | — |
-| `pine` | `#2D5A4D` | Estados (disponible, académica, colaboración). | 6.76:1 sobre `paper` |
+| `pine` | `#2D5A4D` | Estados (académica, colaboración). | 6.76:1 sobre `paper` |
 | `marigold` | `#E9B949` | Solo fondo (insignia "Destacado", etiqueta de la foto), siempre con texto `ink`. | `ink` sobre `marigold` 9.49:1 |
 
 - Todo texto cumple 4.5:1. Ningún texto informativo por debajo de 14 px: `text-sm` es el mínimo y `text-xs` no existe.
@@ -117,7 +117,7 @@ lib/
   supabase.ts           server/browser clients + isAdmin()
   github.ts             GitHub REST client (server only)
 content/seed.json       initial content (already in the repo)
-supabase/migrations/    0001_init.sql (tables, RLS, storage) · 0002_profile_stats.sql (availability, semester)
+supabase/migrations/    0001_init.sql (tables, RLS, storage)
 middleware.ts           refreshes the session and protects /admin
 next.config.ts          security headers, images
 .env.example
@@ -202,8 +202,8 @@ Un componente por sección, cada uno con su `id`. `SECTIONS` (en `components/ui/
 
 1. **Intro** (solo la primera visita de la sesión): cortina `ink` con el monograma, el nombre y una barra que se llena; luego sube y el hero entra escalonado. Botón "Saltar intro" y enlace "Saltar al contenido". Funciona con CSS aunque no haya JS; se omite con reduced motion o con las animaciones apagadas.
 2. **Menú fijo**: monograma "DI", anclas con subrayado `rust` en la sección actual, indicador "01 / 08", interruptor "Animaciones: sí/no", "Descargar CV" y, por debajo de 1280 px, menú a pantalla completa (foco atrapado, `Esc` para cerrar). Enlace "Saltar al contenido" al inicio del documento.
-3. **Hero** (`#inicio`): insignia de disponibilidad (`profile.availability`), nombre grande en Fraunces (apellido en cursiva `rust`), rol y meta, frase corta, "Ver proyectos" y "Descargar CV", ubicación y mi foto real (`daniel-sin-hora.webp`, sin filtros) en un marco de papel con mi nombre completo en una etiqueta `marigold`.
-4. **Cifras clave** (`#cifras`): semestre (`profile.semester`), proyectos publicados y plataformas (tipos de proyecto distintos), todo leído de los datos.
+3. **Hero** (`#inicio`): nombre grande en Fraunces (apellido en cursiva `rust`), rol y meta, frase corta, "Ver proyectos" y "Descargar CV", ubicación y mi foto real (`daniel-sin-hora.webp`, sin filtros) en un marco de papel con mi nombre completo en una etiqueta `marigold`.
+4. **Cifras clave** (`#cifras`): proyectos publicados, plataformas (tipos de proyecto distintos) y tecnologías del stack, todo leído de los datos.
 5. **Sobre mí** (`#sobre-mi`): `profile.about`, foto, datos rápidos (ubicación, estudio, meta) y el stack agrupado por categoría desde `skills`. Sin niveles, porcentajes ni barras.
 6. **Proyectos** (`#proyectos`): filtros por tipo con contador, tarjetas con portada (captura o espacio limpio con tipo, periodo y nombre), insignias "Destacado" y "Colaboración", tecnologías, "Código" + la acción de su tipo y el detalle en un modal (problema, solución, mi rol, aprendizajes, galería y enlaces extra).
 7. **Testimonios** (`#testimonios`): 3 tarjetas con avatar (foto o iniciales), nombre, cargo y texto.
@@ -244,7 +244,6 @@ Un componente por sección, cada uno con su `id`. `SECTIONS` (en `components/ui/
 - Demo de Luma (`liveUrl`).
 - El proyecto web del restaurante de Diana Jojoa: nombre, URL y año. Ya está como borrador en `content/seed.json`.
 - `public/cv.pdf`: lo subo yo desde el admin.
-- Correr `supabase/migrations/0002_profile_stats.sql` en Supabase: agrega `availability` (insignia del hero) y `semester` (cifras clave) al perfil.
 
 ---
 

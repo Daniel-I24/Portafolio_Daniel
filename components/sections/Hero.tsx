@@ -16,13 +16,7 @@ export function Hero({ profile, cvNote }: { profile: ProfileData; cvNote?: strin
     <section id="inicio" aria-labelledby="inicio-title" className="scroll-mt-20 pb-20 pt-32 sm:pb-28 sm:pt-40">
       <div className={`${container} grid items-center gap-14 lg:grid-cols-[1.25fr_0.9fr] lg:gap-20`}>
         <div>
-          <div {...step(0)} className="enter flex flex-wrap items-center gap-3">
-            {profile.availability && (
-              <p className="inline-flex items-center gap-2 rounded-full border border-line bg-card px-3.5 py-2 text-sm font-medium text-pine">
-                <span aria-hidden className="size-2 rounded-full bg-pine motion-safe:animate-pulse" />
-                {profile.availability}
-              </p>
-            )}
+          <div {...step(0)} className="enter">
             <p className="text-sm font-medium uppercase tracking-[0.12em] text-muted"><span className="text-rust">{sectionNumber("inicio")}</span> — Inicio</p>
           </div>
 

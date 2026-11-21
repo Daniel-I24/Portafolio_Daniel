@@ -8,10 +8,10 @@ const fraunces = Fraunces({ subsets: ["latin"], axes: ["opsz"], style: ["normal"
 const plex = IBM_Plex_Sans({ weight: ["400", "500", "600"], subsets: ["latin"], variable: "--font-plex", display: "swap" });
 
 /**
- * Runs before paint: applies the saved "Animaciones" choice and skips the intro on repeat visits,
- * with reduced motion or with animations off, so neither flashes before hydration.
+ * Runs before paint: sets the animations state (the saved choice, else off only with OS reduced motion)
+ * and skips the intro on repeat visits or with animations off, so neither flashes before hydration.
  */
-const PREFS_SCRIPT = `try{var d=document.documentElement;if(localStorage.getItem("motion")==="off")d.dataset.motion="off";if(sessionStorage.getItem("intro")||d.dataset.motion==="off"||matchMedia("(prefers-reduced-motion: reduce)").matches)d.dataset.intro="seen"}catch(e){}`;
+const PREFS_SCRIPT = `try{var d=document.documentElement,m=localStorage.getItem("motion");d.dataset.motion=m==="on"||m==="off"?m:matchMedia("(prefers-reduced-motion: reduce)").matches?"off":"on";if(sessionStorage.getItem("intro")||d.dataset.motion==="off")d.dataset.intro="seen"}catch(e){}`;
 
 export async function generateMetadata(): Promise<Metadata> {
   const { profile } = await getPortfolio();

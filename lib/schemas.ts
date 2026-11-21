@@ -30,8 +30,6 @@ export const profileSchema = z.object({
   goal: text("Meta"),
   tagline: text("Frase corta", 160),
   location: text("Ubicación"),
-  availability: text("Disponibilidad (insignia del hero)", 60),
-  semester: z.number().int().min(1).max(12).nullish().describe("Semestre actual"),
   about: text("Sobre mí", 2000),
   photo: z.string().default("").describe("Foto"),
   cvUrl: z.string().default("/cv.pdf").describe("CV (PDF)"),

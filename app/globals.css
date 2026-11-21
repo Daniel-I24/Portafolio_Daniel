@@ -105,9 +105,9 @@
   to { transform: scaleX(1); }
 }
 
-/* Same rules for the OS setting and for the in-page "Animaciones" switch. */
+/* Same rules for the OS setting (unless the visitor turned animations back on) and for the in-page switch. */
 @media (prefers-reduced-motion: reduce) {
-  *, *::before, *::after {
+  html:not([data-motion="on"]) *, html:not([data-motion="on"]) *::before, html:not([data-motion="on"]) *::after {
     animation-duration: 0.01ms !important;
     animation-delay: 0s !important;
     animation-iteration-count: 1 !important;

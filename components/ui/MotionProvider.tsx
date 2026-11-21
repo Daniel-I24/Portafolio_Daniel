@@ -1,7 +1,7 @@
 "use client";
 
 import Lenis from "lenis";
-import { MotionConfig, useReducedMotion } from "motion/react";
+import { MotionConfig } from "motion/react";
 import { createContext, useContext, useEffect, useState, type ReactNode } from "react";
 import { Icon } from "./Icon";
 
@@ -13,29 +13,29 @@ const MotionContext = createContext<MotionPrefs>({ enabled: true, toggle: () => 
 
 export const useMotionPrefs = (): MotionPrefs => useContext(MotionContext);
 
-/** True when nothing should move: the OS asks for reduced motion or the visitor switched animations off. */
+/** True when nothing should move: animations are off by the visitor's choice or, without one, by the OS setting. */
 export function useCalm(): boolean {
-  const reduced = useReducedMotion();
-  const { enabled } = useMotionPrefs();
-  return Boolean(reduced) || !enabled;
+  return !useMotionPrefs().enabled;
 }
 
 /**
  * Page-wide motion switch (persisted in localStorage, mirrored on <html data-motion> so CSS obeys it too)
- * and Lenis smooth scroll, which only runs while motion is allowed.
+ * and Lenis smooth scroll, which only runs while motion is allowed. On by default unless the OS asks for reduced motion.
  */
 export function MotionProvider({ children }: { children: ReactNode }) {
   const [enabled, setEnabled] = useState(true);
-  const reduced = useReducedMotion();
 
-  // The inline script in app/layout.tsx already applied the saved choice before paint; sync React with it.
-  useEffect(() => setEnabled(document.documentElement.dataset.motion !== "off"), []);
+  // The inline script in app/layout.tsx already set the state before paint; sync React with it.
+  useEffect(() => {
+    const { motion } = document.documentElement.dataset;
+    setEnabled(motion ? motion === "on" : !matchMedia("(prefers-reduced-motion: reduce)").matches);
+  }, []);
 
   useEffect(() => {
-    if (!enabled || reduced) return;
+    if (!enabled) return;
     const lenis = new Lenis({ autoRaf: true, anchors: { offset: -HEADER_OFFSET } });
     return () => lenis.destroy();
-  }, [enabled, reduced]);
+  }, [enabled]);
 
   const toggle = () => {
     const next = !enabled;
@@ -50,19 +50,19 @@ export function MotionProvider({ children }: { children: ReactNode }) {
 
   return (
     <MotionContext value={{ enabled, toggle }}>
-      <MotionConfig reducedMotion={enabled ? "user" : "always"}>{children}</MotionConfig>
+      <MotionConfig reducedMotion={enabled ? "never" : "always"}>{children}</MotionConfig>
     </MotionContext>
   );
 }
 
-/** "Animaciones: sí / no" switch; also used inside the mobile menu. */
+/** Labelled with the action it performs; pressed while animations are paused. Also used inside the mobile menu. */
 export function MotionSwitch({ className = "" }: { className?: string }) {
   const { enabled, toggle } = useMotionPrefs();
   return (
     <button type="button" onClick={toggle} aria-pressed={!enabled}
       className={`inline-flex items-center gap-2 rounded-full border border-line px-3.5 py-2.5 text-sm font-medium text-ink transition-colors duration-150 hover:border-ink ${className}`}>
       <Icon name={enabled ? "pause" : "play"} size={16} />
-      Animaciones: {enabled ? "sí" : "no"}
+      {enabled ? "Pausar animaciones" : "Activar animaciones"}
     </button>
   );
 }

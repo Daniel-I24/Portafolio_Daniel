@@ -90,19 +90,16 @@ export function ProjectCard({ project, onOpen }: { project: ProjectView; onOpen:
 
 export function ProjectDetail({ project }: { project: ProjectView }) {
   const sections = [["Problema", project.problem], ["Solución", project.solution], ["Mi rol", project.myRole], ["Aprendizajes", project.learnings]].filter(([, text]) => text);
-  const note = project.links.find((link) => link.note)?.note;
   return (
     <div className="space-y-6">
       <Badges project={project} />
       <p className="text-lg">{project.summary}</p>
-      {sections.length > 0 ? (
+      {sections.length > 0 && (
         <dl className="grid gap-5 sm:grid-cols-2">
           {sections.map(([label, text]) => (
             <div key={label}><dt className="font-display text-lg font-semibold">{label}</dt><dd className="mt-1 text-muted">{text}</dd></div>
           ))}
         </dl>
-      ) : (
-        <p className="text-muted">Pronto agrego el detalle completo: problema, solución, mi rol y aprendizajes.</p>
       )}
       {project.gallery.length > 0 && (
         <div className="grid grid-cols-2 gap-3">
@@ -110,7 +107,6 @@ export function ProjectDetail({ project }: { project: ProjectView }) {
         </div>
       )}
       <TechList stack={project.stack} />
-      {note && <p className="rounded-xl border-l-4 border-pine bg-paper p-4 text-sm"><strong>¿Por qué «Documentación»?</strong> {note}</p>}
       <div className="flex flex-wrap gap-2"><ProjectLinks project={project} extra /></div>
     </div>
   );
