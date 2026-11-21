@@ -1,9 +1,7 @@
 "use client";
 
-import { AnimatePresence, motion } from "motion/react";
 import { useMemo, useState } from "react";
 import { Modal } from "@/components/ui/Modal";
-import { useCalm } from "@/components/ui/MotionProvider";
 import { Reveal } from "@/components/ui/Reveal";
 import { meta, ProjectCard, ProjectDetail, type ProjectView } from "@/components/ui/ProjectCard";
 import { Section } from "@/components/ui/Section";
@@ -35,7 +33,6 @@ function KindFilter({ index, value, onChange }: { index: TechIndex<ProjectView>;
 }
 
 export function Projects({ projects }: { projects: ProjectView[] }) {
-  const calm = useCalm();
   const [kind, setKind] = useState<ProjectKind | null>(null);
   const [selected, setSelected] = useState<ProjectView | null>(null);
   const index = useMemo(() => new TechIndex(projects, (project) => [project.kind]), [projects]);
@@ -45,15 +42,11 @@ export function Projects({ projects }: { projects: ProjectView[] }) {
     <Section id="proyectos" title="Proyectos" lead="Web, móvil, escritorio, videojuegos y APIs: lo que he construido, solo y en equipo."
       aside={<KindFilter index={index} value={kind} onChange={setKind} />}>
       <p className="sr-only" aria-live="polite">{`Mostrando ${visible.length} proyectos`}</p>
-      <motion.ul layout={!calm} className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
-        <AnimatePresence mode="popLayout" initial={false}>
-          {visible.map((project, i) => (
-            <motion.li key={project.id} layout={!calm} exit={{ opacity: 0, scale: 0.96 }} transition={{ duration: 0.3, ease: [0.16, 1, 0.3, 1] }}>
-              <Reveal index={i % 3} className="h-full"><ProjectCard project={project} onOpen={() => setSelected(project)} /></Reveal>
-            </motion.li>
-          ))}
-        </AnimatePresence>
-      </motion.ul>
+      <ul className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+        {visible.map((project, i) => (
+          <Reveal as="li" key={project.id} index={i % 3} className="h-full"><ProjectCard project={project} onOpen={() => setSelected(project)} /></Reveal>
+        ))}
+      </ul>
 
       <Modal open={selected !== null} onClose={() => setSelected(null)} title={selected?.title ?? ""} kicker={selected ? meta(selected) : undefined}>
         {selected && <ProjectDetail project={selected} />}

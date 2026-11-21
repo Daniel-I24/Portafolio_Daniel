@@ -48,16 +48,14 @@
     -webkit-tap-highlight-color: transparent;
     --intro-delay: 1.15s;
   }
-  html[data-intro="seen"] { --intro-delay: 0s; }
-  html[data-intro="skip"] { --intro-delay: 0.1s; }
+  html[data-intro="seen"] { --intro-delay: 0s; } html[data-intro="skip"] { --intro-delay: 0.1s; }
   body { font-family: var(--font-sans); overflow-x: hidden; }
 
   :focus-visible { outline: 3px solid var(--color-mist); outline-offset: 3px; }
   ::selection { background: var(--color-mist); color: var(--color-abyss); }
 
   /* Lenis */
-  html.lenis, html.lenis body { height: auto; }
-  .lenis.lenis-stopped { overflow: clip; }
+  html.lenis, html.lenis body { height: auto; } .lenis.lenis-stopped { overflow: clip; }
   .lenis [data-lenis-prevent] { overscroll-behavior: contain; }
 }
 
@@ -70,16 +68,15 @@
   }
   .enter { animation-name: rise; animation-duration: 0.8s; }
   .letter { animation-name: letter; animation-duration: 0.9s; animation-delay: calc(var(--intro-delay) + 150ms + var(--i) * 45ms); }
-  .draw { animation-name: draw; animation-duration: 1.1s; }
-  .ink-in { animation-name: ink-in; animation-duration: 0.7s; }
+  .draw { animation-name: draw; animation-duration: 1.1s; } .ink-in { animation-name: ink-in; animation-duration: 0.7s; }
   .swash { animation-name: swash; animation-duration: 0.9s; }
-  .unblur { animation-name: unblur; animation-duration: 1s; }
-  .sharpen { animation-name: sharpen; animation-duration: 1s; }
+  .unblur, .sharpen { animation-duration: 1s; } .unblur { animation-name: unblur; } .sharpen { animation-name: sharpen; }
 
   /* Lava lamp: pre-softened shapes, each on its own slow cycle (inline duration/delay). Paused in hidden tabs. */
   .lava-blob { animation: lava var(--d, 30s) ease-in-out var(--delay, 0s) infinite; }
   .lava-blob:nth-child(even) { animation-name: lava-b; }
-  html[data-tab="hidden"] .lava-blob, html[data-tab="hidden"] .animate-pulse-led { animation-play-state: paused; }
+  /* Endless loops wait for the page to settle (data-ready, set when idle after load) and pause in hidden tabs. */
+  html:is(:not([data-ready]), [data-tab="hidden"]) :is(.lava-blob, .animate-pulse-led, .sway) { animation-play-state: paused; }
 
   /* Loader: shapes gather into the monogram while the counter runs to 100, then everything dissolves (≤ 1.6 s). */
   .loader { animation: loader-out 0.4s ease-in 1.15s forwards; }
@@ -89,6 +86,14 @@
   .loader-count::after { content: counter(n); }
   html[data-intro="skip"] .loader { animation-delay: 0s; animation-duration: 0.25s; }
   html[data-intro="seen"] .loader { display: none; }
+
+  /* Scroll-linked entrance and exit, both ways: rises in while entering, holds, then lifts away with depth once
+     it is already leaving (exit 35 %+), so nothing fades while it is being read. --i staggers a row by distance. */
+  @supports (animation-timeline: view()) {
+    .reveal { animation: reveal linear both; animation-timeline: view(); animation-range: entry 0% exit 100%; }
+    .reveal-mask { animation: mask linear both; animation-timeline: view(); animation-range: entry 0% exit 100%; }
+  }
+  html[data-motion="off"] :is(.reveal, .reveal-mask) { animation: none; }
 
   /* Touch screens: the hero photo sways gently instead of following a cursor. */
   @media (hover: none) { .sway { animation: var(--animate-sway); } }
@@ -103,15 +108,8 @@
 @keyframes swash { from { stroke-dashoffset: 1.1; } to { stroke-dashoffset: 0; } }
 @keyframes unblur { from { opacity: 1; } to { opacity: 0; } }
 @keyframes sharpen { from { transform: scale(1.02); } to { transform: none; } }
-@keyframes sheen {
-  from { opacity: 1; transform: translateX(-160%) skewX(-20deg); }
-  to { opacity: 1; transform: translateX(420%) skewX(-20deg); }
-}
-@keyframes sway {
-  0%, 100% { transform: rotateX(0deg) rotateY(0deg); }
-  25% { transform: rotateX(3deg) rotateY(-5deg); }
-  75% { transform: rotateX(-2deg) rotateY(5deg); }
-}
+@keyframes sheen { from { opacity: 1; transform: translateX(-160%) skewX(-20deg); } to { opacity: 1; transform: translateX(420%) skewX(-20deg); } }
+@keyframes sway { 0%, 100% { transform: none; } 25% { transform: rotateX(3deg) rotateY(-5deg); } 75% { transform: rotateX(-2deg) rotateY(5deg); } }
 /* LED light breathes slowly; rest (100 %) is full light. */
 @keyframes pulse-led { 0%, 100% { opacity: 1; } 50% { opacity: 0.6; } }
 /* Wax rises stretched, flattens at the top, sinks back round. 0 % = 100 % = rest, so with motion off it is still. */
@@ -126,6 +124,13 @@
   35% { transform: translate3d(-6vw, 30vh, 0) scale(1.3, 0.78); opacity: 1; }
   65% { transform: translate3d(5vw, 42vh, 0) scale(0.85, 1.3); opacity: 0.6; }
 }
+@keyframes reveal {
+  entry 0% { opacity: 0; transform: translateY(calc(48px + var(--i, 0) * 28px)) scale(0.97); }
+  entry 90% { opacity: 1; transform: none; }
+  exit 35% { opacity: 1; transform: none; }
+  exit 100% { opacity: 0; transform: translateY(-56px) scale(0.94); }
+}
+@keyframes mask { entry 10% { transform: translateY(105%); } entry 80%, exit 40% { transform: none; opacity: 1; } exit 100% { transform: translateY(-40%); opacity: 0; } }
 @keyframes gather { from { transform: translate(var(--fx), var(--fy)) scale(0.6); } to { transform: none; } }
 @keyframes mark { from { opacity: 0; transform: scale(0.85); } to { opacity: 1; transform: none; } }
 @keyframes count { to { --n: 100; } }
@@ -133,6 +138,7 @@
 
 /* Same rules for the OS setting (unless the visitor turned animations back on) and for the in-page switch. */
 @media (prefers-reduced-motion: reduce) {
+  html:not([data-motion="on"]) :is(.reveal, .reveal-mask) { animation: none; }
   html:not([data-motion="on"]) *, html:not([data-motion="on"]) *::before, html:not([data-motion="on"]) *::after {
     animation-duration: 0.01ms !important; animation-delay: 0s !important; animation-iteration-count: 1 !important;
     transition-duration: 0.01ms !important; scroll-behavior: auto !important;

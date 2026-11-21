@@ -4,8 +4,16 @@ import { shortPhrase } from "@/lib/domain";
 import { getPortfolio } from "@/lib/patterns";
 import "./globals.css";
 
-const fraunces = Fraunces({ subsets: ["latin"], axes: ["opsz"], style: ["normal", "italic"], variable: "--font-fraunces", display: "swap" });
-const plex = IBM_Plex_Sans({ weight: ["400", "500", "600"], subsets: ["latin"], variable: "--font-plex", display: "swap" });
+// Both families are on the hero (name, surname in italics, role, text, buttons), so both are preloaded.
+// `swap` paints text at once; the metric-matched fallback (adjustFontFallback) keeps the later swap from moving layout.
+const fraunces = Fraunces({
+  subsets: ["latin"], axes: ["opsz"], style: ["normal", "italic"], variable: "--font-fraunces",
+  display: "swap", preload: true, adjustFontFallback: true, fallback: ["Georgia", "serif"],
+});
+const plex = IBM_Plex_Sans({
+  weight: ["400", "500", "600"], subsets: ["latin"], variable: "--font-plex",
+  display: "swap", preload: true, adjustFontFallback: true, fallback: ["system-ui", "sans-serif"],
+});
 
 /**
  * Runs before paint: sets the animations state (the saved choice, else off only with OS reduced motion)

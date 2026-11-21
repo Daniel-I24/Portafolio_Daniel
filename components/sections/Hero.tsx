@@ -74,8 +74,12 @@ export function Hero({ profile, cvNote }: { profile: ProfileData; cvNote?: strin
             {/* On phones the text sits right below the photo: the halo stays short there to keep 4.5:1. */}
             <Glow className="-inset-x-[22%] -bottom-[12%] -top-[18%] sm:-inset-x-[22%] sm:-top-[20%] sm:-bottom-[32%]" />
             <TiltPhoto>
-              <Image src={profile.photo} alt={`Foto de ${profile.fullName}`} width={1002} height={880}
-                sizes="(min-width: 1024px) 440px, (min-width: 640px) 288px, 208px" priority className="h-auto w-full" />
+              {/* The file has white rounded corners: a CSS clip with a softer radius and a slight zoom keeps them out
+                  of view without touching the image. The LED tube follows the frame radius (TiltPhoto). */}
+              <div className="overflow-hidden rounded-[11%/12.5%]">
+                <Image src={profile.photo} alt={`Foto de ${profile.fullName}`} width={1002} height={880}
+                  sizes="(min-width: 1024px) 440px, (min-width: 640px) 288px, 208px" priority className="h-auto w-full origin-[50%_45%] scale-[1.2]" />
+              </div>
             </TiltPhoto>
             <figcaption className="absolute -bottom-3 -left-3 z-10 -rotate-3 rounded-xl bg-mist px-3 py-2 text-sm font-semibold text-abyss shadow-lift sm:-left-5 sm:bottom-8 sm:px-4 sm:py-2.5">
               {profile.fullName}

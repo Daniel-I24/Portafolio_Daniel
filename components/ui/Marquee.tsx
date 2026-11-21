@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useRef } from "react";
-import { useCalm } from "./MotionProvider";
+import { useCalm, whenReady } from "./MotionProvider";
 
 const SPEED = 70; // px per second
 const CRAWL = 0.08; // share of the speed kept under the cursor
@@ -31,10 +31,13 @@ export function Marquee({ text }: { text: string }) {
   useEffect(() => {
     const element = track.current;
     if (calm || !element) return;
-    const duration = (element.scrollWidth / 2 / SPEED) * 1000;
-    const animation = element.animate([{ transform: "translateX(0)" }, { transform: "translateX(-50%)" }], { duration, iterations: Infinity });
-    loop.current = animation;
-    return () => { cancelAnimationFrame(ramp.current); animation.cancel(); loop.current = null; };
+    let animation: Animation | null = null;
+    const stop = whenReady(() => {
+      const duration = (element.scrollWidth / 2 / SPEED) * 1000;
+      animation = element.animate([{ transform: "translateX(0)" }, { transform: "translateX(-50%)" }], { duration, iterations: Infinity });
+      loop.current = animation;
+    });
+    return () => { stop(); cancelAnimationFrame(ramp.current); animation?.cancel(); loop.current = null; };
   }, [calm]);
 
   /** Eases the playback rate toward `target` over BRAKE_MS (a few frames of JS, only on hover changes). */
