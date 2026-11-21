@@ -1,32 +1,35 @@
 "use client";
 
-import { motion, useReducedMotion } from "motion/react";
-import { useState, type ReactNode } from "react";
+import { motion } from "motion/react";
+import type { ReactNode } from "react";
+import { useCalm } from "./MotionProvider";
 
 interface RevealProps {
   children: ReactNode;
   className?: string;
-  delay?: number;
+  /** Position in a staggered group: each step waits 70 ms more. */
+  index?: number;
+  as?: "div" | "li";
 }
 
-/**
- * Fades, lifts and straightens its content the first time it enters the viewport.
- * Sets `data-inview` so descendants can start CSS effects (e.g. title drips) with `group-data-inview:`.
- */
-export function Reveal({ children, className = "", delay = 0 }: RevealProps) {
-  const reduced = useReducedMotion();
-  const [seen, setSeen] = useState(false);
+/** Fades and lifts its content the first time it enters the viewport. Static when motion is off. */
+export function Reveal({ children, className, index = 0, as = "div" }: RevealProps) {
+  const calm = useCalm();
+  // Calm: a plain element, so nothing waits for a scroll to become visible.
+  if (calm) {
+    const Plain = as;
+    return <Plain className={className}>{children}</Plain>;
+  }
+  const Tag = as === "li" ? motion.li : motion.div;
   return (
-    <motion.div
-      className={`group ${className}`}
-      data-inview={seen || undefined}
-      initial={reduced ? false : { opacity: 0, y: 28, rotate: -1.5 }}
-      whileInView={{ opacity: 1, y: 0, rotate: 0 }}
-      viewport={{ once: true, amount: 0.2 }}
-      onViewportEnter={() => setSeen(true)}
-      transition={{ duration: 0.6, delay, ease: [0.16, 1, 0.3, 1] }}
+    <Tag
+      className={className}
+      initial={{ opacity: 0, y: 24 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      viewport={{ once: true, amount: 0.15 }}
+      transition={{ duration: 0.6, delay: Math.min(index, 8) * 0.07, ease: [0.16, 1, 0.3, 1] }}
     >
       {children}
-    </motion.div>
+    </Tag>
   );
 }

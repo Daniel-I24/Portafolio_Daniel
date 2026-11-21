@@ -7,14 +7,16 @@ interface ModalProps {
   open: boolean;
   onClose: () => void;
   title: string;
+  /** Small line above the title (type, period…). */
+  kicker?: string;
   children: ReactNode;
 }
 
 /**
- * Poster-style dialog built on the native <dialog>: showModal() gives focus trapping,
- * Esc to close and an inert background for free. Clicking the backdrop also closes it.
+ * Dialog built on the native <dialog>: showModal() gives focus trapping, Esc to close and an inert
+ * background for free. Clicking the backdrop also closes it. Lenis leaves its inner scroll alone.
  */
-export function Modal({ open, onClose, title, children }: ModalProps) {
+export function Modal({ open, onClose, title, kicker, children }: ModalProps) {
   const ref = useRef<HTMLDialogElement>(null);
 
   useEffect(() => {
@@ -28,23 +30,27 @@ export function Modal({ open, onClose, title, children }: ModalProps) {
     <dialog
       ref={ref}
       aria-labelledby="modal-title"
+      data-lenis-prevent
       onClose={onClose}
       onClick={(event) => event.target === ref.current && onClose()}
-      className="m-auto max-h-[88dvh] w-[min(42rem,calc(100vw-2rem))] overflow-y-auto border-[3px] border-ink bg-paper p-0 text-ink shadow-sticker-lg backdrop:bg-ink/75 open:animate-[pop_300ms_var(--ease-snap)]"
+      className="m-auto max-h-[88dvh] w-[min(46rem,calc(100vw-2rem))] overflow-y-auto overscroll-contain rounded-3xl border border-line bg-card p-0 text-ink shadow-lift backdrop:bg-ink/60 backdrop:backdrop-blur-sm open:animate-rise"
     >
-      <div className="p-6 sm:p-8">
-        <div className="flex items-start justify-between gap-4">
-          <h2 id="modal-title" className="font-marker text-3xl leading-none sm:text-4xl">{title}</h2>
+      <div className="p-6 sm:p-10">
+        <div className="flex items-start justify-between gap-6">
+          <div>
+            {kicker && <p className="text-sm font-medium uppercase tracking-[0.12em] text-muted">{kicker}</p>}
+            <h2 id="modal-title" className="mt-1 font-display text-2xl font-semibold leading-tight sm:text-3xl">{title}</h2>
+          </div>
           <button
             type="button"
             onClick={onClose}
             aria-label="Cerrar"
-            className="grid size-10 shrink-0 rotate-45 place-items-center border-[3px] border-ink bg-mustard shadow-sticker-sm transition-transform duration-150 hover:rotate-[135deg]"
+            className="grid size-11 shrink-0 place-items-center rounded-full border border-line transition-colors duration-150 hover:border-ink hover:bg-paper"
           >
-            <Icon name="plus" size={22} />
+            <Icon name="close" />
           </button>
         </div>
-        <div className="mt-6">{children}</div>
+        <div className="mt-8">{children}</div>
       </div>
     </dialog>
   );

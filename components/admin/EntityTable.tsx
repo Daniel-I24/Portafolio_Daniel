@@ -16,7 +16,7 @@ type Row = Record<string, unknown> & { id: string; published: boolean };
 const pick = (row: Row, keys: string[]) => String(keys.map((key) => row[key]).find((value) => value) ?? "");
 const titleOf = (row: Row) => pick(row, ["title", "name"]);
 const subtitleOf = (row: Row) => pick(row, ["period", "role", "group", "type", "kind"]);
-const iconButton = "grid size-9 place-items-center border-2 border-ink bg-paper text-ink hover:bg-mustard disabled:opacity-40";
+const iconButton = "grid size-9 place-items-center rounded-lg border border-line bg-card text-ink hover:bg-marigold disabled:opacity-40";
 
 export function EntityTable({ table, rows: initialRows }: { table: Table; rows: Row[] }) {
   const router = useRouter();
@@ -52,29 +52,29 @@ export function EntityTable({ table, rows: initialRows }: { table: Table; rows: 
       <div className="flex flex-wrap items-center gap-3">
         <label className="grow">
           <span className="sr-only">Buscar</span>
-          <input type="search" value={query} onChange={(e) => setQuery(e.target.value)} placeholder="Buscar…" className="w-full border-[3px] border-ink bg-paper px-3 py-2 text-ink" />
+          <input type="search" value={query} onChange={(e) => setQuery(e.target.value)} placeholder="Buscar…" className="w-full rounded-xl border border-line bg-card px-3 py-2 text-ink" />
         </label>
-        <button type="button" onClick={() => setEditing("new")} className="inline-flex items-center gap-2 border-[3px] border-ink bg-hoodie px-4 py-2 font-extrabold uppercase text-ink shadow-sticker-sm">
+        <button type="button" onClick={() => setEditing("new")} className="inline-flex items-center gap-2 rounded-full bg-rust px-4 py-2.5 font-semibold text-card hover:bg-rust-deep">
           <Icon name="plus" size={18} /> Nuevo
         </button>
       </div>
-      <p role="status" className="mt-3 min-h-6 font-mono text-sm text-mustard">{pending ? "Guardando…" : status}</p>
-      {query && <p className="font-mono text-sm text-cement">El orden por arrastre se desactiva mientras buscas.</p>}
+      <p role="status" className="mt-3 min-h-6 text-sm text-rust">{pending ? "Guardando…" : status}</p>
+      {query && <p className="text-sm text-muted">El orden por arrastre se desactiva mientras buscas.</p>}
 
       <Reorder.Group as="ol" axis="y" values={rows} onReorder={setRows} className="mt-2 space-y-2">
         {visible.map((row) => {
           const index = rows.indexOf(row);
           return (
             <Reorder.Item key={row.id} value={row} as="li" drag={query ? false : "y"} onDragEnd={() => saveOrder(latest.current)}
-              className="flex flex-wrap items-center gap-3 border-[3px] border-ink bg-paper p-3 text-ink">
-              <span aria-hidden className="cursor-grab font-mono text-concrete">⋮⋮</span>
+              className="flex flex-wrap items-center gap-3 rounded-xl border border-line bg-card p-3 text-ink">
+              <span aria-hidden className="cursor-grab text-muted">⋮⋮</span>
               <div className="min-w-0 grow">
                 <p className="truncate font-semibold">{titleOf(row)}</p>
-                <p className="truncate font-mono text-sm text-concrete">{subtitleOf(row)}</p>
+                <p className="truncate text-sm text-muted">{subtitleOf(row)}</p>
               </div>
               <button type="button" role="switch" aria-checked={row.published} aria-label={`Publicado: ${titleOf(row)}`}
                 onClick={() => { setRows(rows.map((r) => (r.id === row.id ? { ...r, published: !r.published } : r))); run(() => setPublished(table, row.id, !row.published)); }}
-                className={`border-2 border-ink px-2 py-1 font-mono text-sm ${row.published ? "bg-slime" : "bg-cement"}`}>
+                className={`rounded-lg border border-line px-2 py-1 text-sm ${row.published ? "bg-pine text-card" : "bg-line"}`}>
                 {row.published ? "Publicado" : "Borrador"}
               </button>
               <button type="button" aria-label={`Subir ${titleOf(row)}`} disabled={!!query || index === 0} onClick={() => move(index, -1)} className={iconButton}>
@@ -87,8 +87,8 @@ export function EntityTable({ table, rows: initialRows }: { table: Table; rows: 
               {confirming === row.id ? (
                 <span className="flex items-center gap-2 text-sm font-semibold">
                   ¿Eliminar?
-                  <button type="button" onClick={() => { setRows(rows.filter((r) => r.id !== row.id)); setConfirming(null); run(() => deleteEntity(table, row.id)); }} className="border-2 border-spray-pink bg-ink px-2 py-1 text-paper">Sí</button>
-                  <button type="button" onClick={() => setConfirming(null)} className="border-2 border-ink bg-paper px-2 py-1">No</button>
+                  <button type="button" onClick={() => { setRows(rows.filter((r) => r.id !== row.id)); setConfirming(null); run(() => deleteEntity(table, row.id)); }} className="rounded-lg bg-rust px-2 py-1 text-card">Sí</button>
+                  <button type="button" onClick={() => setConfirming(null)} className="rounded-lg border border-line bg-card px-2 py-1">No</button>
                 </span>
               ) : (
                 <button type="button" aria-label={`Eliminar ${titleOf(row)}`} onClick={() => setConfirming(row.id)} className={iconButton}><Icon name="trash" size={16} /></button>
@@ -97,7 +97,7 @@ export function EntityTable({ table, rows: initialRows }: { table: Table; rows: 
           );
         })}
       </Reorder.Group>
-      {visible.length === 0 && <p className="mt-4 font-semibold text-paper">{query ? "Nada coincide con la búsqueda." : "Todavía no hay registros."}</p>}
+      {visible.length === 0 && <p className="mt-4 font-semibold text-ink">{query ? "Nada coincide con la búsqueda." : "Todavía no hay registros."}</p>}
 
       <Modal open={editing !== null} onClose={() => setEditing(null)} title={editing === "new" ? "Nuevo registro" : `Editar: ${editing ? titleOf(editing) : ""}`}>
         {editing && (

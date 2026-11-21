@@ -5,17 +5,17 @@ import type {
 import { periodKey } from "./structures";
 
 export type IconName =
-  | "spray" | "github" | "linkedin" | "mail" | "download" | "apk" | "arrow"
-  | "volley" | "football" | "moto" | "pool" | "music" | "shield" | "code"
-  | "edit" | "trash" | "plus" | "logout";
+  | "github" | "linkedin" | "mail" | "download" | "apk" | "arrow" | "external" | "copy" | "check"
+  | "pin" | "menu" | "close" | "pause" | "play" | "volley" | "football" | "moto" | "pool" | "music"
+  | "dumbbell" | "shield" | "code" | "edit" | "trash" | "plus" | "logout";
 
 /** Short hero phrase: the explicit tagline, or the first sentence of "about". */
 export const shortPhrase = (profile: ProfileData): string => profile.tagline || (profile.about.match(/^[^.!?]+[.!?]/)?.[0] ?? "");
 
-export type Accent = "hoodie" | "mustard" | "denim" | "spray-pink" | "slime";
+export type Accent = "rust" | "pine";
 
 export type Card = { title: string; subtitle: string; tags: string[] };
-export type CardAction = { label: string; href: string; icon: IconName; note?: string }; // note: why it is the README
+export type CardAction = { label: string; href: string; icon: IconName };
 
 type EntityMeta = { id: string; order: number; published: boolean };
 
@@ -29,6 +29,11 @@ export abstract class Entity<T extends EntityMeta = EntityMeta> {
 
   abstract toCard(): Card;
 }
+
+/** Visible name of each kind: filter chips, card labels and the "plataformas" figure. */
+export const KIND_LABELS: Record<ProjectKind, string> = {
+  web: "Web", mobile: "Móvil", desktop: "Escritorio", game: "Videojuego", api: "API",
+};
 
 type LinkSpec = { label: string; icon: IconName; url: (p: ProjectData) => string };
 
@@ -49,14 +54,6 @@ const LINK_ORDER: LinkSpec[] = [
   { label: "Descargar", icon: "download", url: (p) => p.downloadUrl },
 ];
 
-const NO_DEMO_NOTES: Record<ProjectKind, string> = {
-  web: "La demo pública todavía no está desplegada: el README explica cómo correr el proyecto en local.",
-  mobile: "Todavía no hay un APK publicado: el README explica cómo compilar e instalar la app.",
-  api: "Es una API sin interfaz web pública: el README documenta cómo ejecutarla y probar sus endpoints.",
-  desktop: "Es una aplicación de escritorio, no corre en el navegador: el README explica cómo instalarla y ejecutarla.",
-  game: "El juego todavía no tiene una versión descargable: el README explica cómo compilarlo y ejecutarlo.",
-};
-
 export class Project extends Entity<ProjectData> {
   get stack(): string[] { return this.data.stack; }
   get kind(): ProjectKind { return this.data.kind; }
@@ -75,7 +72,7 @@ export class Project extends Entity<ProjectData> {
       return [{ label: href === this.liveUrl && this.data.liveLabel ? this.data.liveLabel : label, icon, href }];
     });
     if (links.length < 2 && this.repoUrl) {
-      links.push({ label: "Documentación", icon: "code", href: `${this.repoUrl}#readme`, note: NO_DEMO_NOTES[this.kind] });
+      links.push({ label: "Documentación", icon: "code", href: `${this.repoUrl}#readme` });
     }
     return links;
   }
@@ -103,7 +100,7 @@ export class Skill extends Entity<SkillData> {
 }
 
 const INTEREST_ICONS: Record<InterestSlug, IconName> = {
-  voley: "volley", futbol: "football", motos: "moto", billar: "pool", musica: "music", deporte: "arrow",
+  voley: "volley", futbol: "football", motos: "moto", billar: "pool", musica: "music", deporte: "dumbbell",
 };
 
 export class Interest extends Entity<InterestData> {
@@ -129,12 +126,12 @@ export abstract class Experience extends Entity<ExperienceData> {
 
 export class AcademicExperience extends Experience {
   badge(): string { return "Académica"; }
-  accent(): Accent { return "mustard"; }
+  accent(): Accent { return "pine"; }
   icon(): IconName { return "shield"; }
 }
 
 export class WorkExperience extends Experience {
-  badge(): string { return "Proyectos / laboral"; }
-  accent(): Accent { return "hoodie"; }
+  badge(): string { return "Laboral"; }
+  accent(): Accent { return "rust"; }
   icon(): IconName { return "code"; }
 }

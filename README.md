@@ -1,6 +1,6 @@
-# Dani · Graffo Edition
+# Dani · Papel técnico
 
-Portafolio de **Ivan Daniel Igua Benavides**: desarrollador full stack, con identidad visual de graffiti.
+Portafolio de **Ivan Daniel Igua Benavides**: desarrollador full stack. Dirección visual "Papel técnico": papel cálido, tinta, acento óxido y titulares en serif.
 Desarrollador full stack, futuro especialista en ciberseguridad.
 
 ## Stack
@@ -30,8 +30,8 @@ app/                 page.tsx (secciones en orden), layout.tsx, actions.ts (form
   admin/             panel privado: layout (guarda + noindex), page (pestañas), actions (CRUD), login
   auth/callback/     retorno de GitHub OAuth
 components/
-  sections/          Navbar · Hero · About · Projects · Testimonials · Experience · Contact · OffTheClock · Footer
-  ui/                Character · GraffitiWall · BubbleMenu · SprayButton · Sticker · Modal · Reveal · SectionTitle · Icon
+  sections/          Intro · Navbar · Hero · Stats · About · Projects · Testimonials · Experience · OffTheClock · Contact · Footer
+  ui/                Section · Button · CvButton · Icon · Reveal · Modal · MotionProvider (interruptor + Lenis) · MobileMenu · ProjectCard · ContactForm
   admin/             EntityTable · EntityForm (generado desde Zod) · GithubImport
 lib/
   domain.ts          POO: Entity → Project, Testimonial, Skill, Interest, Experience → Academic/Work
