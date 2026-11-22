@@ -200,19 +200,6 @@
       "liveUrl": "https://terminal-transportes-pasto.vercel.app",
       "featured": false,
       "period": "2026-2"
-    },
-    {
-      "slug": "gamer-food-freeze",
-      "title": "Gamer Food Freeze",
-      "kind": "web",
-      "period": "2025-1",
-      "published": false,
-      "summary": "Página web para Gamer Food Freeze, restaurante de comidas rápidas y heladería en Pasto.",
-      "stack": [
-        "[PENDIENTE]"
-      ],
-      "liveUrl": "https://share.google/YpdclirscuOQdcW63",
-      "liveLabel": "Ver negocio"
     }
   ],
   "testimonials": [

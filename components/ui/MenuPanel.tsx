@@ -2,6 +2,7 @@
 
 import { AnimatePresence, MotionConfig, motion } from "motion/react";
 import { useEffect, useRef, type KeyboardEvent } from "react";
+import { iconButtonClass } from "./Button";
 import { CvButton } from "./CvButton";
 import { Icon } from "./Icon";
 import { MotionSwitch, useCalm } from "./MotionProvider";
@@ -57,7 +58,7 @@ export function MenuPanel({ circle, active, cvUrl, cvNote, onClose }: MenuPanelP
               initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0, transition: { delay: 0.18, duration: 0.35, ease: EASE } }}
               exit={{ opacity: 0, transition: { duration: 0.15 } }}>
               <div className="flex h-18 shrink-0 items-center justify-end">
-                <button type="button" onClick={() => onClose()} className="grid size-11 place-items-center rounded-full border-[1.5px] border-steel text-ice transition-colors duration-150 hover:bg-ice hover:text-abyss">
+                <button type="button" onClick={() => onClose()} className={iconButtonClass}>
                   <Icon name="close" />
                   <span className="sr-only">Cerrar menú</span>
                 </button>

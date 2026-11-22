@@ -17,7 +17,7 @@ class TrieNode<T> {
   readonly values = new Set<T>();
 }
 
-/** Prefix search used by the bubble menu and the admin table. Every word of a label is indexed. */
+/** Prefix search used by the admin table. Every word of a label is indexed. */
 export class Trie<T> {
   private readonly root = new TrieNode<T>();
 

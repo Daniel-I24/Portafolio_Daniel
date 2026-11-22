@@ -1,8 +1,10 @@
 "use client";
 
 import { useCallback, useEffect, useRef, useState, type KeyboardEvent, type PointerEvent, type ReactNode } from "react";
+import { iconButtonClass } from "./Button";
 import { Icon } from "./Icon";
 import { useCalm } from "./MotionProvider";
+import { trackPointer } from "./TiltPhoto";
 
 interface GalleryProps {
   label: string;
@@ -71,11 +73,7 @@ export function Gallery({ label, count, resetKey, children }: GalleryProps) {
   const onPointerMove = (event: PointerEvent<HTMLUListElement>) => {
     const el = track.current;
     const card = (event.target as Element).closest<HTMLElement>("[data-tilt]");
-    if (card && !calm && event.pointerType === "mouse") {
-      const box = card.getBoundingClientRect();
-      card.style.setProperty("--px", ((event.clientX - box.left) / box.width).toFixed(3));
-      card.style.setProperty("--py", ((event.clientY - box.top) / box.height).toFixed(3));
-    }
+    if (card && !calm && event.pointerType === "mouse") trackPointer(card, event.clientX, event.clientY);
     if (!drag.current || !el) return;
     const dx = event.clientX - drag.current.x;
     if (Math.abs(dx) > DRAG_THRESHOLD) { drag.current.moved = true; el.dataset.dragging = ""; }
@@ -109,7 +107,7 @@ export function Gallery({ label, count, resetKey, children }: GalleryProps) {
           {([-1, 1] as const).map((direction) => (
             <button key={direction} type="button" onClick={() => go(direction)} disabled={direction < 0 ? view.start : view.end}
               aria-label={direction < 0 ? "Proyecto anterior" : "Proyecto siguiente"}
-              className="grid size-11 place-items-center rounded-full border border-steel text-ice transition-[background-color,color,opacity] duration-150 hover:bg-ice hover:text-abyss disabled:opacity-40 disabled:hover:bg-transparent disabled:hover:text-ice">
+              className={iconButtonClass}>
               <Icon name="arrow" size={18} className={direction < 0 ? "rotate-180" : ""} />
             </button>
           ))}

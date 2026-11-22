@@ -5,6 +5,13 @@ import { useCalm } from "./MotionProvider";
 
 const MAX_TILT = 9; // degrees
 
+/** Writes the pointer position inside `el` (0–1) as --px/--py; CSS transforms read them. Shared with the gallery cards. */
+export function trackPointer(el: HTMLElement, clientX: number, clientY: number) {
+  const box = el.getBoundingClientRect();
+  el.style.setProperty("--px", ((clientX - box.left) / box.width).toFixed(3));
+  el.style.setProperty("--py", ((clientY - box.top) / box.height).toFixed(3));
+}
+
 /** Pointer position inside the frame (0–1) drives everything through CSS variables; transitions do the easing. */
 const frame: CSSProperties = {
   transform: `rotateX(calc((0.5 - var(--py, 0.5)) * ${MAX_TILT * 2}deg)) rotateY(calc((var(--px, 0.5) - 0.5) * ${MAX_TILT * 2}deg))`,
@@ -26,18 +33,13 @@ export function TiltPhoto({ children }: { children: ReactNode }) {
   const calm = useCalm();
   const root = useRef<HTMLDivElement>(null);
 
-  const set = (x: number, y: number) => {
-    root.current?.style.setProperty("--px", x.toFixed(3));
-    root.current?.style.setProperty("--py", y.toFixed(3));
-  };
   const onMove = (event: PointerEvent<HTMLDivElement>) => {
-    if (calm || event.pointerType !== "mouse") return;
-    const box = event.currentTarget.getBoundingClientRect();
-    set((event.clientX - box.left) / box.width, (event.clientY - box.top) / box.height);
+    if (!calm && event.pointerType === "mouse") trackPointer(event.currentTarget, event.clientX, event.clientY);
   };
+  const reset = () => { root.current?.style.setProperty("--px", "0.5"); root.current?.style.setProperty("--py", "0.5"); };
 
   return (
-    <div ref={root} onPointerMove={onMove} onPointerLeave={() => set(0.5, 0.5)} className="group relative isolate [perspective:1100px]">
+    <div ref={root} onPointerMove={onMove} onPointerLeave={reset} className="group relative isolate [perspective:1100px]">
       {/* Shadow: a pre-softened gradient block that only translates. */}
       <div aria-hidden style={calm ? undefined : shadow}
         className="absolute inset-x-[8%] inset-y-[6%] -z-10 rounded-[14%] bg-[radial-gradient(closest-side,rgb(0_6_14/0.75),transparent)] transition-transform duration-500 ease-(--ease-soft)" />

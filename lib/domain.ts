@@ -9,6 +9,10 @@ export type IconName =
   | "pin" | "menu" | "close" | "pause" | "play" | "volley" | "football" | "moto" | "pool" | "music"
   | "dumbbell" | "shield" | "code" | "edit" | "trash" | "plus" | "logout";
 
+/** Up to two initials, upper-case: the monogram ("DI") and avatars without a photo. */
+export const initialsOf = (name: string): string =>
+  name.split(/\s+/).slice(0, 2).map((word) => word[0]?.toUpperCase() ?? "").join("");
+
 /** Short hero phrase: the explicit tagline, or the first sentence of "about". */
 export const shortPhrase = (profile: ProfileData): string => profile.tagline || (profile.about.match(/^[^.!?]+[.!?]/)?.[0] ?? "");
 
@@ -86,9 +90,7 @@ export class Project extends Entity<ProjectData> {
 
 export class Testimonial extends Entity<TestimonialData> {
   /** Initials for the drawn avatar when there is no photo. */
-  get initials(): string {
-    return this.data.name.split(/\s+/).slice(0, 2).map((word) => word[0]?.toUpperCase()).join("");
-  }
+  get initials(): string { return initialsOf(this.data.name); }
 
   toCard(): Card {
     return { title: this.data.name, subtitle: this.data.quote, tags: [this.data.role] };

@@ -2,6 +2,7 @@
 
 import { useEffect, useMemo, useState, type ReactNode } from "react";
 import { CircularQueue } from "@/lib/structures";
+import { iconButtonClass } from "./Button";
 import { Icon } from "./Icon";
 import { useCalm } from "./MotionProvider";
 
@@ -29,8 +30,6 @@ export function Carousel({ label, slides }: { label: string; slides: ReactNode[]
     return () => clearInterval(timer);
   }, [playing, queue]);
 
-  const control = "grid size-11 place-items-center rounded-full border border-steel text-ice transition-colors duration-150 hover:bg-ice hover:text-abyss";
-
   return (
     <section aria-roledescription="carrusel" aria-label={label}
       onPointerEnter={() => setHovered(true)} onPointerLeave={() => setHovered(false)}
@@ -55,13 +54,13 @@ export function Carousel({ label, slides }: { label: string; slides: ReactNode[]
         </div>
         <div className="flex gap-2">
           {!calm && slides.length > 1 && (
-            <button type="button" onClick={() => setPaused(!paused)} aria-pressed={paused} className={control}
+            <button type="button" onClick={() => setPaused(!paused)} aria-pressed={paused} className={iconButtonClass}
               aria-label={paused ? "Reanudar el carrusel" : "Pausar el carrusel"}>
               <Icon name={paused ? "play" : "pause"} size={16} />
             </button>
           )}
-          <button type="button" onClick={() => step("prev")} aria-label="Testimonio anterior" className={control}><Icon name="arrow" size={18} className="rotate-180" /></button>
-          <button type="button" onClick={() => step("next")} aria-label="Testimonio siguiente" className={control}><Icon name="arrow" size={18} /></button>
+          <button type="button" onClick={() => step("prev")} aria-label="Testimonio anterior" className={iconButtonClass}><Icon name="arrow" size={18} className="rotate-180" /></button>
+          <button type="button" onClick={() => step("next")} aria-label="Testimonio siguiente" className={iconButtonClass}><Icon name="arrow" size={18} /></button>
         </div>
       </div>
     </section>

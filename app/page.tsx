@@ -16,7 +16,7 @@ import { LavaLamp } from "@/components/ui/LavaLamp";
 import { Marquee } from "@/components/ui/Marquee";
 import { MotionProvider } from "@/components/ui/MotionProvider";
 import { SectionCurtain } from "@/components/ui/SectionCurtain";
-import { KIND_LABELS } from "@/lib/domain";
+import { initialsOf, KIND_LABELS } from "@/lib/domain";
 import { getPortfolio } from "@/lib/patterns";
 import type { ProfileData } from "@/lib/schemas";
 
@@ -26,7 +26,6 @@ const CV_PENDING = "El CV se está actualizando: muy pronto podrás descargarlo.
 const cvMissing = ({ cvUrl }: ProfileData) =>
   !cvUrl || (cvUrl.startsWith("/") && !existsSync(join(process.cwd(), "public", cvUrl)));
 
-const initialsOf = (name: string) => name.split(/\s+/).slice(0, 2).map((word) => word[0]).join("").toUpperCase();
 
 // Order: lava backdrop → loader → menu → hero → LED band → key figures → about → projects → testimonials → experience → beyond code → contact → footer.
 // Client sections receive plain views: class instances cannot cross the server/client boundary,

@@ -114,8 +114,9 @@ components/
 lib/
   domain.ts             abstract classes + models
   patterns.ts           Repository, Factory, Strategy, Observer
-  structures.ts         Trie, CircularQueue, TechIndex
+  structures.ts         Trie, CircularQueue, TechIndex, sort helpers
   schemas.ts            Zod schemas (single source for forms, DB and validation)
+  *.test.ts             Vitest unit tests: structures, schemas, domain (next to the module they test)
   supabase.ts           server/browser clients + isAdmin()
   github.ts             GitHub REST client (server only)
 content/seed.json       initial content (already in the repo)
@@ -218,13 +219,13 @@ Un componente por sección, cada uno con su `id`. `SECTIONS` (en `components/ui/
 
 ## 7. Movimiento
 
-**Fase actual (base):**
+**Base:**
 
 - `Reveal` (componente de servidor, sin JS): entrada y salida ligadas al scroll con `animation-timeline: view()`, en ambos sentidos; ver Fase 4 · Parte 2.
-- Scroll suave con **Lenis** (las anclas descuentan la altura del menú).
-- Hover cuidado: botones que suben 2 px y mueven su icono, tarjetas que se elevan con `shadow-lift`, subrayados que crecen.
+- Scroll suave con **Lenis** en equipos con ratón, cargado en tiempo ocioso (las anclas descuentan la altura del menú).
+- Hover cuidado: botones que se rellenan desde el lado del cursor y mueven su icono, tarjetas que se elevan, subrayados que crecen.
 - Transición carga → página: la carga se disuelve y el hero entra escalonado (solo con `transform`).
-- Interruptor "Pausar / Activar animaciones" (guardado en `localStorage`): activadas por defecto salvo con `prefers-reduced-motion`; apagado detiene Motion (`MotionConfig`), Lenis y las animaciones CSS.
+- Interruptor "Pausar / Activar animaciones" (guardado en `localStorage`): activadas por defecto salvo con `prefers-reduced-motion`; apagado detiene Lenis, las animaciones CSS (incluidas las ligadas al scroll) y las de JS (`useCalm()`).
 - `prefers-reduced-motion`: mismo efecto que el interruptor apagado.
 - Tiempos: 150 ms en hover, 300 ms en menús y 600 ms en entradas. Easing `cubic-bezier(0.16, 1, 0.3, 1)`.
 
@@ -259,13 +260,14 @@ Un componente por sección, cada uno con su `id`. `SECTIONS` (en `components/ui/
 
 ## 9. Lo que falta (déjalo editable desde el admin)
 
-- El proyecto web del restaurante de Diana Jojoa: nombre, URL y año. Ya está como borrador en `content/seed.json`.
+- El proyecto web del restaurante de Diana Jojoa (Gamer Food Freeze): stack, URL definitiva y año; se agrega desde el admin cuando esté listo.
 - `public/cv.pdf`: lo subo yo desde el admin.
 
 ---
 
 ## 10. Fases
 
-1. **Estructura nueva "Papel técnico"** (esta fase): tokens y fuentes, intro, menú, todas las secciones, movimiento base, panel `/admin` con la nueva paleta, revisión en 390 / 768 / 1440 / 1920 px.
-2. **Animaciones avanzadas**: efectos 3D, transiciones entre secciones y microinteracciones de mayor nivel, siempre con reduced motion y el interruptor.
-3. **Pulido**: imagen OG, Lighthouse ≥ 95, README y guía de despliegue en Vercel.
+1. **Estructura** (hecha): tokens y fuentes, menú, todas las secciones, movimiento base y panel `/admin`.
+2. **Fase 4 · Noche azul y movimiento** (hecha, pendiente de aprobación en `redesign/motion`): paleta azul, lava, foto LED, carga, menú flotante, galería de proyectos, entradas y salidas ligadas al scroll, rendimiento.
+3. **Fase 4 · Limpieza** (hecha, pendiente de aprobación): código sin uso eliminado, duplicados unificados, pruebas con Vitest y documentación al día.
+4. **Pulido**: imagen OG y metas de PageSpeed (escritorio ≥ 90, móvil ≥ 80, accesibilidad ≥ 95) medidas sobre el preview.

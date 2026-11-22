@@ -1,14 +1,15 @@
-# Dani · Papel técnico
+# Dani · Noche azul
 
-Portafolio de **Ivan Daniel Igua Benavides**: desarrollador full stack. Dirección visual "Papel técnico": papel cálido, tinta, acento óxido y titulares en serif.
-Desarrollador full stack, futuro especialista en ciberseguridad.
+Portafolio de **Ivan Daniel Igua Benavides**: desarrollador full stack, futuro especialista en ciberseguridad.
+Dirección visual "Noche azul": azul marino profundo, una lámpara de lava de fondo, la foto en un marco de luz LED y titulares en serif.
 
 ## Stack
 
 - **Next.js 15** (App Router) + **TypeScript** estricto
 - **Tailwind CSS v4** con tokens en `@theme` (`app/globals.css`)
 - **Supabase**: Postgres con RLS, Auth (GitHub OAuth) y Storage
-- **Motion** (`motion/react`) para las animaciones, siempre con `prefers-reduced-motion`
+- Movimiento ligero: CSS (scroll timelines, keyframes) y Web Animations en el arranque; **Motion** (`motion/react`) solo en el panel del menú móvil (carga diferida) y el admin; **Lenis** cargado en tiempo ocioso. Todo respeta `prefers-reduced-motion` y el interruptor "Pausar animaciones".
+- **Vitest** para las pruebas unitarias de `lib/`
 - Despliegue en **Vercel**
 
 ## Cómo correrlo
@@ -18,6 +19,7 @@ npm install
 cp .env.example .env.local   # opcional: sin variables, la web usa content/seed.json
 npm run dev                  # http://localhost:3000
 npm run lint && npm run build
+npm test                     # Vitest: lib/structures, lib/schemas y lib/domain
 ```
 
 Sin variables de Supabase la web funciona igual: `SeedRepository` lee `content/seed.json`.
@@ -30,18 +32,21 @@ app/                 page.tsx (secciones en orden), layout.tsx, actions.ts (form
   admin/             panel privado: layout (guarda + noindex), page (pestañas), actions (CRUD), login
   auth/callback/     retorno de GitHub OAuth
 components/
-  sections/          Intro · Navbar · Hero · Stats · About · Projects · Testimonials · Experience · OffTheClock · Contact · Footer
-  ui/                Section · Button · CvButton · Icon · Reveal · Modal · MotionProvider (interruptor + Lenis) · MobileMenu · ProjectCard · ContactForm
+  sections/          Loader · Navbar · Hero · Stats · About · Projects · Testimonials · Experience · OffTheClock · Contact · Footer
+  ui/                Section · Button · CvButton · Icon · Reveal (CSS, sin JS) · Modal · MotionProvider (interruptor, Lenis diferido)
+                     MobileMenu + MenuPanel (botón flotante y panel diferido) · ProjectCard · Gallery · Carousel · ContactForm
+                     LavaLamp · Glow + TiltPhoto (foto LED) · Marquee · Ambient (luz, cursor, botones) · SectionCurtain
   admin/             EntityTable · EntityForm (generado desde Zod) · GithubImport
 lib/
   domain.ts          POO: Entity → Project, Testimonial, Skill, Interest, Experience → Academic/Work
   patterns.ts        Repository (Seed/Supabase), Factory, Strategy (reglas de validación), Observer
   structures.ts      Trie, CircularQueue, TechIndex, ordenamientos
+  *.test.ts          pruebas unitarias (Vitest) de structures, schemas y domain
   schemas.ts         Zod: única fuente para formularios, base de datos y validación
   supabase.ts        clientes + isAdmin() + SupabaseRepository
   github.ts          cliente REST de GitHub (solo servidor)
 content/seed.json    contenido inicial
-supabase/migrations/ tablas, RLS y bucket de Storage
+supabase/migrations/ 0001 tablas, RLS y bucket de Storage · 0002 tipos de proyecto "web-mobile" y "wearable"
 middleware.ts        protege /admin
 ```
 

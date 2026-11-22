@@ -32,6 +32,10 @@ export const buttonClass = (variant: ButtonVariant = "solid", size: keyof typeof
     SIZES[size],
   ].join(" ");
 
+/** Round icon-only control (gallery arrows, carousel, menu close); disabled ones dim and stop reacting. */
+export const iconButtonClass =
+  "grid size-11 shrink-0 place-items-center rounded-full border border-steel text-ice transition-[background-color,color,opacity] duration-150 hover:bg-ice hover:text-abyss disabled:opacity-40 disabled:hover:bg-transparent disabled:hover:text-ice";
+
 /** Icon that slides in its direction on hover. */
 export const ButtonIcon = ({ name }: { name: IconName }) => (
   <Icon name={name} size={18} className={`shrink-0 transition-transform duration-300 ease-(--ease-soft) ${name === "download" ? "group-hover:translate-y-1" : "group-hover:translate-x-1.5"}`} />
