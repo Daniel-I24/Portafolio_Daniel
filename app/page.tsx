@@ -18,6 +18,7 @@ import { MotionProvider } from "@/components/ui/MotionProvider";
 import { SectionCurtain } from "@/components/ui/SectionCurtain";
 import { initialsOf, PLATFORM_LABELS } from "@/lib/domain";
 import { getPortfolio } from "@/lib/patterns";
+import { personJsonLd } from "@/lib/site";
 import { platformKinds, type ProfileData } from "@/lib/schemas";
 
 const CV_PENDING = "El CV se está actualizando: muy pronto podrás descargarlo.";
@@ -41,6 +42,8 @@ export default async function HomePage() {
 
   return (
     <MotionProvider>
+      {/* Structured data (schema.org Person) for search engines. */}
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: personJsonLd(profile, skills.map((skill) => skill.data.name)) }} />
       <LavaLamp />
       <Loader initials={initialsOf(profile.displayName)} />
       <Navbar initials={initialsOf(profile.displayName)} name={profile.displayName} cvUrl={profile.cvUrl} cvNote={cvNote} />

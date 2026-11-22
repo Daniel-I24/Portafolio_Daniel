@@ -2,6 +2,7 @@ import type { Metadata, Viewport } from "next";
 import { Fraunces, IBM_Plex_Sans } from "next/font/google";
 import { shortPhrase } from "@/lib/domain";
 import { getPortfolio } from "@/lib/patterns";
+import { siteUrl } from "@/lib/site";
 import "./globals.css";
 
 // Both families are on the hero (name, surname in italics, role, text, buttons), so both are preloaded.
@@ -26,12 +27,19 @@ export async function generateMetadata(): Promise<Metadata> {
   const title = `${profile.fullName} · ${profile.role}`;
   const description = `${shortPhrase(profile)} ${profile.goal}. ${profile.location}.`;
   return {
-    metadataBase: new URL(process.env.NEXT_PUBLIC_SITE_URL ?? "http://localhost:3000"),
+    // Icons (icon.svg, favicon.ico, apple-icon.png) and the Open Graph image come from files in app/.
+    metadataBase: siteUrl(),
     title: { default: title, template: `%s · ${profile.displayName}` },
     description,
+    applicationName: `${profile.displayName} · Portafolio`,
     authors: [{ name: profile.fullName, url: profile.socials.find((s) => s.kind === "github")?.url }],
-    openGraph: { type: "website", locale: "es_CO", title, description, siteName: profile.displayName },
+    creator: profile.fullName,
+    keywords: ["desarrollador full stack", "portafolio", "Next.js", "Angular", "Spring Boot", "Kotlin", "Pasto", "Colombia", profile.fullName],
+    alternates: { canonical: "/" },
+    robots: { index: true, follow: true },
+    openGraph: { type: "profile", locale: "es_CO", url: "/", title, description, siteName: profile.displayName },
     twitter: { card: "summary_large_image", title, description },
+    formatDetection: { telephone: false, email: false, address: false },
   };
 }
 
