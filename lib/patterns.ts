@@ -1,13 +1,10 @@
 import { z } from "zod";
-import {
-  AcademicExperience, Interest, Project, Skill, Testimonial, WorkExperience, type Experience,
-} from "./domain";
+import { AcademicExperience, Interest, Project, Skill, Testimonial, WorkExperience, type Experience } from "./domain";
 import { CACHE_TAGS, ENTITY_TABLES, entitySchemas, profileSchema, type EntityInput, type EntityRow, type EntityTable } from "./schemas";
-import { byNewest, byOrder } from "./structures";
+import { byKeys, byNewest, byOrder } from "./structures";
 
 /* ---------- Repository + Strategy: interchangeable data sources ---------- */
 export { CACHE_TAGS };
-
 /** Unparsed rows as stored (seed or DB); EntityFactory validates them. */
 export type Snapshot = { profile: z.input<typeof profileSchema> } & { [T in EntityTable]: Partial<EntityInput<T>>[] };
 export interface Repository { snapshot(): Promise<Snapshot> }
@@ -32,11 +29,7 @@ export class SeedRepository implements Repository {
 export const hasSupabase = (): boolean => Boolean(process.env.NEXT_PUBLIC_SUPABASE_URL && process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY);
 export const repository = async (): Promise<Repository> => hasSupabase() ? new (await import("./supabase")).SupabaseRepository() : new SeedRepository();
 
-/**
- * Supabase reads are cached by tag (admin saves call revalidateTag()). The seed ships in the bundle: a cached copy
- * would outlive its edits across builds. next/cache is imported lazily so the browser bundle (which only uses the
- * rules and the observer below) never pulls it in; the cache entry is keyed by "portfolio", so it is shared.
- */
+/** Supabase reads are cached by tag (admin saves revalidate). next/cache is imported lazily: the browser bundle never pulls it in. */
 const cachedSnapshot = async (): Promise<Snapshot> =>
   (await import("next/cache")).unstable_cache(async () => (await repository()).snapshot(), ["portfolio"], { tags: [...CACHE_TAGS] })();
 /** Falls back to the seed when Supabase fails or its profile row is missing/invalid (empty DB), so builds never break. */
@@ -66,7 +59,7 @@ export class EntityFactory {
       snapshot[table].map((row) => EntityFactory.from(table, row)).filter(Boolean) as E[];
     return {
       profile: profileSchema.parse(snapshot.profile),
-      projects: byOrder(list<Project>("projects")),
+      projects: byKeys(byOrder(list<Project>("projects")), (project) => project.relevance),
       testimonials: byOrder(list<Testimonial>("testimonials")),
       experience: byNewest(list<Experience>("experience"), (e) => e.sortKey),
       skills: byOrder(list<Skill>("skills")),
@@ -77,7 +70,6 @@ export class EntityFactory {
 
 export type Portfolio = ReturnType<typeof EntityFactory.build>;
 export const getPortfolio = async (): Promise<Portfolio> => EntityFactory.build(await getSnapshot());
-
 /* ---------- Strategy: validation rules, combined with Zod ---------- */
 export interface ValidationRule { check(value: string): string | null }
 
@@ -88,10 +80,7 @@ export class MinLength implements ValidationRule {
 export class Required extends MinLength {
   constructor(message: string) { super(1, message); }
 }
-/**
- * Shared base for rules backed by a format pattern. Plain RegExps (not Zod) keep these rules light enough
- * for the browser: the client imports only the Strategy and Observer parts of this file, and Zod stays on the server.
- */
+/** Rules backed by a format pattern. Plain RegExps keep the browser (rules + observer only) free of Zod. */
 abstract class FormatRule implements ValidationRule {
   constructor(private readonly format: RegExp, private readonly message: string) {}
   check(value: string) { return this.format.test(value.trim()) ? null : this.message; }
@@ -101,7 +90,6 @@ const EMAIL = /^(?!\.)(?!.*\.\.)[\w'+.-]*[\w+-]@([a-z\d][a-z\d-]*\.)+[a-z]{2,}$/
 export class Email extends FormatRule {
   constructor() { super(EMAIL, "Revisa el correo: debe verse como nombre@dominio.com."); }
 }
-
 export class Url extends FormatRule {
   constructor() { super(/^https:\/\/[^\s/$.?#][^\s]*$/i, "El enlace debe empezar por https://"); }
 }

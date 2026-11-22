@@ -86,7 +86,7 @@ export class CircularQueue<T> {
   }
 }
 
-/** Inverted index tag → items. Tags come from `tagsOf`: technologies, the project kind… Drives the project filter. */
+/** Inverted index tag → items. Tags come from `tagsOf`: technologies, the project platforms… Drives the project filter. */
 export class TechIndex<T> {
   private readonly index = new Map<string, Set<T>>();
 
@@ -138,6 +138,10 @@ export function periodKey(period: string, now = new Date()): number {
 /** Stable sort by `order` ascending (Array#sort is stable since ES2019). */
 export const byOrder = <T extends { order: number }>(items: readonly T[]): T[] =>
   [...items].sort((a, b) => a.order - b.order);
+
+/** Stable sort by several numeric keys, highest first: the first key decides, the next ones break ties. */
+export const byKeys = <T>(items: readonly T[], keys: (item: T) => number[]): T[] =>
+  [...items].sort((a, b) => { const [x, y] = [keys(a), keys(b)]; return x.reduce((diff, v, i) => diff || y[i] - v, 0); });
 
 /** Stable sort by a numeric date key (year, timestamp…), most recent first; ties keep their order. */
 export const byNewest = <T>(items: readonly T[], key: (item: T) => number): T[] =>

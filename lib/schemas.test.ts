@@ -1,12 +1,12 @@
 import { describe, expect, it } from "vitest";
-import { entitySchemas, profileSchema, projectKinds, projectSchema } from "./schemas";
+import { entitySchemas, platformKinds, platformsFromKind, profileSchema, projectSchema } from "./schemas";
 
 const minimalProject = { id: "p1", slug: "luma", title: "Luma" };
 
 describe("projectSchema", () => {
   it("fills defaults for a minimal row", () => {
     const project = projectSchema.parse(minimalProject);
-    expect(project).toMatchObject({ kind: "web", summary: "", stack: [], repoUrl: "", featured: false, order: 0, published: true });
+    expect(project).toMatchObject({ platforms: ["web"], summary: "", stack: [], repoUrl: "", featured: false, order: 0, published: true });
   });
 
   it("turns null optional texts and links into empty strings (seed and DB rows)", () => {
@@ -16,10 +16,17 @@ describe("projectSchema", () => {
     expect(project.problem).toBe("");
   });
 
-  it("accepts every project kind, including web-mobile and wearable", () => {
-    expect(projectKinds).toEqual(expect.arrayContaining(["web-mobile", "wearable"]));
-    for (const kind of projectKinds) expect(projectSchema.safeParse({ ...minimalProject, kind }).success).toBe(true);
-    expect(projectSchema.safeParse({ ...minimalProject, kind: "tv" }).success).toBe(false);
+  it("accepts one or several platforms, never none or unknown ones", () => {
+    expect(projectSchema.safeParse({ ...minimalProject, platforms: [...platformKinds] }).success).toBe(true);
+    expect(projectSchema.parse({ ...minimalProject, platforms: ["mobile", "wearable"] }).platforms).toEqual(["mobile", "wearable"]);
+    expect(projectSchema.safeParse({ ...minimalProject, platforms: [] }).success).toBe(false);
+    expect(projectSchema.safeParse({ ...minimalProject, platforms: ["tv"] }).success).toBe(false);
+  });
+
+  it("maps the old single kind (rows before migration 0003) to platforms", () => {
+    expect(platformsFromKind("web-mobile")).toEqual(["web", "mobile"]);
+    expect(platformsFromKind("wearable")).toEqual(["wearable"]);
+    expect(platformsFromKind("tv")).toEqual(["web"]);
   });
 
   it("rejects bad slugs and bad links", () => {

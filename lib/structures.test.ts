@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { byNewest, byOrder, CircularQueue, normalize, periodKey, TechIndex, toCamel, toSnake, Trie } from "./structures";
+import { byKeys, byNewest, byOrder, CircularQueue, normalize, periodKey, TechIndex, toCamel, toSnake, Trie } from "./structures";
 
 describe("normalize", () => {
   it("lowercases, trims and strips accents", () => {
@@ -99,5 +99,9 @@ describe("sorting helpers", () => {
   it("puts the newest first and keeps ties stable", () => {
     const input = [{ k: 1, id: "a" }, { k: 3, id: "b" }, { k: 1, id: "c" }];
     expect(byNewest(input, (i) => i.k).map((i) => i.id)).toEqual(["b", "a", "c"]);
+  });
+  it("byKeys sorts by several keys, highest first, keeping ties stable", () => {
+    const input = [{ id: "a", k: [0, 5] }, { id: "b", k: [1, 0] }, { id: "c", k: [0, 9] }, { id: "d", k: [0, 5] }];
+    expect(byKeys(input, (i) => i.k).map((i) => i.id)).toEqual(["b", "c", "a", "d"]);
   });
 });

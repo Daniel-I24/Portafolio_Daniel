@@ -8,13 +8,13 @@ import { Reveal } from "@/components/ui/Reveal";
 import { useCalm } from "@/components/ui/MotionProvider";
 import { meta, ProjectCard, ProjectDetail, type ProjectView } from "@/components/ui/ProjectCard";
 import { Section } from "@/components/ui/Section";
-import { KIND_LABELS } from "@/lib/domain";
-import type { ProjectKind } from "@/lib/schemas";
+import { PLATFORM_LABELS } from "@/lib/domain";
+import type { Platform } from "@/lib/schemas";
 import { TechIndex } from "@/lib/structures";
 
 export type { ProjectView };
 
-const KINDS = Object.keys(KIND_LABELS) as ProjectKind[];
+const PLATFORMS = Object.keys(PLATFORM_LABELS) as Platform[];
 const OPEN_NAME = "project-detail";
 
 /**
@@ -26,18 +26,18 @@ function transition(calm: boolean, change: () => void): Promise<void> {
   return document.startViewTransition(() => flushSync(change)).finished;
 }
 
-/** Filter chips by kind, each with its counter (TechIndex keyed by kind). */
-function KindFilter({ index, value, onChange }: { index: TechIndex<ProjectView>; value: ProjectKind | null; onChange: (kind: ProjectKind | null) => void }) {
-  const options = [null, ...KINDS.filter((kind) => index.count(kind) > 0)];
+/** Filter chips by platform, each with its counter (TechIndex keyed by platform; a project can count under several). */
+function PlatformFilter({ index, value, onChange }: { index: TechIndex<ProjectView>; value: Platform | null; onChange: (platform: Platform | null) => void }) {
+  const options = [null, ...PLATFORMS.filter((platform) => index.count(platform) > 0)];
   return (
-    <div role="group" aria-label="Filtrar por tipo" className="flex flex-wrap gap-2">
-      {options.map((kind) => {
-        const pressed = value === kind;
+    <div role="group" aria-label="Filtrar por plataforma" className="flex flex-wrap gap-2">
+      {options.map((option) => {
+        const pressed = value === option;
         return (
-          <button key={kind ?? "all"} type="button" aria-pressed={pressed} onClick={() => onChange(kind)}
+          <button key={option ?? "all"} type="button" aria-pressed={pressed} onClick={() => onChange(option)}
             className={`inline-flex items-center gap-2 rounded-full border px-4 py-2.5 text-sm font-semibold transition-colors duration-150 ${pressed ? "border-ice bg-ice text-abyss" : "border-line bg-deep text-ice hover:border-steel"}`}>
-            {kind ? KIND_LABELS[kind] : "Todos"}
-            <span className={`rounded-full px-2 py-0.5 text-sm tabular-nums ${pressed ? "bg-deep text-ice" : "bg-abyss text-mist"}`}>{index.count(kind)}</span>
+            {option ? PLATFORM_LABELS[option] : "Todos"}
+            <span className={`rounded-full px-2 py-0.5 text-sm tabular-nums ${pressed ? "bg-deep text-ice" : "bg-abyss text-mist"}`}>{index.count(option)}</span>
           </button>
         );
       })}
@@ -47,13 +47,13 @@ function KindFilter({ index, value, onChange }: { index: TechIndex<ProjectView>;
 
 export function Projects({ projects }: { projects: ProjectView[] }) {
   const calm = useCalm();
-  const [kind, setKind] = useState<ProjectKind | null>(null);
+  const [platform, setPlatform] = useState<Platform | null>(null);
   const [selected, setSelected] = useState<ProjectView | null>(null);
   const origin = useRef<HTMLElement | null>(null);
-  const index = useMemo(() => new TechIndex(projects, (project) => [project.kind]), [projects]);
-  const visible = index.filter(kind);
+  const index = useMemo(() => new TechIndex(projects, (project) => project.platforms), [projects]);
+  const visible = index.filter(platform);
 
-  const filter = (next: ProjectKind | null) => void transition(calm, () => setKind(next));
+  const filter = (next: Platform | null) => void transition(calm, () => setPlatform(next));
 
   // The card hands its name to the dialog: the transition morphs one into the other, and back on close.
   const open = (project: ProjectView, card: HTMLElement) => {
@@ -71,11 +71,11 @@ export function Projects({ projects }: { projects: ProjectView[] }) {
 
   return (
     <Section id="proyectos" title="Proyectos" lead="Web, móvil, wearables, escritorio, videojuegos y APIs: lo que he construido, solo y en equipo."
-      aside={<KindFilter index={index} value={kind} onChange={filter} />}>
+      aside={<PlatformFilter index={index} value={platform} onChange={filter} />}>
       <p className="sr-only" aria-live="polite">{`Mostrando ${visible.length} proyectos`}</p>
       {/* The whole row enters and leaves with the scroll (its cards live in a horizontal scroller). */}
       <Reveal>
-      <Gallery label="Galería de proyectos" count={visible.length} resetKey={kind ?? "all"}>
+      <Gallery label="Galería de proyectos" count={visible.length} resetKey={platform ?? "all"}>
         {visible.map((project, i) => (
           <li key={project.id} style={{ viewTransitionName: `project-${project.slug}` }}
             className={`w-[82vw] max-w-[23rem] shrink-0 snap-start sm:w-[22rem] ${i % 2 ? "lg:mt-10" : ""}`}>

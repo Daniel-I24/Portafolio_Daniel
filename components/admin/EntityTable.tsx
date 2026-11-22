@@ -15,7 +15,7 @@ type Row = Record<string, unknown> & { id: string; published: boolean };
 /** First field that exists, so one table works for every entity (title/name, period/role/group…). */
 const pick = (row: Row, keys: string[]) => String(keys.map((key) => row[key]).find((value) => value) ?? "");
 const titleOf = (row: Row) => pick(row, ["title", "name"]);
-const subtitleOf = (row: Row) => pick(row, ["period", "role", "group", "type", "kind"]);
+const subtitleOf = (row: Row) => pick(row, ["period", "role", "group", "type"]);
 const iconButton = "grid size-9 place-items-center rounded-lg border border-line bg-deep text-ice hover:bg-mist disabled:opacity-40";
 
 export function EntityTable({ table, rows: initialRows }: { table: Table; rows: Row[] }) {

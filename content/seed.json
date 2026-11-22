@@ -28,7 +28,9 @@
     {
       "slug": "luma",
       "title": "Luma",
-      "kind": "web-mobile",
+      "platforms": [
+        "mobile"
+      ],
       "summary": "App web y Android para descubrir restaurantes y comercios de Pasto: mapa en vivo, pedidos para recoger y recomendaciones con IA.",
       "stack": [
         "Angular",
@@ -46,7 +48,10 @@
     {
       "slug": "flux",
       "title": "FLUX",
-      "kind": "wearable",
+      "platforms": [
+        "mobile",
+        "wearable"
+      ],
       "summary": "Notas y recordatorios por voz para Wear OS. La IA clasifica la idea, detecta la fecha y programa la alarma en el reloj y el celular.",
       "stack": [
         "Kotlin",
@@ -67,9 +72,33 @@
       ]
     },
     {
+      "slug": "nexium",
+      "title": "Nexium",
+      "platforms": [
+        "desktop"
+      ],
+      "period": "2026-2",
+      "featured": true,
+      "summary": "Asistente de escritorio para Windows, macOS y Linux: entiende solicitudes en español por voz o texto y responde con datos reales del equipo (sistema, archivos, documentos, clima y recordatorios).",
+      "stack": [
+        "Tauri 2",
+        "Rust",
+        "React",
+        "TypeScript",
+        "Whisper",
+        "Gemini",
+        "SQLite",
+        "Cloudflare Workers"
+      ],
+      "repoUrl": "https://github.com/Daniel-I24/Nexium",
+      "solution": "Los datos salen del equipo, no de un modelo: reglas locales resuelven lo simple, la IA solo interpreta la solicitud y la aplicación ejecuta funciones controladas. La voz se transcribe en el equipo con Whisper y la clave de Gemini vive solo en un servidor intermediario."
+    },
+    {
       "slug": "ai-code-tutor",
       "title": "AI Code Tutor",
-      "kind": "web",
+      "platforms": [
+        "web"
+      ],
       "collaboration": true,
       "period": "2026-1",
       "featured": true,
@@ -96,7 +125,9 @@
     {
       "slug": "el-caso-404",
       "title": "El Caso 404",
-      "kind": "game",
+      "platforms": [
+        "game"
+      ],
       "collaboration": true,
       "period": "2026-2",
       "featured": true,
@@ -112,7 +143,9 @@
     {
       "slug": "mm-glow-beauty",
       "title": "M&M Glow Beauty",
-      "kind": "api",
+      "platforms": [
+        "api"
+      ],
       "summary": "Backend para un centro estético de Pasto: citas, inventario, pagos, reseñas y recordatorios por correo y WhatsApp.",
       "stack": [
         "Spring Boot",
@@ -129,7 +162,9 @@
     {
       "slug": "plataforma-ia",
       "title": "Plataforma IA",
-      "kind": "web",
+      "platforms": [
+        "web"
+      ],
       "summary": "Consumo de IA con control de cuotas: una cadena de proxies limita peticiones por minuto y tokens por mes según el plan.",
       "stack": [
         "React",
@@ -145,7 +180,9 @@
     {
       "slug": "novabeat",
       "title": "NovaBeat",
-      "kind": "web",
+      "platforms": [
+        "web"
+      ],
       "period": "2026-1",
       "summary": "Reproductor de música web con cuentas de usuario, búsqueda por género, cola de reproducción y letras de las canciones.",
       "stack": [
@@ -160,7 +197,9 @@
     {
       "slug": "sistema-911",
       "title": "Sistema de Emergencias 911",
-      "kind": "desktop",
+      "platforms": [
+        "desktop"
+      ],
       "summary": "Simulador de despacho: cola de prioridad para las llamadas, Dijkstra para la unidad más cercana y pila para deshacer acciones.",
       "stack": [
         "Python",
@@ -176,7 +215,9 @@
     {
       "slug": "gestion-proyectos-state",
       "title": "Gestión de Proyectos · Patrón State",
-      "kind": "desktop",
+      "platforms": [
+        "desktop"
+      ],
       "period": "2026-1",
       "summary": "Sistema de gestión de proyectos de software donde el patrón State controla 12 estados de proyecto y 6 de tarea, con vistas para gerente, desarrollador y cliente.",
       "stack": [
@@ -189,7 +230,9 @@
     {
       "slug": "terminal-transportes-pasto",
       "title": "Terminal de Transportes Pasto",
-      "kind": "web",
+      "platforms": [
+        "web"
+      ],
       "summary": "Sitio web responsive de la Terminal de Transportes de Pasto, hecho para el curso de Diseño de Interfaces.",
       "stack": [
         "Angular",

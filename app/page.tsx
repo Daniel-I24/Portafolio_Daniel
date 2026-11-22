@@ -16,7 +16,7 @@ import { LavaLamp } from "@/components/ui/LavaLamp";
 import { Marquee } from "@/components/ui/Marquee";
 import { MotionProvider } from "@/components/ui/MotionProvider";
 import { SectionCurtain } from "@/components/ui/SectionCurtain";
-import { initialsOf, KIND_LABELS } from "@/lib/domain";
+import { initialsOf, PLATFORM_LABELS } from "@/lib/domain";
 import { getPortfolio } from "@/lib/patterns";
 import type { ProfileData } from "@/lib/schemas";
 
@@ -34,7 +34,7 @@ export default async function HomePage() {
   const { profile, projects, testimonials, experience, skills, interests } = await getPortfolio();
   const cvNote = cvMissing(profile) ? CV_PENDING : undefined;
   const socials = profile.socials.map(({ label, url, kind }) => ({ label, url, icon: kind }));
-  const platforms = [...new Set(projects.map((project) => project.kind))].map((kind) => KIND_LABELS[kind]);
+  const platforms = [...new Set(projects.flatMap((project) => project.platforms))].map((platform) => PLATFORM_LABELS[platform]);
   const techs = new Set(skills.map((skill) => skill.data.name.toLowerCase())).size;
   const techGroups = [...new Set(skills.map((skill) => skill.data.group))];
 

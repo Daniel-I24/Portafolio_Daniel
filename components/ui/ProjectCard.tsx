@@ -1,25 +1,26 @@
 import Image from "next/image";
 import type { ReactNode } from "react";
-import { KIND_LABELS, type CardAction } from "@/lib/domain";
-import type { ProjectData, ProjectKind } from "@/lib/schemas";
+import { PLATFORM_LABELS, type CardAction } from "@/lib/domain";
+import type { Platform, ProjectData } from "@/lib/schemas";
 import { ButtonLink } from "./Button";
 import { Icon } from "./Icon";
 
 export type ProjectView = ProjectData & { links: CardAction[] };
 
-/** Plain cover per kind when there is no screenshot: color + name, nothing fake. Every pair passes 4.5:1. */
-const COVER_TONES: Record<ProjectKind, string> = {
+/** Plain cover per main (first) platform when there is no screenshot: color + name, nothing fake. Every pair passes 4.5:1. */
+const COVER_TONES: Record<Platform, string> = {
   web: "bg-abyss text-ice",
-  "web-mobile": "bg-deep text-ice",
   mobile: "bg-navy text-ice",
   wearable: "bg-steel text-abyss",
   desktop: "bg-slate text-ice",
-  game: "bg-ice text-abyss",
+  game: "bg-bone text-abyss",
   api: "bg-mist text-abyss",
 };
 const MAX_TECHS = 5;
 
-export const meta = (project: ProjectView) => [KIND_LABELS[project.kind], project.period].filter(Boolean).join(" · ");
+/** "Móvil / Wearable · 2026-2". */
+export const meta = (project: ProjectView) =>
+  [project.platforms.map((platform) => PLATFORM_LABELS[platform]).join(" / "), project.period].filter(Boolean).join(" · ");
 
 /** Screenshot, or a plain colored space with kind, period and name: nothing fake. */
 function Cover({ project }: { project: ProjectView }) {
@@ -28,7 +29,7 @@ function Cover({ project }: { project: ProjectView }) {
   }
   const size = project.title.length > 20 ? "text-xl sm:text-2xl" : "text-2xl sm:text-3xl";
   return (
-    <div className={`flex aspect-video flex-col justify-between p-6 text-left ${COVER_TONES[project.kind]}`}>
+    <div className={`flex aspect-video flex-col justify-between p-6 text-left ${COVER_TONES[project.platforms[0]]}`}>
       <span className="text-sm font-medium uppercase tracking-[0.12em]">{meta(project)}</span>
       <span className={`line-clamp-3 font-display font-semibold leading-tight [font-variation-settings:'opsz'_144] ${size}`}>{project.title}</span>
     </div>
@@ -54,15 +55,13 @@ export const TechList = ({ stack, limit = stack.length }: { stack: string[]; lim
   </ul>
 );
 
-/** Every link the project carries (resolved by Project.links()); the detail adds the extra ones. */
-export const ProjectLinks = ({ project, extra = false }: { project: ProjectView; extra?: boolean }) => {
-  const extras = extra ? project.extraLinks.map(({ label, url }): CardAction => ({ label, href: url, icon: "external" })) : [];
-  return [...project.links, ...extras].map((link, i) => (
+/** Every link the project carries, resolved by Project.links() (extra links included). */
+export const ProjectLinks = ({ project }: { project: ProjectView }) =>
+  project.links.map((link, i) => (
     <ButtonLink key={link.href} href={link.href} icon={link.icon === "arrow" ? "external" : link.icon} size="sm" variant={i === 0 ? "outline" : "solid"}>
       {link.label}<span className="sr-only"> de {project.title}</span>
     </ButtonLink>
   ));
-};
 
 /** 3D tilt toward the cursor: the gallery writes --px/--py (0–1) on `[data-tilt]`; transitions smooth it. */
 const TILT = { transform: "perspective(900px) rotateX(calc((0.5 - var(--py, 0.5)) * 8deg)) rotateY(calc((var(--px, 0.5) - 0.5) * 10deg))" };
@@ -118,7 +117,7 @@ export function ProjectDetail({ project }: { project: ProjectView }) {
         </div>
       )}
       <TechList stack={project.stack} />
-      <div className="flex flex-wrap gap-2"><ProjectLinks project={project} extra /></div>
+      <div className="flex flex-wrap gap-2"><ProjectLinks project={project} /></div>
     </div>
   );
 }

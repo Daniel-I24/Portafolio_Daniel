@@ -1,25 +1,25 @@
 import { describe, expect, it } from "vitest";
-import { AcademicExperience, Interest, initialsOf, KIND_LABELS, Project, shortPhrase, Testimonial, WorkExperience } from "./domain";
-import { experienceSchema, interestSchema, profileSchema, projectKinds, projectSchema, testimonialSchema } from "./schemas";
+import { AcademicExperience, Interest, initialsOf, PLATFORM_LABELS, Project, shortPhrase, Testimonial, WorkExperience } from "./domain";
+import { experienceSchema, interestSchema, platformKinds, profileSchema, projectSchema, testimonialSchema } from "./schemas";
 
 const project = (data: Record<string, unknown>) => new Project(projectSchema.parse({ id: "p", slug: "p", title: "Proyecto", ...data }));
 const hrefs = (p: Project) => p.links().map((link) => `${link.label} → ${link.href}`);
 
-describe("Project.links (polymorphic by kind)", () => {
-  it("puts Código first and the kind action second", () => {
-    expect(hrefs(project({ kind: "web", repoUrl: "https://g.co/r", liveUrl: "https://site.co" }))).toEqual([
+describe("Project.links (polymorphic by platform)", () => {
+  it("puts Código first and the platform action second", () => {
+    expect(hrefs(project({ platforms: ["web"], repoUrl: "https://g.co/r", liveUrl: "https://site.co" }))).toEqual([
       "Código → https://g.co/r", "Demo en vivo → https://site.co",
     ]);
   });
 
-  it("offers the APK for mobile and wearable projects", () => {
-    const watch = project({ kind: "wearable", repoUrl: "https://g.co/r", apkUrl: "https://g.co/w.apk" });
-    expect(hrefs(watch)).toEqual(["Código → https://g.co/r", "Descargar APK → https://g.co/w.apk"]);
+  it("phone + watch: the watch APK first, the phone APK from the extra links, no repeats", () => {
+    const flux = project({ platforms: ["mobile", "wearable"], repoUrl: "https://g.co/r", apkUrl: "https://g.co/w.apk", extraLinks: [{ label: "APK del teléfono", url: "https://g.co/m.apk" }] });
+    expect(hrefs(flux)).toEqual(["Código → https://g.co/r", "APK del reloj → https://g.co/w.apk", "APK del teléfono → https://g.co/m.apk"]);
   });
 
-  it("shows both demo and APK for web-mobile projects, without repeats", () => {
-    const both = project({ kind: "web-mobile", repoUrl: "https://g.co/r", liveUrl: "https://site.co", apkUrl: "https://g.co/a.apk" });
-    expect(hrefs(both)).toEqual(["Código → https://g.co/r", "Demo en vivo → https://site.co", "Descargar APK → https://g.co/a.apk"]);
+  it("a mobile app with a web demo offers the APK, then the demo", () => {
+    const luma = project({ platforms: ["mobile"], repoUrl: "https://g.co/r", liveUrl: "https://site.co", apkUrl: "https://g.co/a.apk" });
+    expect(hrefs(luma)).toEqual(["Código → https://g.co/r", "Descargar APK → https://g.co/a.apk", "Demo en vivo → https://site.co"]);
   });
 
   it("uses the custom label for the live link", () => {
@@ -27,7 +27,7 @@ describe("Project.links (polymorphic by kind)", () => {
   });
 
   it("falls back to the README when only the code is linked", () => {
-    expect(hrefs(project({ kind: "desktop", repoUrl: "https://g.co/r" }))).toEqual([
+    expect(hrefs(project({ platforms: ["desktop"], repoUrl: "https://g.co/r" }))).toEqual([
       "Código → https://g.co/r", "Documentación → https://g.co/r#readme",
     ]);
   });
@@ -68,7 +68,13 @@ describe("small domain helpers", () => {
     expect(shortPhrase(profileSchema.parse({ ...base, about: "Primera. Segunda." }))).toBe("Primera.");
   });
 
-  it("every kind has a visible label", () => {
-    for (const kind of projectKinds) expect(KIND_LABELS[kind]).toBeTruthy();
+  it("every platform has a visible label", () => {
+    for (const platform of platformKinds) expect(PLATFORM_LABELS[platform]).toBeTruthy();
+  });
+
+  it("relevance ranks featured, then complete, then newest", () => {
+    const [plain, rich, star] = [project({ period: "2026-2" }), project({ period: "2026-1", liveUrl: "https://s.co", problem: "x" }), project({ featured: true, period: "2025-1" })];
+    const ranked = [plain, rich, star].sort((a, b) => a.relevance.reduce((d, v, i) => d || b.relevance[i] - v, 0));
+    expect(ranked).toEqual([star, rich, plain]);
   });
 });

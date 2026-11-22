@@ -1,5 +1,5 @@
 import type {
-  ExperienceData, InterestData, InterestSlug, ProfileData, ProjectData, ProjectKind,
+  ExperienceData, InterestData, InterestSlug, Platform, ProfileData, ProjectData,
   SkillData, TestimonialData,
 } from "./schemas";
 import { periodKey } from "./structures";
@@ -34,44 +34,52 @@ export abstract class Entity<T extends EntityMeta = EntityMeta> {
   abstract toCard(): Card;
 }
 
-/** Visible name of each kind, in filter order: filter chips, card labels and the "plataformas" figure. */
-export const KIND_LABELS: Record<ProjectKind, string> = {
-  web: "Web", "web-mobile": "Web y móvil", mobile: "Móvil", wearable: "Wearable", desktop: "Escritorio", game: "Videojuego", api: "API",
+/** Visible name of each platform, in filter order: filter chips, card labels and the "plataformas" figure. */
+export const PLATFORM_LABELS: Record<Platform, string> = {
+  web: "Web", mobile: "Móvil", wearable: "Wearable", desktop: "Escritorio", game: "Videojuego", api: "API",
 };
 
 type LinkSpec = { label: string; icon: IconName; url: (p: ProjectData) => string };
 
-/** The kind decides the main link shown next to "Código". */
-const KIND_ACTIONS: Record<ProjectKind, LinkSpec> = {
-  web: { label: "Demo en vivo", icon: "arrow", url: (p) => p.liveUrl },
-  "web-mobile": { label: "Demo en vivo", icon: "arrow", url: (p) => p.liveUrl },
-  mobile: { label: "Descargar APK", icon: "apk", url: (p) => p.apkUrl || p.liveUrl },
-  wearable: { label: "Descargar APK", icon: "apk", url: (p) => p.apkUrl || p.liveUrl },
-  api: { label: "Documentación", icon: "code", url: (p) => p.liveUrl },
-  desktop: { label: "Ver código", icon: "github", url: (p) => p.repoUrl },
-  game: { label: "Descargar juego", icon: "download", url: (p) => p.downloadUrl },
-};
+/** Each platform's main link, next to "Código"; the most specific first (watch APK before phone APK). */
+const PLATFORM_ACTIONS: [Platform, LinkSpec][] = [
+  ["wearable", { label: "APK del reloj", icon: "apk", url: (p) => p.apkUrl }],
+  ["mobile", { label: "Descargar APK", icon: "apk", url: (p) => p.apkUrl }],
+  ["web", { label: "Demo en vivo", icon: "arrow", url: (p) => p.liveUrl }],
+  ["game", { label: "Descargar juego", icon: "download", url: (p) => p.downloadUrl }],
+  ["desktop", { label: "Descargar", icon: "download", url: (p) => p.downloadUrl }],
+  ["api", { label: "Documentación", icon: "code", url: (p) => p.liveUrl }],
+];
 
-/** "Código" first, then the kind action, then any other link the project carries. */
+/** "Código" first, then the platform actions, then any other link the project carries. */
 const LINK_ORDER: LinkSpec[] = [
   { label: "Código", icon: "github", url: (p) => p.repoUrl },
-  { label: "Ver sitio", icon: "arrow", url: (p) => p.liveUrl },
+  { label: "Demo en vivo", icon: "arrow", url: (p) => p.liveUrl },
   { label: "Descargar APK", icon: "apk", url: (p) => p.apkUrl },
   { label: "Descargar", icon: "download", url: (p) => p.downloadUrl },
 ];
 
 export class Project extends Entity<ProjectData> {
   get stack(): string[] { return this.data.stack; }
-  get kind(): ProjectKind { return this.data.kind; }
+  get platforms(): Platform[] { return this.data.platforms; }
   get repoUrl(): string { return this.data.repoUrl; }
   get liveUrl(): string { return this.data.liveUrl; }
   get apkUrl(): string { return this.data.apkUrl; }
 
-  /** Every existing link, without repeats. With only "Código" left, the README becomes the second link. */
+  /** Gallery relevance: featured, then most complete (ways to try it + detail), then newest; manual order breaks ties. */
+  get relevance(): number[] {
+    const d = this.data;
+    const filled = [d.liveUrl, d.apkUrl, d.downloadUrl, d.imageUrl, d.problem, d.solution, d.myRole, d.learnings].filter(Boolean).length;
+    return [Number(d.featured), filled + d.extraLinks.length, periodKey(d.period)];
+  }
+
+  /** Every existing link, without repeats, extra links last. With only "Código" left, the README becomes the second link. */
   links(): CardAction[] {
     const [code, ...rest] = LINK_ORDER;
     const seen = new Set<string>();
-    const links: CardAction[] = [code, KIND_ACTIONS[this.kind], ...rest].flatMap(({ label, icon, url }) => {
+    const actions = PLATFORM_ACTIONS.filter(([platform]) => this.platforms.includes(platform)).map(([, spec]) => spec);
+    const extras = this.data.extraLinks.map(({ label, url }): LinkSpec => ({ label, icon: "external", url: () => url }));
+    const links: CardAction[] = [code, ...actions, ...rest, ...extras].flatMap(({ label, icon, url }) => {
       const href = url(this.data);
       if (!href || seen.has(href)) return [];
       seen.add(href);
