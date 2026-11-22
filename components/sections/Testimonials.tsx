@@ -19,7 +19,7 @@ function Avatar({ person, tone }: { person: TestimonialView; tone: string }) {
 export function Testimonials({ testimonials }: { testimonials: TestimonialView[] }) {
   if (testimonials.length === 0) return null;
   return (
-    <Section id="testimonios" title="Testimonios" lead="Personas que han trabajado conmigo o han usado lo que construyo." surface="raised">
+    <Section id="testimonios" title="Testimonios" lead="Personas que han trabajado conmigo o han usado lo que construyo." surface="bone">
       <Reveal className="max-w-3xl">
         <Carousel label="Testimonios" slides={testimonials.map((person, i) => (
           <figure key={person.id} className="flex h-full flex-col rounded-3xl border border-line bg-abyss p-7 sm:p-10">

@@ -12,6 +12,7 @@
   --color-sky: #9cc9e6;    /* accent text 10.06:1 · never on slate */
   --color-mist: #c2e8ff;   /* secondary text 13.75:1 */
   --color-ice: #eaffff;    /* main text 17.1:1 · abyss on ice/mist as dark text */
+  --color-bone: #f3eee4;   /* cream: fills and accents on blue (abyss text 15.3:1); cream sections use .surface-bone */
 
   --font-*: initial;
   --font-display: var(--font-fraunces), Georgia, serif;
@@ -52,11 +53,17 @@
   body { font-family: var(--font-sans); overflow-x: hidden; }
 
   :focus-visible { outline: 3px solid var(--color-mist); outline-offset: 3px; }
+  /* Cream sections: the same tokens, inverted, so every component inside reads navy on bone with no extra classes.
+     Measured on bone: ice 15.3 · mist 7.8 · sky 8.6:1; bone (now navy) fills carry cream text 12.9:1. The lava hides behind. */
+  .surface-bone {
+    --color-abyss: #f3eee4; --color-deep: #e9e2d4; --color-slate: #dfd6c5; --color-navy: #cfe0ea; --color-line: #d3c8b4;
+    --color-steel: #8fa5b3; --color-sky: #004671; --color-mist: #2a4d63; --color-ice: #021a2a; --color-bone: #042a41;
+    color-scheme: light; background-color: var(--color-abyss); color: var(--color-ice);
+  }
   ::selection { background: var(--color-mist); color: var(--color-abyss); }
 
   /* Lenis */
-  html.lenis, html.lenis body { height: auto; } .lenis.lenis-stopped { overflow: clip; }
-  .lenis [data-lenis-prevent] { overscroll-behavior: contain; }
+  html.lenis, html.lenis body { height: auto; } .lenis.lenis-stopped { overflow: clip; } .lenis [data-lenis-prevent] { overscroll-behavior: contain; }
 }
 
 @layer utilities {
@@ -73,8 +80,7 @@
   .unblur, .sharpen { animation-duration: 1s; } .unblur { animation-name: unblur; } .sharpen { animation-name: sharpen; }
 
   /* Lava lamp: pre-softened shapes, each on its own slow cycle (inline duration/delay). Paused in hidden tabs. */
-  .lava-blob { animation: lava var(--d, 30s) ease-in-out var(--delay, 0s) infinite; }
-  .lava-blob:nth-child(even) { animation-name: lava-b; }
+  .lava-blob { animation: lava var(--d, 30s) ease-in-out var(--delay, 0s) infinite; } .lava-blob:nth-child(even) { animation-name: lava-b; }
   /* Endless loops wait for the page to settle (data-ready, set when idle after load) and pause in hidden tabs. */
   html:is(:not([data-ready]), [data-tab="hidden"]) :is(.lava-blob, .animate-pulse-led, .sway) { animation-play-state: paused; }
 
@@ -82,8 +88,7 @@
   .loader { animation: loader-out 0.4s ease-in 1.15s forwards; }
   .loader-gather { animation: gather 0.75s var(--ease-soft) both; }
   .loader-mark { animation: mark 0.5s var(--ease-soft) 0.45s both; }
-  .loader-count { counter-reset: n var(--n); animation: count 1.05s linear both; }
-  .loader-count::after { content: counter(n); }
+  .loader-count { counter-reset: n var(--n); animation: count 1.05s linear both; } .loader-count::after { content: counter(n); }
   html[data-intro="skip"] .loader { animation-delay: 0s; animation-duration: 0.25s; }
   html[data-intro="seen"] .loader { display: none; }
 
@@ -105,14 +110,12 @@
   @media (hover: none) { .sway { animation: var(--animate-sway); } }
 }
 
-@property --n { syntax: "<integer>"; initial-value: 0; inherits: false; }
-@property --v { syntax: "<integer>"; initial-value: 0; inherits: false; }
+@property --n { syntax: "<integer>"; initial-value: 0; inherits: false; } @property --v { syntax: "<integer>"; initial-value: 0; inherits: false; }
 
 @keyframes rise { from { transform: translateY(28px); } to { transform: none; } }
 @keyframes letter { from { transform: translateY(110%); } to { transform: none; } }
 @keyframes draw { from { clip-path: inset(-30% 102% -30% -8%); } to { clip-path: inset(-30% -8% -30% -8%); } }
-@keyframes ink-in { from { opacity: 0; } to { opacity: 1; } } @keyframes unblur { from { opacity: 1; } to { opacity: 0; } }
-@keyframes swash { from { stroke-dashoffset: 1.1; } to { stroke-dashoffset: 0; } }
+@keyframes ink-in { from { opacity: 0; } to { opacity: 1; } } @keyframes unblur { from { opacity: 1; } to { opacity: 0; } } @keyframes swash { from { stroke-dashoffset: 1.1; } to { stroke-dashoffset: 0; } }
 @keyframes sharpen { from { transform: scale(1.02); } to { transform: none; } }
 @keyframes sheen { from { opacity: 1; transform: translateX(-160%) skewX(-20deg); } to { opacity: 1; transform: translateX(420%) skewX(-20deg); } }
 @keyframes sway { 0%, 100% { transform: none; } 25% { transform: rotateX(3deg) rotateY(-5deg); } 75% { transform: rotateX(-2deg) rotateY(5deg); } }
@@ -124,16 +127,13 @@
 @keyframes lava-b { 0%, 100% { transform: none; opacity: 0.75; } 35% { transform: translate3d(-6vw, 30vh, 0) scale(1.3, 0.78); opacity: 1; }
   65% { transform: translate3d(5vw, 42vh, 0) scale(0.85, 1.3); opacity: 0.6; } }
 /* Scroll-driven one-offs: figures tally up, the timeline line grows and its dots light, the reading bar fills. */
-@keyframes tally { from { --v: 0; } }
-@keyframes grow-y { from { transform: scaleY(0); } }
+@keyframes tally { from { --v: 0; } } @keyframes grow-y { from { transform: scaleY(0); } } @keyframes fill-x { from { transform: scaleX(0); } }
 @keyframes light-up { from { opacity: 0.3; transform: scale(0.5); } }
-@keyframes fill-x { from { transform: scaleX(0); } }
 @keyframes rise-in { from { opacity: 0; transform: translateY(calc(48px + var(--i, 0) * 28px)) scale(0.97); } }
 @keyframes mask-in { from { transform: translateY(105%); } }
 @keyframes lift-out { to { opacity: 0; transform: translateY(-56px) scale(0.94); } }
 @keyframes gather { from { transform: translate(var(--fx), var(--fy)) scale(0.6); } to { transform: none; } }
-@keyframes mark { from { opacity: 0; transform: scale(0.85); } to { opacity: 1; transform: none; } }
-@keyframes count { to { --n: 100; } }
+@keyframes mark { from { opacity: 0; transform: scale(0.85); } to { opacity: 1; transform: none; } } @keyframes count { to { --n: 100; } }
 @keyframes loader-out { to { opacity: 0; transform: scale(1.06); visibility: hidden; } }
 
 /* Same rules for the OS setting (unless the visitor turned animations back on) and for the in-page switch. */

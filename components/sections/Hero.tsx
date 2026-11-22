@@ -78,7 +78,7 @@ export function Hero({ profile, cvNote }: { profile: ProfileData; cvNote?: strin
               <Image src={profile.photo} alt={`Foto de ${profile.fullName}`} width={1002} height={880} quality={90}
                 sizes="(min-width: 1024px) 440px, (min-width: 640px) 288px, 208px" priority fetchPriority="high" className="size-full object-cover" />
             </TiltPhoto>
-            <figcaption className="absolute -bottom-3 -left-3 z-10 -rotate-3 rounded-xl bg-mist px-3 py-2 text-sm font-semibold text-abyss shadow-lift sm:-left-5 sm:bottom-8 sm:px-4 sm:py-2.5">
+            <figcaption className="absolute -bottom-3 -left-3 z-10 -rotate-3 rounded-xl bg-bone px-3 py-2 text-sm font-semibold text-abyss shadow-lift sm:-left-5 sm:bottom-8 sm:px-4 sm:py-2.5">
               {profile.fullName}
             </figcaption>
           </figure>

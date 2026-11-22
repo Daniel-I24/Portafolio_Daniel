@@ -17,7 +17,7 @@ export function About({ profile, skills }: AboutProps) {
   const groups = [...new Set(skills.map((skill) => skill.group))];
 
   return (
-    <Section id="sobre-mi" title="Sobre mí" lead="Quién soy y con qué trabajo.">
+    <Section id="sobre-mi" title="Sobre mí" lead="Quién soy y con qué trabajo." surface="bone">
       <div className="grid gap-10 lg:grid-cols-[1.7fr_1fr] lg:gap-16">
         <Reveal>
           <p className="font-display text-lg leading-relaxed sm:text-xl sm:leading-relaxed lg:text-2xl lg:leading-snug">{profile.about}</p>

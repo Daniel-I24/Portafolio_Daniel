@@ -4,7 +4,7 @@ import { Icon } from "./Icon";
 
 /** Each variant sets its own surface and the `--fill` color that floods in from the cursor side. */
 const VARIANTS = {
-  solid: "bg-mist text-abyss [--fill:var(--color-ice)] hover:shadow-glow",
+  solid: "bg-bone text-abyss [--fill:var(--color-mist)] hover:shadow-glow",
   outline:
     "border-[1.5px] border-transparent text-ice [--fill:var(--color-navy)] [background:linear-gradient(var(--color-deep),var(--color-deep))_padding-box,linear-gradient(115deg,var(--color-steel),var(--color-mist),var(--color-sky),var(--color-steel))_border-box] hover:shadow-glow",
   quiet: "border border-line bg-deep text-ice [--fill:var(--color-slate)] hover:border-steel",

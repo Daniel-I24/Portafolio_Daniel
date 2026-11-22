@@ -15,7 +15,7 @@ const TONES = ["bg-navy text-ice", "bg-slate text-ice", "bg-mist text-abyss", "b
 /** Even grid of current interests: same-sized tiles with their own icon, title and note, lifting in 3D on hover. */
 export function OffTheClock({ interests }: { interests: InterestView[] }) {
   return (
-    <Section id="mas-alla-del-codigo" title="Más allá del código" lead="Lo que disfruto cuando no estoy programando.">
+    <Section id="mas-alla-del-codigo" title="Más allá del código" lead="Lo que disfruto cuando no estoy programando." surface="bone">
       <ul className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
         {interests.map((interest, i) => (
           <Reveal as="li" key={interest.id} index={i} className="[perspective:900px]">

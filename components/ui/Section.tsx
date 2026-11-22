@@ -27,11 +27,16 @@ interface SectionProps {
   title: string;
   lead?: string;
   children: ReactNode;
-  /** `raised` sets the section on a translucent surface (the lava still shows) to separate it from its neighbours. */
-  surface?: "plain" | "raised";
+  /**
+   * `raised`: a translucent navy surface (the lava still shows). `bone`: a cream section; the palette inverts
+   * through `.surface-bone` (globals.css), so the content inside needs no changes and the lava hides behind it.
+   */
+  surface?: "plain" | "raised" | "bone";
   /** Extra content aligned with the title on wide screens (filters, tabs…). */
   aside?: ReactNode;
 }
+
+const SURFACES = { plain: "", raised: "border-y border-line bg-deep/75", bone: "surface-bone" } as const;
 
 /** Section shell: numbered kicker, serif title, optional lead, then the content. */
 export function Section({ id, title, lead, children, surface = "plain", aside }: SectionProps) {
@@ -39,7 +44,7 @@ export function Section({ id, title, lead, children, surface = "plain", aside }:
     <section
       id={id}
       aria-labelledby={`${id}-title`}
-      className={`relative isolate scroll-mt-20 overflow-x-clip py-20 sm:py-24 ${surface === "raised" ? "border-y border-line bg-deep/75" : ""}`}
+      className={`relative isolate scroll-mt-20 overflow-x-clip py-20 sm:py-24 ${SURFACES[surface]}`}
     >
       <div className={container}>
         <Reveal className="flex flex-wrap items-end justify-between gap-x-10 gap-y-6">
