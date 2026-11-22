@@ -1,12 +1,24 @@
 "use client";
 
-import Lenis from "lenis";
-import { MotionConfig } from "motion/react";
+import type Lenis from "lenis";
 import { createContext, useContext, useEffect, useState, type ReactNode } from "react";
+import { buttonClass } from "./Button";
 import { Icon } from "./Icon";
 
 /** Height of the fixed menu: anchor jumps stop below it. */
 export const HEADER_OFFSET = 80;
+
+const READY_EVENT = "page-ready";
+
+/** Runs `start` once the page has settled (loaded + idle); returns a cleanup. */
+export function whenReady(start: () => void): () => void {
+  if (document.documentElement.dataset.ready !== undefined) { start(); return () => {}; }
+  addEventListener(READY_EVENT, start, { once: true });
+  return () => removeEventListener(READY_EVENT, start);
+}
+
+/** The running smooth-scroll instance (null while motion is off), for jumps that must not glide. */
+export const smoothScroll: { current: Lenis | null } = { current: null };
 
 type MotionPrefs = { enabled: boolean; toggle: () => void };
 const MotionContext = createContext<MotionPrefs>({ enabled: true, toggle: () => {} });
@@ -21,6 +33,8 @@ export function useCalm(): boolean {
 /**
  * Page-wide motion switch (persisted in localStorage, mirrored on <html data-motion> so CSS obeys it too)
  * and Lenis smooth scroll, which only runs while motion is allowed. On by default unless the OS asks for reduced motion.
+ * Lenis is fetched when the browser is idle and only for wheel/trackpad devices (it does not smooth touch anyway),
+ * so it never competes with the first paint.
  */
 export function MotionProvider({ children }: { children: ReactNode }) {
   const [enabled, setEnabled] = useState(true);
@@ -31,10 +45,37 @@ export function MotionProvider({ children }: { children: ReactNode }) {
     setEnabled(motion ? motion === "on" : !matchMedia("(prefers-reduced-motion: reduce)").matches);
   }, []);
 
+  // Endless CSS loops (lava, LED pulse, sway) start once the page is loaded and the browser is idle,
+  // so they never compete with the first paint; they rest in their start pose until then.
   useEffect(() => {
-    if (!enabled) return;
-    const lenis = new Lenis({ autoRaf: true, anchors: { offset: -HEADER_OFFSET } });
-    return () => lenis.destroy();
+    const ready = () => { document.documentElement.dataset.ready = ""; dispatchEvent(new Event(READY_EVENT)); };
+    const later = () => ("requestIdleCallback" in window ? requestIdleCallback(ready, { timeout: 2500 }) : setTimeout(ready, 1200));
+    if (document.readyState === "complete") later(); else addEventListener("load", later, { once: true });
+  }, []);
+
+  // Hidden tab: CSS loops pause via html[data-tab="hidden"].
+  useEffect(() => {
+    const sync = () => { document.documentElement.dataset.tab = document.hidden ? "hidden" : "visible"; };
+    document.addEventListener("visibilitychange", sync);
+    return () => document.removeEventListener("visibilitychange", sync);
+  }, []);
+
+  useEffect(() => {
+    if (!enabled || !matchMedia("(hover: hover) and (pointer: fine)").matches) return;
+    let lenis: Lenis | null = null;
+    let cancelled = false;
+    const start = () => import("lenis").then(({ default: SmoothScroll }) => {
+      if (cancelled) return;
+      lenis = new SmoothScroll({ autoRaf: true, anchors: { offset: -HEADER_OFFSET } });
+      smoothScroll.current = lenis;
+    });
+    const idle = "requestIdleCallback" in window ? requestIdleCallback(start, { timeout: 3000 }) : setTimeout(start, 1500);
+    return () => {
+      cancelled = true;
+      if ("cancelIdleCallback" in window) cancelIdleCallback(idle as number); else clearTimeout(idle);
+      smoothScroll.current = null;
+      lenis?.destroy();
+    };
   }, [enabled]);
 
   const toggle = () => {
@@ -49,9 +90,7 @@ export function MotionProvider({ children }: { children: ReactNode }) {
   };
 
   return (
-    <MotionContext value={{ enabled, toggle }}>
-      <MotionConfig reducedMotion={enabled ? "never" : "always"}>{children}</MotionConfig>
-    </MotionContext>
+    <MotionContext value={{ enabled, toggle }}>{children}</MotionContext>
   );
 }
 
@@ -59,8 +98,7 @@ export function MotionProvider({ children }: { children: ReactNode }) {
 export function MotionSwitch({ className = "" }: { className?: string }) {
   const { enabled, toggle } = useMotionPrefs();
   return (
-    <button type="button" onClick={toggle} aria-pressed={!enabled}
-      className={`inline-flex items-center gap-2 rounded-full border border-line px-3.5 py-2.5 text-sm font-medium text-ink transition-colors duration-150 hover:border-ink ${className}`}>
+    <button type="button" onClick={toggle} aria-pressed={!enabled} className={`${buttonClass("quiet", "sm")} ${className}`}>
       <Icon name={enabled ? "pause" : "play"} size={16} />
       {enabled ? "Pausar animaciones" : "Activar animaciones"}
     </button>

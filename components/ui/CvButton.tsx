@@ -32,7 +32,7 @@ export function CvButton({ href, missingNote, variant = "outline", size = "md", 
       </a>
       <span className="sr-only" aria-live="polite">{state === "note" ? missingNote : state === "done" ? "Descarga iniciada" : ""}</span>
       {state === "note" && (
-        <span aria-hidden className={`absolute ${align === "left" ? "left-0" : "right-0"} top-full z-50 mt-2 w-64 rounded-xl border border-line bg-card p-3 text-sm text-ink shadow-lift`}>
+        <span aria-hidden className={`absolute ${align === "left" ? "left-0" : "right-0"} top-full z-50 mt-2 w-64 rounded-xl border border-line bg-deep p-3 text-sm text-ice shadow-lift`}>
           {missingNote}
         </span>
       )}

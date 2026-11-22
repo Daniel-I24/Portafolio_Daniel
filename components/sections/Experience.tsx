@@ -9,8 +9,8 @@ import type { ExperienceData } from "@/lib/schemas";
 /** Polymorphic values (badge, accent, icon) are resolved on the server by each Experience subclass. */
 export type ExperienceView = ExperienceData & { badge: string; accent: Accent; icon: IconName };
 
-const DOT: Record<Accent, string> = { rust: "bg-rust", pine: "bg-pine" };
-const TEXT: Record<Accent, string> = { rust: "text-rust", pine: "text-pine" };
+const DOT: Record<Accent, string> = { sky: "bg-sky", mist: "bg-mist" };
+const TEXT: Record<Accent, string> = { sky: "text-sky", mist: "text-mist" };
 /** Tab order the visitor expects; any other badge goes after these. */
 const PREFERRED = ["Académica", "Laboral"];
 
@@ -31,11 +31,11 @@ export function Experience({ items }: { items: ExperienceView[] }) {
   };
 
   const tabs = (
-    <div role="tablist" aria-label="Tipo de experiencia" className="inline-flex rounded-full border border-line bg-card p-1">
+    <div role="tablist" aria-label="Tipo de experiencia" className="inline-flex rounded-full border border-line bg-deep p-1">
       {groups.map((group, i) => (
         <button key={group} id={`exp-tab-${i}`} role="tab" type="button" aria-selected={group === active} aria-controls="exp-panel"
           tabIndex={group === active ? 0 : -1} onClick={() => setActive(group)} onKeyDown={onKey}
-          className="rounded-full px-5 py-2.5 text-sm font-semibold text-muted transition-colors duration-150 hover:text-ink aria-selected:bg-ink aria-selected:text-card">
+          className="rounded-full px-5 py-2.5 text-sm font-semibold text-mist transition-colors duration-150 hover:text-ice aria-selected:bg-ice aria-selected:text-abyss">
           {group}
           <span className="ml-2 tabular-nums">{items.filter((item) => item.badge === group).length}</span>
         </button>
@@ -47,15 +47,17 @@ export function Experience({ items }: { items: ExperienceView[] }) {
     <Section id="experiencia" title="Experiencia" lead="Formación académica y proyectos en los que he trabajado." aside={tabs}>
       <div id="exp-panel" role="tabpanel" aria-labelledby={`exp-tab-${groups.indexOf(active)}`} tabIndex={0} className="max-w-3xl rounded-sm">
         <ol key={active} className="relative border-l border-line">
+          {/* The lit line draws itself with the scroll; each dot lights up as it is reached (CSS scroll timelines). */}
+          <span aria-hidden className="scroll-fx absolute -left-px top-0 h-full w-0.5 origin-top bg-sky shadow-glow [animation-name:grow-y] [animation-range:entry_15%_cover_75%]" />
           {visible.map((item, i) => (
             <Reveal as="li" key={item.id} index={i} className="relative pb-10 pl-8 last:pb-0 sm:pl-12">
-              <span aria-hidden className={`absolute -left-[7px] top-1.5 size-3.5 rounded-full ring-4 ring-paper ${DOT[item.accent]}`} />
+              <span aria-hidden className={`scroll-fx absolute -left-[7px] top-1.5 size-3.5 rounded-full shadow-glow ring-4 ring-abyss [animation-name:light-up] [animation-range:cover_20%_cover_40%] ${DOT[item.accent]}`} />
               <p className={`text-sm font-semibold tabular-nums ${TEXT[item.accent]}`}>
                 <span className="sr-only">Periodo: </span>{item.period}
               </p>
               <h3 className="mt-1.5 font-display text-lg font-semibold leading-snug sm:text-xl">{item.title}</h3>
-              {item.place && <p className="mt-1 text-sm text-muted">{item.place}</p>}
-              {item.summary && <p className="mt-3 text-muted">{item.summary}</p>}
+              {item.place && <p className="mt-1 text-sm text-mist">{item.place}</p>}
+              {item.summary && <p className="mt-3 text-mist">{item.summary}</p>}
             </Reveal>
           ))}
         </ol>

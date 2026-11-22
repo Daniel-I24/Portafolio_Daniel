@@ -1,4 +1,5 @@
 import Image from "next/image";
+import { Carousel } from "@/components/ui/Carousel";
 import { Reveal } from "@/components/ui/Reveal";
 import { Section } from "@/components/ui/Section";
 import type { TestimonialData } from "@/lib/schemas";
@@ -6,7 +7,7 @@ import type { TestimonialData } from "@/lib/schemas";
 export type TestimonialView = TestimonialData & { initials: string };
 
 /** Avatar tones for people without a photo; text color keeps 4.5:1 on each. */
-const TONES = ["bg-pine text-card", "bg-marigold text-ink", "bg-rust text-card"];
+const TONES = ["bg-navy text-ice", "bg-mist text-abyss", "bg-slate text-ice"];
 
 function Avatar({ person, tone }: { person: TestimonialView; tone: string }) {
   if (person.avatarUrl) {
@@ -18,26 +19,26 @@ function Avatar({ person, tone }: { person: TestimonialView; tone: string }) {
 export function Testimonials({ testimonials }: { testimonials: TestimonialView[] }) {
   if (testimonials.length === 0) return null;
   return (
-    <Section id="testimonios" title="Testimonios" lead="Personas que han trabajado conmigo o han usado lo que construyo." surface="card">
-      <ul className="grid gap-6 md:grid-cols-2 lg:grid-cols-3 md:max-lg:[&>li:last-child:nth-child(odd)]:col-span-2">
-        {testimonials.map((person, i) => (
-          <Reveal as="li" key={person.id} index={i} className="h-full">
-            <figure className="flex h-full flex-col rounded-3xl border border-line bg-paper p-7 transition-[border-color,translate] duration-300 hover:-translate-y-1 hover:border-ink sm:p-8">
-              <span aria-hidden className="font-display text-4xl leading-none text-rust">“</span>
-              <blockquote className="mt-2 flex-1 text-ink">
-                <p>{person.quote}</p>
-              </blockquote>
-              <figcaption className="mt-8 flex items-center gap-4 border-t border-line pt-6">
-                <Avatar person={person} tone={TONES[i % TONES.length]} />
-                <span>
-                  <span className="block font-semibold">{person.name}</span>
-                  {person.role && <span className="block text-sm text-muted">{person.role}</span>}
-                </span>
-              </figcaption>
-            </figure>
-          </Reveal>
-        ))}
-      </ul>
+    <Section id="testimonios" title="Testimonios" lead="Personas que han trabajado conmigo o han usado lo que construyo." surface="bone">
+      {/* Wide screens: the card keeps a reading width and a large drawn quote mark fills the side. */}
+      <Reveal className="grid items-center gap-10 lg:grid-cols-[minmax(0,48rem)_1fr]">
+        <Carousel label="Testimonios" slides={testimonials.map((person, i) => (
+          <figure key={person.id} className="flex h-full flex-col rounded-3xl border border-line bg-deep p-7 shadow-lift sm:p-10">
+            <span aria-hidden className="font-display text-[4rem] leading-none text-sky lg:hidden">“</span>
+            <blockquote className="mt-2 flex-1 font-display text-lg leading-relaxed text-ice sm:text-xl">
+              <p>{person.quote}</p>
+            </blockquote>
+            <figcaption className="mt-8 flex items-center gap-4 border-t border-line pt-6">
+              <Avatar person={person} tone={TONES[i % TONES.length]} />
+              <span>
+                <span className="block font-semibold">{person.name}</span>
+                {person.role && <span className="block text-sm text-mist">{person.role}</span>}
+              </span>
+            </figcaption>
+          </figure>
+        ))} />
+        <span aria-hidden className="hidden select-none justify-self-center font-display text-[18rem] leading-[0.7] text-steel lg:block">“</span>
+      </Reveal>
     </Section>
   );
 }

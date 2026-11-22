@@ -1,23 +1,26 @@
 import Image from "next/image";
 import type { ReactNode } from "react";
-import { KIND_LABELS, type CardAction } from "@/lib/domain";
-import type { ProjectData, ProjectKind } from "@/lib/schemas";
+import { PLATFORM_LABELS, type CardAction } from "@/lib/domain";
+import type { Platform, ProjectData } from "@/lib/schemas";
 import { ButtonLink } from "./Button";
 import { Icon } from "./Icon";
 
 export type ProjectView = ProjectData & { links: CardAction[] };
 
-/** Plain cover per kind when there is no screenshot: color + name, nothing fake. Every pair passes 4.5:1. */
-const COVER_TONES: Record<ProjectKind, string> = {
-  web: "bg-paper text-ink",
-  mobile: "bg-pine text-card",
-  desktop: "bg-ink text-card",
-  game: "bg-rust text-card",
-  api: "bg-marigold text-ink",
+/** Plain cover per main (first) platform when there is no screenshot: color + name, nothing fake. Every pair passes 4.5:1. */
+const COVER_TONES: Record<Platform, string> = {
+  web: "bg-abyss text-ice",
+  mobile: "bg-navy text-ice",
+  wearable: "bg-steel text-abyss",
+  desktop: "bg-slate text-ice",
+  game: "bg-bone text-abyss",
+  api: "bg-mist text-abyss",
 };
 const MAX_TECHS = 5;
 
-export const meta = (project: ProjectView) => [KIND_LABELS[project.kind], project.period].filter(Boolean).join(" · ");
+/** "Móvil / Wearable · 2026-2". */
+export const meta = (project: ProjectView) =>
+  [project.platforms.map((platform) => PLATFORM_LABELS[platform]).join(" / "), project.period].filter(Boolean).join(" · ");
 
 /** Screenshot, or a plain colored space with kind, period and name: nothing fake. */
 function Cover({ project }: { project: ProjectView }) {
@@ -26,7 +29,7 @@ function Cover({ project }: { project: ProjectView }) {
   }
   const size = project.title.length > 20 ? "text-xl sm:text-2xl" : "text-2xl sm:text-3xl";
   return (
-    <div className={`flex aspect-video flex-col justify-between p-6 text-left ${COVER_TONES[project.kind]}`}>
+    <div className={`flex aspect-video flex-col justify-between p-6 text-left ${COVER_TONES[project.platforms[0]]}`}>
       <span className="text-sm font-medium uppercase tracking-[0.12em]">{meta(project)}</span>
       <span className={`line-clamp-3 font-display font-semibold leading-tight [font-variation-settings:'opsz'_144] ${size}`}>{project.title}</span>
     </div>
@@ -34,7 +37,7 @@ function Cover({ project }: { project: ProjectView }) {
 }
 
 export const Badge = ({ tone, children }: { tone: "featured" | "collab"; children: ReactNode }) => (
-  <span className={`rounded-full px-3 py-1 text-sm font-semibold ${tone === "featured" ? "bg-marigold text-ink" : "border border-pine bg-card text-pine"}`}>{children}</span>
+  <span className={`rounded-full px-3 py-1 text-sm font-semibold ${tone === "featured" ? "bg-mist text-abyss" : "border border-sky bg-deep text-sky"}`}>{children}</span>
 );
 
 export const Badges = ({ project }: { project: ProjectView }) =>
@@ -47,40 +50,47 @@ export const Badges = ({ project }: { project: ProjectView }) =>
 
 export const TechList = ({ stack, limit = stack.length }: { stack: string[]; limit?: number }) => (
   <ul aria-label="Tecnologías" className="flex flex-wrap gap-1.5">
-    {stack.slice(0, limit).map((tech) => <li key={tech} className="rounded-md bg-paper px-2.5 py-1 text-sm text-ink">{tech}</li>)}
-    {stack.length > limit && <li className="px-1 py-1 text-sm text-muted">+{stack.length - limit} más</li>}
+    {stack.slice(0, limit).map((tech) => <li key={tech} className="rounded-md bg-abyss px-2.5 py-1 text-sm text-ice">{tech}</li>)}
+    {stack.length > limit && <li className="px-1 py-1 text-sm text-mist">+{stack.length - limit} más</li>}
   </ul>
 );
 
-/** Every link the project carries (resolved by Project.links()); the detail adds the extra ones. */
-export const ProjectLinks = ({ project, extra = false }: { project: ProjectView; extra?: boolean }) => {
-  const extras = extra ? project.extraLinks.map(({ label, url }): CardAction => ({ label, href: url, icon: "external" })) : [];
-  return [...project.links, ...extras].map((link, i) => (
+/** Every link the project carries, resolved by Project.links() (extra links included). */
+export const ProjectLinks = ({ project }: { project: ProjectView }) =>
+  project.links.map((link, i) => (
     <ButtonLink key={link.href} href={link.href} icon={link.icon === "arrow" ? "external" : link.icon} size="sm" variant={i === 0 ? "outline" : "solid"}>
       {link.label}<span className="sr-only"> de {project.title}</span>
     </ButtonLink>
   ));
+
+/** 3D tilt toward the cursor: the gallery writes --px/--py (0–1) on `[data-tilt]`; transitions smooth it. */
+const TILT = { transform: "perspective(900px) rotateX(calc((0.5 - var(--py, 0.5)) * 8deg)) rotateY(calc((var(--px, 0.5) - 0.5) * 10deg))" };
+const resetTilt = (event: { currentTarget: HTMLElement }) => {
+  event.currentTarget.style.setProperty("--px", "0.5");
+  event.currentTarget.style.setProperty("--py", "0.5");
 };
 
-export function ProjectCard({ project, onOpen }: { project: ProjectView; onOpen: () => void }) {
+export function ProjectCard({ project, onOpen }: { project: ProjectView; onOpen: (card: HTMLElement) => void }) {
   const named = !project.imageUrl; // the plain cover already shows kind, period and name
+  const open = (event: { currentTarget: HTMLElement }) => onOpen(event.currentTarget.closest("article") as HTMLElement);
   return (
-    <article className="group/card relative flex h-full flex-col overflow-hidden rounded-3xl border border-line bg-card transition-[border-color,box-shadow,translate] duration-300 hover:-translate-y-1 hover:border-ink hover:shadow-lift">
+    <article data-tilt style={TILT} onPointerLeave={resetTilt}
+      className="group/card relative flex h-full flex-col overflow-hidden rounded-3xl border border-line bg-deep transition-[transform,border-color,box-shadow] duration-300 ease-out hover:border-steel hover:shadow-lift after:pointer-events-none after:absolute after:inset-0 after:rounded-3xl after:opacity-0 after:shadow-[inset_0_0_0_1.5px_var(--color-mist),inset_0_0_24px_-6px_var(--color-steel),0_0_32px_-6px_var(--color-steel)] after:transition-opacity after:duration-300 hover:after:opacity-100">
       {/* Mouse shortcut to the detail; keyboard and screen readers use the labelled button below. */}
-      <button type="button" tabIndex={-1} aria-hidden onClick={onOpen} className="block overflow-hidden border-b border-line">
+      <button type="button" tabIndex={-1} aria-hidden onClick={open} className="block overflow-hidden border-b border-line">
         <div className="transition-transform duration-500 ease-(--ease-soft) group-hover/card:scale-[1.03]"><Cover project={project} /></div>
       </button>
-      <button type="button" onClick={onOpen} title="Ver detalle" aria-label={`Ver detalle de ${project.title}`}
-        className="absolute right-4 top-4 grid size-11 place-items-center rounded-full border border-line bg-card text-rust shadow-lift transition-[border-color,rotate] duration-300 hover:rotate-90 hover:border-rust">
+      <button type="button" onClick={open} title="Ver detalle" aria-label={`Ver detalle de ${project.title}`}
+        className="absolute right-4 top-4 grid size-11 place-items-center rounded-full border border-line bg-deep text-sky shadow-lift transition-[border-color,rotate] duration-300 hover:rotate-90 hover:border-sky">
         <Icon name="plus" size={20} />
       </button>
       <div className="flex flex-1 flex-col gap-4 p-6">
         <Badges project={project} />
         <div className={named ? "sr-only" : ""}>
-          <p className="text-sm text-muted">{meta(project)}</p>
+          <p className="text-sm text-mist">{meta(project)}</p>
           <h3 className="mt-1 font-display text-xl font-semibold leading-tight">{project.title}</h3>
         </div>
-        <p className="line-clamp-3 text-muted">{project.summary}</p>
+        <p className="line-clamp-3 text-mist">{project.summary}</p>
         <TechList stack={project.stack} limit={MAX_TECHS} />
         <div className="mt-auto flex flex-wrap gap-2 pt-2"><ProjectLinks project={project} /></div>
       </div>
@@ -97,7 +107,7 @@ export function ProjectDetail({ project }: { project: ProjectView }) {
       {sections.length > 0 && (
         <dl className="grid gap-5 sm:grid-cols-2">
           {sections.map(([label, text]) => (
-            <div key={label}><dt className="font-display text-lg font-semibold">{label}</dt><dd className="mt-1 text-muted">{text}</dd></div>
+            <div key={label}><dt className="font-display text-lg font-semibold">{label}</dt><dd className="mt-1 text-mist">{text}</dd></div>
           ))}
         </dl>
       )}
@@ -107,7 +117,7 @@ export function ProjectDetail({ project }: { project: ProjectView }) {
         </div>
       )}
       <TechList stack={project.stack} />
-      <div className="flex flex-wrap gap-2"><ProjectLinks project={project} extra /></div>
+      <div className="flex flex-wrap gap-2"><ProjectLinks project={project} /></div>
     </div>
   );
 }

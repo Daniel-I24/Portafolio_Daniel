@@ -27,30 +27,36 @@ interface SectionProps {
   title: string;
   lead?: string;
   children: ReactNode;
-  /** `card` sets the section on the lighter surface to separate it from its neighbours. */
-  surface?: "paper" | "card";
+  /**
+   * `raised`: a translucent navy surface (the lava still shows). `bone`: a cream section; the palette inverts
+   * through `.surface-bone` (globals.css), so the content inside needs no changes and the lava hides behind it.
+   */
+  surface?: "plain" | "raised" | "bone";
   /** Extra content aligned with the title on wide screens (filters, tabs…). */
   aside?: ReactNode;
 }
 
+const SURFACES = { plain: "", raised: "border-y border-line bg-deep/75", bone: "surface-bone" } as const;
+
 /** Section shell: numbered kicker, serif title, optional lead, then the content. */
-export function Section({ id, title, lead, children, surface = "paper", aside }: SectionProps) {
+export function Section({ id, title, lead, children, surface = "plain", aside }: SectionProps) {
   return (
     <section
       id={id}
       aria-labelledby={`${id}-title`}
-      className={`scroll-mt-20 py-20 sm:py-24 ${surface === "card" ? "border-y border-line bg-card" : ""}`}
+      className={`relative isolate scroll-mt-20 overflow-x-clip py-20 sm:py-24 ${SURFACES[surface]}`}
     >
       <div className={container}>
         <Reveal className="flex flex-wrap items-end justify-between gap-x-10 gap-y-6">
           <div className="max-w-2xl">
-            <p className="text-sm font-medium uppercase tracking-[0.12em] text-muted">
-              <span className="text-rust">{sectionNumber(id)}</span> — {SECTIONS.find((s) => s.id === id)?.label}
+            <p className="text-sm font-medium uppercase tracking-[0.12em] text-mist">
+              <span className="text-sky">{sectionNumber(id)}</span> — {SECTIONS.find((s) => s.id === id)?.label}
             </p>
-            <h2 id={`${id}-title`} className="mt-3 font-display text-2xl font-semibold tracking-tight sm:text-3xl lg:text-4xl">
-              {title}
+            {/* The title rises inside a mask as it enters, then drifts up and fades as it leaves. */}
+            <h2 id={`${id}-title`} className="mt-3 overflow-clip pb-[0.12em] font-display text-2xl font-semibold tracking-tight sm:text-3xl lg:text-4xl">
+              <span className="reveal-mask block">{title}</span>
             </h2>
-            {lead && <p className="mt-4 text-lg text-muted">{lead}</p>}
+            {lead && <p className="mt-4 text-lg text-mist">{lead}</p>}
           </div>
           {aside}
         </Reveal>

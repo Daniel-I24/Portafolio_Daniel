@@ -105,7 +105,7 @@ export async function repoToProject(input: string): Promise<Partial<ProjectData>
     liveUrl: repo.homepage ?? "",
     apkUrl,
     downloadUrl: !apkUrl && release?.assets.length ? release.html_url : "",
-    kind: apkUrl ? "mobile" : isGame ? "game" : "web",
+    platforms: [apkUrl ? "mobile" : isGame ? "game" : "web"],
     collaboration: isCollaboration(repo.owner.login),
     githubRepo: repo.full_name,
     stars: repo.stargazers_count,

@@ -2,23 +2,43 @@ import type { AnchorHTMLAttributes, ReactNode } from "react";
 import type { IconName } from "@/lib/domain";
 import { Icon } from "./Icon";
 
+/** Each variant sets its own surface and the `--fill` color that floods in from the cursor side. */
 const VARIANTS = {
-  solid: "bg-rust text-card hover:bg-rust-deep hover:shadow-lift",
-  outline: "border border-ink text-ink hover:bg-ink hover:text-card",
-  quiet: "border border-line bg-card text-ink hover:border-ink",
+  solid: "bg-bone text-abyss [--fill:var(--color-mist)] hover:shadow-glow",
+  outline:
+    "border-[1.5px] border-transparent text-ice [--fill:var(--color-navy)] [background:linear-gradient(var(--color-deep),var(--color-deep))_padding-box,linear-gradient(115deg,var(--color-steel),var(--color-mist),var(--color-sky),var(--color-steel))_border-box] hover:shadow-glow",
+  quiet: "border border-line bg-deep text-ice [--fill:var(--color-slate)] hover:border-steel",
 };
 
 const SIZES = { md: "gap-2.5 px-6 py-3.5 text-base", sm: "gap-2 px-4 py-2.5 text-sm" };
 
 export type ButtonVariant = keyof typeof VARIANTS;
 
-/** Pill button styles shared by links, form buttons and the CV button. */
+/**
+ * One button language for the whole site (pointer effects wired in Ambient.tsx):
+ * - `::before` is the fill: a circle that grows from --x/--y, the point where the cursor came in;
+ * - `::after` is a sheen that crosses once on hover;
+ * - --mx/--my move `[data-magnetic]` buttons slightly toward the cursor;
+ * - keyboard focus gets a thick offset outline.
+ */
 export const buttonClass = (variant: ButtonVariant = "solid", size: keyof typeof SIZES = "md") =>
-  `group inline-flex items-center justify-center rounded-full font-semibold transition-[background-color,color,border-color,box-shadow,translate,scale] duration-150 hover:-translate-y-0.5 active:translate-y-0 active:scale-[0.98] disabled:pointer-events-none disabled:opacity-70 ${VARIANTS[variant]} ${SIZES[size]}`;
+  [
+    "btn group relative isolate inline-flex items-center justify-center overflow-hidden rounded-full font-semibold",
+    "[transform:translate3d(var(--mx,0px),var(--my,0px),0)] transition-[color,box-shadow,border-color,transform,scale] duration-300 ease-(--ease-soft)",
+    "before:pointer-events-none before:absolute before:top-(--y,50%) before:left-(--x,50%) before:-z-10 before:aspect-square before:w-[280%] before:-translate-1/2 before:scale-0 before:rounded-full before:bg-(--fill) before:transition-transform before:duration-500 before:ease-(--ease-soft) hover:before:scale-100",
+    "after:pointer-events-none after:absolute after:inset-y-0 after:left-0 after:w-1/4 after:bg-linear-to-r after:from-transparent after:via-ice/50 after:to-transparent after:opacity-0 hover:after:animate-sheen",
+    "active:scale-[0.97] focus-visible:outline-[3px] focus-visible:outline-offset-4 disabled:pointer-events-none disabled:opacity-70",
+    VARIANTS[variant],
+    SIZES[size],
+  ].join(" ");
 
-/** Icon that nudges in its direction on hover. */
+/** Round icon-only control (gallery arrows, carousel, menu close); disabled ones dim and stop reacting. */
+export const iconButtonClass =
+  "grid size-11 shrink-0 place-items-center rounded-full border border-steel text-ice transition-[background-color,color,opacity] duration-150 hover:bg-ice hover:text-abyss disabled:opacity-40 disabled:hover:bg-transparent disabled:hover:text-ice";
+
+/** Icon that slides in its direction on hover. */
 export const ButtonIcon = ({ name }: { name: IconName }) => (
-  <Icon name={name} size={18} className={`shrink-0 transition-transform duration-150 ${name === "download" ? "group-hover:translate-y-0.5" : "group-hover:translate-x-0.5"}`} />
+  <Icon name={name} size={18} className={`shrink-0 transition-transform duration-300 ease-(--ease-soft) ${name === "download" ? "group-hover:translate-y-1" : "group-hover:translate-x-1.5"}`} />
 );
 
 interface ButtonLinkProps extends AnchorHTMLAttributes<HTMLAnchorElement> {
@@ -29,11 +49,12 @@ interface ButtonLinkProps extends AnchorHTMLAttributes<HTMLAnchorElement> {
   children: ReactNode;
 }
 
-/** Link styled as a button. External URLs open in a new tab with noopener and a hidden notice. */
-export function ButtonLink({ href, icon, variant, size, children, className = "", ...rest }: ButtonLinkProps) {
+/** Link styled as a button. Large solid ones are magnetic. External URLs open in a new tab with a hidden notice. */
+export function ButtonLink({ href, icon, variant = "solid", size = "md", children, className = "", ...rest }: ButtonLinkProps) {
   const external = /^https?:/.test(href);
   return (
-    <a href={href} {...(external ? { target: "_blank", rel: "noopener noreferrer" } : {})} {...rest} className={`${buttonClass(variant, size)} ${className}`}>
+    <a href={href} {...(external ? { target: "_blank", rel: "noopener noreferrer" } : {})} {...rest}
+      data-magnetic={variant === "solid" && size === "md" ? "" : undefined} className={`${buttonClass(variant, size)} ${className}`}>
       <span>{children}</span>
       {icon && <ButtonIcon name={icon} />}
       {external && <span className="sr-only"> (abre en una pestaña nueva)</span>}

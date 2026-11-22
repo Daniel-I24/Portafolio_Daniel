@@ -11,7 +11,8 @@ const text = (label: string, max = 280) =>
 const url = (label: string) =>
   z.union([z.url(), z.literal("")]).nullish().transform((value) => value ?? "").describe(label);
 
-export const projectKinds = ["web", "mobile", "api", "desktop", "game"] as const;
+/** Where a project runs; one project can run on several (FLUX: phone and watch). This is also the filter order. */
+export const platformKinds = ["web", "mobile", "wearable", "desktop", "game", "api"] as const;
 export const experienceTypes = ["academic", "work"] as const;
 export const socialKinds = ["github", "linkedin"] as const;
 export const interestSlugs = ["voley", "futbol", "motos", "billar", "musica", "deporte"] as const;
@@ -41,7 +42,7 @@ export const projectSchema = z.object({
   id,
   slug: z.string().trim().regex(/^[a-z0-9-]+$/).describe("Slug"),
   title: z.string().trim().min(2).describe("Título"),
-  kind: z.enum(projectKinds).default("web").describe("Tipo"),
+  platforms: z.array(z.enum(platformKinds)).min(1).default(["web"]).describe("Plataformas"),
   summary: text("Resumen", 400),
   stack: z.array(z.string().trim().min(1)).default([]).describe("Tecnologías"),
   repoUrl: url("Repositorio"),
@@ -123,8 +124,9 @@ export const entitySchemas = {
 } as const;
 
 export const ENTITY_TABLES = Object.keys(entitySchemas) as EntityTable[];
+/** Cache tags for the public page: the profile plus one per table (admin saves revalidate them). */
+export const CACHE_TAGS = ["profile", ...ENTITY_TABLES] as const;
 
-export type SocialData = z.infer<typeof socialSchema>;
 export type ProfileData = z.infer<typeof profileSchema>;
 export type ProjectData = z.infer<typeof projectSchema>;
 export type TestimonialData = z.infer<typeof testimonialSchema>;
@@ -132,9 +134,15 @@ export type ExperienceData = z.infer<typeof experienceSchema>;
 export type SkillData = z.infer<typeof skillSchema>;
 export type InterestData = z.infer<typeof interestSchema>;
 export type MessageData = z.infer<typeof messageSchema>;
-export type ProjectKind = (typeof projectKinds)[number];
+export type Platform = (typeof platformKinds)[number];
 export type InterestSlug = (typeof interestSlugs)[number];
 export type EntityTable = keyof typeof entitySchemas;
 export type EntityRow<T extends EntityTable> = z.infer<(typeof entitySchemas)[T]>;
+
+/** Rows saved before migration 0003 have one `kind` (web-mobile = web + mobile): the repository maps it to platforms. */
+export function platformsFromKind(kind: unknown): Platform[] {
+  if (kind === "web-mobile") return ["web", "mobile"];
+  return (platformKinds as readonly unknown[]).includes(kind) ? [kind as Platform] : ["web"];
+}
 /** Shape before parsing (what the seed and the DB hold). */
 export type EntityInput<T extends EntityTable> = z.input<(typeof entitySchemas)[T]>;

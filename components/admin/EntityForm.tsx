@@ -4,64 +4,16 @@ import { useState, useTransition } from "react";
 import { saveEntity, type ActionResult, type AdminTable } from "@/app/admin/actions";
 import { Icon } from "@/components/ui/Icon";
 import { entitySchemas, profileSchema } from "@/lib/schemas";
+import { fieldsOf, fromText, toText, type Field } from "./fields";
 import { browserClient } from "@/lib/supabase";
 
-// Zod internals are untyped from outside: introspection only reads `def`, `description` and `maxLength`.
-type Kind = "text" | "textarea" | "email" | "url" | "number" | "boolean" | "select" | "list" | "lines";
-type ZodNode = { def: Record<string, never> & { type: string }; description?: string; maxLength?: number | null; format?: string | null };
-type Field = { key: string; label: string; kind: Kind; options?: string[]; parts?: string[]; upload: boolean };
+const inputClass = "mt-1 w-full rounded-xl border border-line bg-deep px-3 py-2 text-ice";
 
-/** Fields whose value is a file in Storage: they get an upload button. */
-const UPLOADS = new Set(["photo", "cvUrl", "imageUrl", "apkUrl", "downloadUrl", "avatarUrl", "gallery"]);
-const HIDDEN = new Set(["id", "order"]); // id is generated; order is set by drag & drop in EntityTable
-const inputClass = "mt-1 w-full rounded-xl border border-line bg-card px-3 py-2 text-ink";
-
-function unwrap(node: ZodNode): ZodNode {
-  const def = node.def as unknown as { type: string; innerType?: ZodNode; in?: ZodNode };
-  if (["default", "optional", "nullable"].includes(def.type)) return unwrap(def.innerType!);
-  if (def.type === "pipe") return unwrap(def.in!);
-  return node;
-}
-
-/** Turns a Zod object schema into form fields: the schema is the single source of truth. */
-function fieldsOf(shape: Record<string, unknown>): Field[] {
-  return Object.entries(shape).filter(([key]) => !HIDDEN.has(key)).map(([key, value]) => {
-    const outer = value as ZodNode;
-    const node = unwrap(outer);
-    const def = node.def as unknown as { type: string; entries?: Record<string, string>; element?: ZodNode & { shape?: object } };
-    const base = { key, label: outer.description ?? key, upload: UPLOADS.has(key) };
-    if (def.type === "enum") return { ...base, kind: "select", options: Object.values(def.entries!) };
-    if (def.type === "union") return { ...base, kind: "url" };
-    if (def.type === "boolean" || def.type === "number") return { ...base, kind: def.type };
-    if (def.type === "array") {
-      const parts = def.element?.shape ? Object.keys(def.element.shape) : undefined;
-      return { ...base, kind: parts ? "lines" : "list", parts };
-    }
-    if (node.format === "email" || node.format === "url") return { ...base, kind: node.format };
-    return { ...base, kind: (node.maxLength ?? 0) > 300 ? "textarea" : "text" };
-  });
-}
-
-/** Display string ↔ stored value: lists as "a, b"; object arrays as one "x | y" per line. */
-function toText(field: Field, value: unknown): string | boolean {
-  if (field.kind === "boolean") return Boolean(value);
-  if (field.kind === "list") return ((value as string[]) ?? []).join(", ");
-  if (field.kind === "lines") return ((value as Record<string, string>[]) ?? []).map((item) => field.parts!.map((p) => item[p]).join(" | ")).join("\n");
-  if (field.kind === "select" && value == null) return String(field.options![0]);
-  return value == null ? "" : String(value);
-}
-function fromText(field: Field, text: string | boolean): unknown {
-  if (field.kind === "boolean") return text;
-  const value = String(text);
-  if (field.kind === "number") return value === "" ? undefined : Number(value); // undefined → schema default
-  if (field.kind === "list") return value.split(",").map((item) => item.trim()).filter(Boolean);
-  if (field.kind === "lines") {
-    return value.split("\n").filter((line) => line.trim()).map((line) => {
-      const cells = line.split("|").map((cell) => cell.trim());
-      return Object.fromEntries(field.parts!.map((part, i) => [part, cells[i] ?? ""]));
-    });
-  }
-  return value;
+/** One checkbox of a multi-choice field; the value is kept as "a, b". */
+function Choice({ option, value, onChange }: { option: string; value: string; onChange: (next: string) => void }) {
+  const chosen = value.split(", ").filter(Boolean);
+  const toggle = (on: boolean) => onChange((on ? [...chosen, option] : chosen.filter((c) => c !== option)).join(", "));
+  return <label className="flex items-center gap-2"><input type="checkbox" checked={chosen.includes(option)} onChange={(e) => toggle(e.target.checked)} className="size-5 accent-sky" />{option}</label>;
 }
 
 interface EntityFormProps {
@@ -109,13 +61,17 @@ export function EntityForm({ table, initial = {}, onDone }: EntityFormProps) {
           <div key={field.key} className={wide ? "sm:col-span-2" : ""}>
             {field.kind === "boolean" ? (
               <label className="flex items-center gap-3 font-semibold">
-                <input {...common} type="checkbox" checked={values[field.key] as boolean} onChange={(e) => set(field.key, e.target.checked)} className="size-5 accent-rust" />
+                <input {...common} type="checkbox" checked={values[field.key] as boolean} onChange={(e) => set(field.key, e.target.checked)} className="size-5 accent-sky" />
                 {field.label}
               </label>
             ) : (
               <>
-                <label htmlFor={id} className="font-semibold">{field.label}{field.parts && <span className="ml-2 text-sm text-muted">{field.parts.join(" | ")} · uno por línea</span>}</label>
-                {field.kind === "select" ? (
+                <label htmlFor={id} id={`${id}-label`} className="font-semibold">{field.label}{field.parts && <span className="ml-2 text-sm text-mist">{field.parts.join(" | ")} · uno por línea</span>}</label>
+                {field.kind === "multi" ? (
+                  <div role="group" aria-labelledby={`${id}-label`} className="mt-2 flex flex-wrap gap-4">
+                    {field.options!.map((option) => <Choice key={option} option={option} value={String(values[field.key])} onChange={(next) => set(field.key, next)} />)}
+                  </div>
+                ) : field.kind === "select" ? (
                   <select {...common} value={values[field.key] as string} onChange={(e) => set(field.key, e.target.value)} className={inputClass}>
                     {field.options!.map((option) => <option key={option} value={option}>{option}</option>)}
                   </select>
@@ -125,22 +81,22 @@ export function EntityForm({ table, initial = {}, onDone }: EntityFormProps) {
                   <input {...common} type={field.kind === "list" || field.kind === "text" ? "text" : field.kind} value={values[field.key] as string} onChange={(e) => set(field.key, e.target.value)} className={inputClass} />
                 )}
                 {field.upload && (
-                  <label className="mt-2 inline-flex cursor-pointer items-center gap-2 text-sm text-ink underline decoration-pine decoration-2">
+                  <label className="mt-2 inline-flex cursor-pointer items-center gap-2 text-sm text-ice underline decoration-sky decoration-2">
                     <Icon name="plus" size={16} /> {uploading === field.key ? "Subiendo…" : "Subir archivo"}
                     <input type="file" className="sr-only" onChange={(e) => e.target.files?.[0] && upload(field, e.target.files[0])} />
                   </label>
                 )}
               </>
             )}
-            {error && <p id={`${id}-error`} className="mt-1 border-l-4 border-rust pl-2 text-sm font-semibold">{error}</p>}
+            {error && <p id={`${id}-error`} className="mt-1 border-l-4 border-sky pl-2 text-sm font-semibold">{error}</p>}
           </div>
         );
       })}
       <div className="flex items-center gap-4 sm:col-span-2">
-        <button type="submit" disabled={pending || uploading !== null} className="rounded-full bg-rust px-5 py-2.5 font-semibold text-card hover:bg-rust-deep disabled:opacity-60">
+        <button type="submit" disabled={pending || uploading !== null} className="rounded-full bg-navy px-5 py-2.5 font-semibold text-ice hover:bg-slate disabled:opacity-60">
           {pending ? "Guardando…" : "Guardar"}
         </button>
-        <p role="status" className={`font-semibold ${result?.ok ? "border-l-4 border-pine pl-2" : "border-l-4 border-rust pl-2"}`}>{result?.message}</p>
+        <p role="status" className="border-l-4 border-sky pl-2 font-semibold">{result?.message}</p>
       </div>
     </form>
   );

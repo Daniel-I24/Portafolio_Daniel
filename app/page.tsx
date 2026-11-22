@@ -5,16 +5,21 @@ import { Contact } from "@/components/sections/Contact";
 import { Experience } from "@/components/sections/Experience";
 import { Footer } from "@/components/sections/Footer";
 import { Hero } from "@/components/sections/Hero";
-import { Intro } from "@/components/sections/Intro";
+import { Loader } from "@/components/sections/Loader";
 import { Navbar } from "@/components/sections/Navbar";
 import { OffTheClock } from "@/components/sections/OffTheClock";
 import { Projects } from "@/components/sections/Projects";
 import { Stats } from "@/components/sections/Stats";
 import { Testimonials } from "@/components/sections/Testimonials";
+import { Ambient } from "@/components/ui/Ambient";
+import { LavaLamp } from "@/components/ui/LavaLamp";
+import { Marquee } from "@/components/ui/Marquee";
 import { MotionProvider } from "@/components/ui/MotionProvider";
-import { KIND_LABELS } from "@/lib/domain";
+import { SectionCurtain } from "@/components/ui/SectionCurtain";
+import { initialsOf, PLATFORM_LABELS } from "@/lib/domain";
 import { getPortfolio } from "@/lib/patterns";
-import type { ProfileData } from "@/lib/schemas";
+import { personJsonLd } from "@/lib/site";
+import { platformKinds, type ProfileData } from "@/lib/schemas";
 
 const CV_PENDING = "El CV se está actualizando: muy pronto podrás descargarlo.";
 
@@ -22,25 +27,31 @@ const CV_PENDING = "El CV se está actualizando: muy pronto podrás descargarlo.
 const cvMissing = ({ cvUrl }: ProfileData) =>
   !cvUrl || (cvUrl.startsWith("/") && !existsSync(join(process.cwd(), "public", cvUrl)));
 
-const initialsOf = (name: string) => name.split(/\s+/).slice(0, 2).map((word) => word[0]).join("").toUpperCase();
 
-// Order: intro → menu → hero → key figures → about → projects → testimonials → experience → beyond code → contact → footer.
+// Order: lava backdrop → loader → menu → hero → LED band → key figures → about → projects → testimonials → experience → beyond code → contact → footer.
 // Client sections receive plain views: class instances cannot cross the server/client boundary,
 // so the polymorphic methods (badge, accent, icon, links…) are resolved here.
 export default async function HomePage() {
   const { profile, projects, testimonials, experience, skills, interests } = await getPortfolio();
   const cvNote = cvMissing(profile) ? CV_PENDING : undefined;
   const socials = profile.socials.map(({ label, url, kind }) => ({ label, url, icon: kind }));
-  const platforms = [...new Set(projects.map((project) => project.kind))].map((kind) => KIND_LABELS[kind]);
+  const used = new Set(projects.flatMap((project) => project.platforms));
+  const platforms = platformKinds.filter((platform) => used.has(platform)).map((platform) => PLATFORM_LABELS[platform]);
   const techs = new Set(skills.map((skill) => skill.data.name.toLowerCase())).size;
   const techGroups = [...new Set(skills.map((skill) => skill.data.group))];
 
   return (
     <MotionProvider>
-      <Intro name={profile.displayName} role={profile.role} />
+      {/* Structured data (schema.org Person) for search engines. */}
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: personJsonLd(profile, skills.map((skill) => skill.data.name)) }} />
+      <LavaLamp />
+      <Loader initials={initialsOf(profile.displayName)} />
       <Navbar initials={initialsOf(profile.displayName)} name={profile.displayName} cvUrl={profile.cvUrl} cvNote={cvNote} />
+      {/* Reading progress: fills with the page scroll (CSS scroll timeline, no JS); hidden where unsupported or calm. */}
+      <div aria-hidden className="scroll-fx pointer-events-none fixed inset-x-0 top-0 z-50 hidden h-0.5 origin-left bg-mist shadow-glow [animation-name:fill-x] [animation-timeline:scroll(root)]! supports-[animation-timeline:scroll()]:block [html[data-motion=off]_&]:hidden" />
       <main id="contenido" tabIndex={-1} className="overflow-x-clip outline-none">
         <Hero profile={profile} cvNote={cvNote} />
+        <Marquee text={profile.role} />
         <Stats projects={projects.length} platforms={platforms} techs={techs} techGroups={techGroups} />
         <About profile={profile} skills={skills.map((skill) => skill.data)} />
         <Projects projects={projects.map((project) => ({ ...project.data, links: project.links() }))} />
@@ -49,6 +60,8 @@ export default async function HomePage() {
         <OffTheClock interests={interests.map((interest) => ({ ...interest.data, icon: interest.icon }))} />
         <Contact email={profile.email} socials={socials} />
       </main>
+      <SectionCurtain />
+      <Ambient />
       <Footer profile={profile} socials={[...socials, { label: "Correo", url: `mailto:${profile.email}`, icon: "mail" }]} />
     </MotionProvider>
   );

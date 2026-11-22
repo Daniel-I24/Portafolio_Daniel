@@ -1,7 +1,7 @@
 import { createBrowserClient, createServerClient } from "@supabase/ssr";
 import { createClient, type SupabaseClient } from "@supabase/supabase-js";
 import { hasSupabase, type Repository, type Snapshot } from "./patterns";
-import { ENTITY_TABLES, type EntityTable } from "./schemas";
+import { ENTITY_TABLES, platformsFromKind, type EntityTable } from "./schemas";
 import { toCamel } from "./structures";
 
 const url = process.env.NEXT_PUBLIC_SUPABASE_URL ?? "";
@@ -47,7 +47,9 @@ export class SupabaseRepository implements Repository {
     const rows = async (table: EntityTable) => {
       const { data, error } = await db.from(table).select("*").eq("published", true).order("order");
       if (error) throw new Error(`Failed to read ${table}`);
-      return (data ?? []).map(toCamel);
+      const camel = (data ?? []).map(toCamel);
+      // Before migration 0003 a project row has `kind` instead of `platforms`.
+      return table === "projects" ? camel.map((row) => ("platforms" in row ? row : { ...row, platforms: platformsFromKind(row.kind) })) : camel;
     };
     const { data: profile } = await db.from("profile").select("*").limit(1).maybeSingle();
     const [projects, testimonials, experience, skills, interests] = await Promise.all(ENTITY_TABLES.map(rows));
