@@ -43,6 +43,10 @@ const nextConfig: NextConfig = {
   poweredByHeader: false,
   images: {
     formats: ["image/avif", "image/webp"],
+    qualities: [75, 90],
+    // Hero photo: 1x/2x of its three display widths (208, 288, 440 px), capped by the 1002 px file (never enlarged).
+    imageSizes: [16, 32, 48, 64, 96, 128, 208, 256, 288, 384, 416, 576],
+    deviceSizes: [640, 750, 828, 880, 1002, 1200, 1920, 2048, 3840],
     remotePatterns: supabaseHost
       ? [{ protocol: "https", hostname: supabaseHost, pathname: "/storage/v1/object/public/**" }]
       : [],

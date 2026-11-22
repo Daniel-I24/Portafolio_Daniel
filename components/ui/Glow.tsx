@@ -1,18 +1,21 @@
-/** Halo layer: a pre-softened ellipse (the falloff is in the gradient, so no blur is ever animated). */
-const halo = (inner: string, outer: string) => `radial-gradient(closest-side, ${inner} 0%, ${outer} 45%, transparent 100%)`;
-
-const MIST = "rgb(194 232 255 / 0.75)";
-const STEEL = "rgb(114 152 175 / 0.45)";
+import { BAND, FRAME_VIEWBOX, shapePath } from "./PhotoShape";
 
 /**
- * Blue light that an LED mirror throws on the wall: a soft halo around the photo, stronger below it,
- * breathing slowly (opacity only). With motion off it rests at full light.
+ * Blue light that an LED mirror throws on the wall: a soft halo with the photo's own outline (PhotoShape),
+ * stronger below it, breathing slowly (opacity only). The blur lives inside a static SVG, so it is drawn once
+ * and the breathing never repaints it. Place it over the same box as the framed photo. With motion off it rests at full light.
  */
 export function Glow({ className = "" }: { className?: string }) {
   return (
-    <div aria-hidden className={`pointer-events-none absolute -z-10 animate-pulse-led ${className}`}>
-      <span className="absolute inset-[6%] rounded-[40%]" style={{ backgroundImage: halo("rgb(194 232 255 / 0.45)", "rgb(114 152 175 / 0.28)") }} />
-      <span className="absolute inset-x-[8%] -bottom-[6%] h-[55%] rounded-full" style={{ backgroundImage: halo(MIST, STEEL) }} />
-    </div>
+    <svg aria-hidden viewBox={FRAME_VIEWBOX} preserveAspectRatio="none"
+      className={`pointer-events-none absolute inset-0 -z-10 size-full animate-pulse-led overflow-visible ${className}`}>
+      <defs>
+        <filter id="glow-soft" x="-50%" y="-50%" width="200%" height="200%"><feGaussianBlur stdDeviation="46" /></filter>
+      </defs>
+      <g filter="url(#glow-soft)">
+        <path d={shapePath(BAND + 30)} fill="none" stroke="rgb(194 232 255)" strokeOpacity={0.5} strokeWidth={70} />
+        <path d={shapePath(BAND + 40)} transform="translate(0 70)" fill="none" stroke="rgb(114 152 175)" strokeOpacity={0.55} strokeWidth={90} />
+      </g>
+    </svg>
   );
 }

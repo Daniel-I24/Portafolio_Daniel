@@ -71,15 +71,12 @@ export function Hero({ profile, cvNote }: { profile: ProfileData; cvNote?: strin
 
         {profile.photo && (
           <figure {...step(2)} className="enter relative isolate order-first mx-auto w-full max-w-52 sm:max-w-72 lg:order-none lg:max-w-110 lg:justify-self-end">
-            {/* On phones the text sits right below the photo: the halo stays short there to keep 4.5:1. */}
-            <Glow className="-inset-x-[22%] -bottom-[12%] -top-[18%] sm:-inset-x-[22%] sm:-top-[20%] sm:-bottom-[32%]" />
+            <Glow />
             <TiltPhoto>
-              {/* The file has white rounded corners: a CSS clip with a softer radius and a slight zoom keeps them out
-                  of view without touching the image. The LED tube follows the frame radius (TiltPhoto). */}
-              <div className="overflow-hidden rounded-[11%/12.5%]">
-                <Image src={profile.photo} alt={`Foto de ${profile.fullName}`} width={1002} height={880}
-                  sizes="(min-width: 1024px) 440px, (min-width: 640px) 288px, 208px" priority className="h-auto w-full origin-[50%_45%] scale-[1.2]" />
-              </div>
+              {/* The whole photo, unscaled: TiltPhoto clips it to the file's own rounded outline. quality 90 and a
+                  srcset up to the file's 1002 px keep it sharp on 2x screens without enlarging it. */}
+              <Image src={profile.photo} alt={`Foto de ${profile.fullName}`} width={1002} height={880} quality={90}
+                sizes="(min-width: 1024px) 440px, (min-width: 640px) 288px, 208px" priority fetchPriority="high" className="size-full object-cover" />
             </TiltPhoto>
             <figcaption className="absolute -bottom-3 -left-3 z-10 -rotate-3 rounded-xl bg-mist px-3 py-2 text-sm font-semibold text-abyss shadow-lift sm:-left-5 sm:bottom-8 sm:px-4 sm:py-2.5">
               {profile.fullName}
