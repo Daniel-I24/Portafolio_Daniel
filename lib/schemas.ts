@@ -123,6 +123,8 @@ export const entitySchemas = {
 } as const;
 
 export const ENTITY_TABLES = Object.keys(entitySchemas) as EntityTable[];
+/** Cache tags for the public page: the profile plus one per table (admin saves revalidate them). */
+export const CACHE_TAGS = ["profile", ...ENTITY_TABLES] as const;
 
 export type ProfileData = z.infer<typeof profileSchema>;
 export type ProjectData = z.infer<typeof projectSchema>;

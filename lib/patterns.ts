@@ -1,13 +1,12 @@
-import { unstable_cache } from "next/cache";
 import { z } from "zod";
 import {
   AcademicExperience, Interest, Project, Skill, Testimonial, WorkExperience, type Experience,
 } from "./domain";
-import { ENTITY_TABLES, entitySchemas, profileSchema, type EntityInput, type EntityRow, type EntityTable } from "./schemas";
+import { CACHE_TAGS, ENTITY_TABLES, entitySchemas, profileSchema, type EntityInput, type EntityRow, type EntityTable } from "./schemas";
 import { byNewest, byOrder } from "./structures";
 
 /* ---------- Repository + Strategy: interchangeable data sources ---------- */
-export const CACHE_TAGS = ["profile", ...ENTITY_TABLES] as const;
+export { CACHE_TAGS };
 
 /** Unparsed rows as stored (seed or DB); EntityFactory validates them. */
 export type Snapshot = { profile: z.input<typeof profileSchema> } & { [T in EntityTable]: Partial<EntityInput<T>>[] };
@@ -33,8 +32,13 @@ export class SeedRepository implements Repository {
 export const hasSupabase = (): boolean => Boolean(process.env.NEXT_PUBLIC_SUPABASE_URL && process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY);
 export const repository = async (): Promise<Repository> => hasSupabase() ? new (await import("./supabase")).SupabaseRepository() : new SeedRepository();
 
-/** Supabase reads are cached by tag (admin saves call revalidateTag()). The seed ships in the bundle: a cached copy would outlive its edits across builds. */
-const cachedSnapshot = /* @__PURE__ */ unstable_cache(async () => (await repository()).snapshot(), ["portfolio"], { tags: [...CACHE_TAGS] });
+/**
+ * Supabase reads are cached by tag (admin saves call revalidateTag()). The seed ships in the bundle: a cached copy
+ * would outlive its edits across builds. next/cache is imported lazily so the browser bundle (which only uses the
+ * rules and the observer below) never pulls it in; the cache entry is keyed by "portfolio", so it is shared.
+ */
+const cachedSnapshot = async (): Promise<Snapshot> =>
+  (await import("next/cache")).unstable_cache(async () => (await repository()).snapshot(), ["portfolio"], { tags: [...CACHE_TAGS] })();
 /** Falls back to the seed when Supabase fails or its profile row is missing/invalid (empty DB), so builds never break. */
 export const getSnapshot = async (): Promise<Snapshot> => {
   const live = hasSupabase() ? await cachedSnapshot().catch((e) => void console.error("Supabase read failed:", e)) : null;
@@ -84,17 +88,22 @@ export class MinLength implements ValidationRule {
 export class Required extends MinLength {
   constructor(message: string) { super(1, message); }
 }
-/** Shared base for rules backed by a Zod format check. */
+/**
+ * Shared base for rules backed by a format pattern. Plain RegExps (not Zod) keep these rules light enough
+ * for the browser: the client imports only the Strategy and Observer parts of this file, and Zod stays on the server.
+ */
 abstract class FormatRule implements ValidationRule {
-  constructor(private readonly format: z.ZodType, private readonly message: string) {}
-  check(value: string) { return this.format.safeParse(value.trim()).success ? null : this.message; }
+  constructor(private readonly format: RegExp, private readonly message: string) {}
+  check(value: string) { return this.format.test(value.trim()) ? null : this.message; }
 }
+/** Same shape Zod's z.email() accepts. */
+const EMAIL = /^(?!\.)(?!.*\.\.)[\w'+.-]*[\w+-]@([a-z\d][a-z\d-]*\.)+[a-z]{2,}$/i;
 export class Email extends FormatRule {
-  constructor() { super(z.email(), "Revisa el correo: debe verse como nombre@dominio.com."); }
+  constructor() { super(EMAIL, "Revisa el correo: debe verse como nombre@dominio.com."); }
 }
 
 export class Url extends FormatRule {
-  constructor() { super(z.url(), "El enlace debe empezar por https://"); }
+  constructor() { super(/^https:\/\/[^\s/$.?#][^\s]*$/i, "El enlace debe empezar por https://"); }
 }
 
 /** First failing message, or null. Used for live validation in the browser. */
@@ -114,12 +123,14 @@ export const contactRules = {
   message: [new Required("Escribe tu mensaje."), new MinLength(10, "Cuéntame un poco más (mínimo 10 caracteres).")],
 } satisfies Record<string, ValidationRule[]>;
 
-export const contactSchema = z.object({
+const buildContactSchema = () => z.object({
   name: ruleField(contactRules.name, 80),
   email: ruleField(contactRules.email, 120),
   message: ruleField(contactRules.message, 2000),
   website: z.string().max(0).optional(), // honeypot: humans never fill it
 });
+/** Built through a pure call so client bundles (which only use the rules) can drop it, and Zod with it. */
+export const contactSchema = /* @__PURE__ */ buildContactSchema();
 
 export type ContactInput = z.infer<typeof contactSchema>;
 
