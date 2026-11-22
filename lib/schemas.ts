@@ -11,7 +11,7 @@ const text = (label: string, max = 280) =>
 const url = (label: string) =>
   z.union([z.url(), z.literal("")]).nullish().transform((value) => value ?? "").describe(label);
 
-export const projectKinds = ["web", "mobile", "api", "desktop", "game"] as const;
+export const projectKinds = ["web", "web-mobile", "mobile", "wearable", "api", "desktop", "game"] as const;
 export const experienceTypes = ["academic", "work"] as const;
 export const socialKinds = ["github", "linkedin"] as const;
 export const interestSlugs = ["voley", "futbol", "motos", "billar", "musica", "deporte"] as const;

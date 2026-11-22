@@ -3,6 +3,7 @@
 import { useEffect, useRef } from "react";
 import { useCalm } from "./MotionProvider";
 
+const INTERACTIVE = "a, button, input, textarea, select, label, [role='button']";
 const MAGNET = 0.22; // share of the distance to the cursor
 const MAGNET_MAX = 8; // px
 
@@ -28,12 +29,14 @@ function pull(event: PointerEvent) {
 }
 
 /**
- * Page-wide pointer effects for desktop mice: the button fill origin, the magnetic pull, and a soft warm light
- * that follows the cursor (transform only, one rAF per frame). Off on touch screens and when calm.
+ * Page-wide pointer effects for desktop mice: the button fill origin, the magnetic pull, a soft light that follows
+ * the cursor and a ring cursor that grows over links and buttons (the system cursor stays, for precision).
+ * Transform only, one rAF per frame. Off on touch screens and when calm.
  */
 export function Ambient() {
   const calm = useCalm();
   const light = useRef<HTMLDivElement>(null);
+  const ring = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     if (calm || !matchMedia("(hover: hover) and (pointer: fine)").matches) return;
@@ -43,10 +46,14 @@ export function Ambient() {
     const onMove = (event: PointerEvent) => {
       pull(event);
       cancelAnimationFrame(frame);
+      const over = Boolean((event.target as Element | null)?.closest?.(INTERACTIVE));
       frame = requestAnimationFrame(() => {
-        if (!light.current) return;
+        if (!light.current || !ring.current) return;
         light.current.style.transform = `translate3d(${event.clientX - 300}px, ${event.clientY - 300}px, 0)`;
         light.current.style.opacity = "1";
+        ring.current.style.transform = `translate3d(${event.clientX - 16}px, ${event.clientY - 16}px, 0)`;
+        ring.current.dataset.over = over ? "true" : "false";
+        ring.current.style.opacity = "1";
       });
     };
     document.addEventListener("pointerover", onOver);
@@ -62,7 +69,13 @@ export function Ambient() {
 
   if (calm) return null;
   return (
-    <div ref={light} aria-hidden
-      className="pointer-events-none fixed left-0 top-0 -z-10 size-[600px] rounded-full bg-[radial-gradient(closest-side,rgb(194_232_255/0.08),rgb(114_152_175/0.05)_55%,transparent)] opacity-0 transition-opacity duration-500 max-lg:hidden" />
+    <>
+      <div ref={light} aria-hidden
+        className="pointer-events-none fixed left-0 top-0 -z-10 size-[600px] rounded-full bg-[radial-gradient(closest-side,rgb(194_232_255/0.08),rgb(114_152_175/0.05)_55%,transparent)] opacity-0 transition-opacity duration-500 max-lg:hidden" />
+      {/* Ring cursor: the outer box follows the pointer; the inner circle scales up over interactive elements. */}
+      <div ref={ring} aria-hidden data-over="false" className="group/ring pointer-events-none fixed left-0 top-0 z-[80] size-8 opacity-0 transition-opacity duration-300 max-lg:hidden">
+        <span className="block size-full rounded-full border border-mist/80 shadow-glow transition-transform duration-300 ease-(--ease-soft) group-data-[over=true]/ring:scale-[1.8] group-data-[over=true]/ring:bg-mist/10" />
+      </div>
+    </>
   );
 }

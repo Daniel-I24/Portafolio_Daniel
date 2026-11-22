@@ -30,9 +30,9 @@ export abstract class Entity<T extends EntityMeta = EntityMeta> {
   abstract toCard(): Card;
 }
 
-/** Visible name of each kind: filter chips, card labels and the "plataformas" figure. */
+/** Visible name of each kind, in filter order: filter chips, card labels and the "plataformas" figure. */
 export const KIND_LABELS: Record<ProjectKind, string> = {
-  web: "Web", mobile: "Móvil", desktop: "Escritorio", game: "Videojuego", api: "API",
+  web: "Web", "web-mobile": "Web y móvil", mobile: "Móvil", wearable: "Wearable", desktop: "Escritorio", game: "Videojuego", api: "API",
 };
 
 type LinkSpec = { label: string; icon: IconName; url: (p: ProjectData) => string };
@@ -40,7 +40,9 @@ type LinkSpec = { label: string; icon: IconName; url: (p: ProjectData) => string
 /** The kind decides the main link shown next to "Código". */
 const KIND_ACTIONS: Record<ProjectKind, LinkSpec> = {
   web: { label: "Demo en vivo", icon: "arrow", url: (p) => p.liveUrl },
+  "web-mobile": { label: "Demo en vivo", icon: "arrow", url: (p) => p.liveUrl },
   mobile: { label: "Descargar APK", icon: "apk", url: (p) => p.apkUrl || p.liveUrl },
+  wearable: { label: "Descargar APK", icon: "apk", url: (p) => p.apkUrl || p.liveUrl },
   api: { label: "Documentación", icon: "code", url: (p) => p.liveUrl },
   desktop: { label: "Ver código", icon: "github", url: (p) => p.repoUrl },
   game: { label: "Descargar juego", icon: "download", url: (p) => p.downloadUrl },

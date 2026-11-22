@@ -64,7 +64,7 @@ export function Marquee({ text }: { text: string }) {
 
   return (
     <div aria-hidden onPointerEnter={() => brakeTo(CRAWL)} onPointerLeave={() => brakeTo(1)}
-      className="overflow-hidden border-y border-line bg-abyss/80 py-5 sm:py-7">
+      className="leave overflow-hidden border-y border-line bg-abyss/80 py-5 sm:py-7">
       <div ref={track} className="flex w-max font-display text-3xl font-semibold uppercase leading-none tracking-[0.02em] whitespace-nowrap [font-variation-settings:'opsz'_144] will-change-transform sm:text-4xl lg:text-[4.5rem]">
         <div className="flex">{items}</div>
         <div className="flex">{items}</div>

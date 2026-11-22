@@ -28,7 +28,7 @@
     {
       "slug": "luma",
       "title": "Luma",
-      "kind": "web",
+      "kind": "web-mobile",
       "summary": "App web y Android para descubrir restaurantes y comercios de Pasto: mapa en vivo, pedidos para recoger y recomendaciones con IA.",
       "stack": [
         "Angular",
@@ -38,14 +38,15 @@
         "MapLibre"
       ],
       "repoUrl": "https://github.com/Daniel-I24/Luma",
-      "liveUrl": null,
+      "liveUrl": "https://luma-ten-henna.vercel.app",
       "featured": true,
-      "period": "2026-2"
+      "period": "2026-2",
+      "apkUrl": "https://github.com/Daniel-I24/Luma/releases/download/v1.0.3/luma-1.0.3.apk"
     },
     {
       "slug": "flux",
       "title": "FLUX",
-      "kind": "mobile",
+      "kind": "wearable",
       "summary": "Notas y recordatorios por voz para Wear OS. La IA clasifica la idea, detecta la fecha y programa la alarma en el reloj y el celular.",
       "stack": [
         "Kotlin",
@@ -55,9 +56,15 @@
         "Firebase"
       ],
       "repoUrl": "https://github.com/Daniel-I24/Flux",
-      "liveUrl": "https://github.com/Daniel-I24/Flux/releases",
       "featured": true,
-      "period": "2026-2"
+      "period": "2026-2",
+      "apkUrl": "https://github.com/Daniel-I24/Flux/releases/download/v1.0.0/flux-wear.apk",
+      "extraLinks": [
+        {
+          "label": "APK del teléfono",
+          "url": "https://github.com/Daniel-I24/Flux/releases/download/v1.0.0/flux-mobile.apk"
+        }
+      ]
     },
     {
       "slug": "ai-code-tutor",

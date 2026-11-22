@@ -109,7 +109,7 @@ app/
 components/
   sections/             Loader · Navbar · Hero · Stats · About · Projects · Testimonials · Experience · OffTheClock · Contact · Footer
   ui/                   Section · Button · CvButton · Icon · Reveal · Modal · MotionProvider · MobileMenu · ProjectCard · ContactForm
-                        · Glow · TiltPhoto · Marquee · Ambient · SectionCurtain · LavaLamp
+                        · Glow · TiltPhoto · Marquee · Ambient · SectionCurtain · LavaLamp · MenuPanel · Gallery · Carousel
   admin/                EntityTable · EntityForm · GithubImport
 lib/
   domain.ts             abstract classes + models
@@ -119,7 +119,7 @@ lib/
   supabase.ts           server/browser clients + isAdmin()
   github.ts             GitHub REST client (server only)
 content/seed.json       initial content (already in the repo)
-supabase/migrations/    0001_init.sql (tables, RLS, storage)
+supabase/migrations/    0001_init.sql (tables, RLS, storage) · 0002_project_kinds.sql (adds "web-mobile" and "wearable")
 middleware.ts           refreshes the session and protects /admin
 next.config.ts          security headers, images
 .env.example
@@ -207,10 +207,10 @@ Un componente por sección, cada uno con su `id`. `SECTIONS` (en `components/ui/
 3. **Hero** (`#inicio`): nombre grande en Fraunces (apellido en cursiva `sky`), rol y meta, frase corta, "Ver proyectos" y "Descargar CV", ubicación y mi foto real (`daniel-sin-hora.webp`, sin filtros) en un marco con tubo de luz LED y halo azul, con mi nombre completo en una etiqueta `mist`.
 4. **Cifras clave** (`#cifras`): proyectos publicados, plataformas (tipos de proyecto distintos) y tecnologías del stack, todo leído de los datos.
 5. **Sobre mí** (`#sobre-mi`): `profile.about`, foto, datos rápidos (ubicación, estudio, meta) y el stack agrupado por categoría desde `skills`. Sin niveles, porcentajes ni barras.
-6. **Proyectos** (`#proyectos`): filtros por tipo con contador, tarjetas con portada (captura o espacio limpio con tipo, periodo y nombre), insignias "Destacado" y "Colaboración", tecnologías, "Código" + la acción de su tipo y el detalle en un modal (problema, solución, mi rol, aprendizajes, galería y enlaces extra).
-7. **Testimonios** (`#testimonios`): 3 tarjetas con avatar (foto o iniciales), nombre, cargo y texto.
-8. **Experiencia** (`#experiencia`): pestañas "Académica" y "Laboral" (con contador y flechas del teclado) sobre una línea de tiempo.
-9. **Más allá del código** (`#mas-alla-del-codigo`): galería en mosaico con un mosaico por gusto (icono propio, título y nota; enlace a la playlist si existe).
+6. **Proyectos** (`#proyectos`): filtros por tipo con contador (Web, Web y móvil, Móvil, Wearable, Escritorio, Videojuego, API) y una **galería horizontal** con scroll-snap, flechas, arrastre con mouse, swipe, teclado (flechas, Inicio, Fin), contador "03 / 10" y barra de desplazamiento propia. Tarjetas con portada (captura o espacio limpio con tipo, periodo y nombre), insignias, tecnologías, "Código" + la acción de su tipo; se inclinan en 3D y se iluminan al pasar el cursor. Los filtros reacomodan la galería y el detalle se abre en un modal que crece desde la tarjeta (View Transitions del navegador).
+7. **Testimonios** (`#testimonios`): carrusel suave sobre `CircularQueue` (avance cada 7 s, pausa al pasar el cursor, al enfocar o con su botón; flechas y puntos; sin avance automático con las animaciones apagadas).
+8. **Experiencia** (`#experiencia`): pestañas "Académica" y "Laboral" (con contador y flechas del teclado) sobre una línea de tiempo que se dibuja con el scroll; cada punto se enciende al llegar.
+9. **Más allá del código** (`#mas-alla-del-codigo`): mosaicos del mismo tamaño, uno por gusto (icono propio, título y nota; enlace a la playlist si existe), que se elevan en 3D con resplandor interno e icono animado al pasar el cursor.
 10. **Contacto** (`#contacto`): correo con botón copiar, GitHub, LinkedIn y formulario con validación en vivo (las mismas reglas que el servidor), contador de caracteres por campo, honeypot, límite de envíos y confirmación.
 11. **Footer**: nombre, rol y ubicación, enlaces rápidos, redes, "© {año} Ivan Daniel Igua Benavides", "Hecho con Next.js + Tailwind" y "Volver arriba".
 
@@ -220,7 +220,7 @@ Un componente por sección, cada uno con su `id`. `SECTIONS` (en `components/ui/
 
 **Fase actual (base):**
 
-- `Reveal`: entrada con opacidad y desplazamiento de 24 px al entrar en pantalla, escalonada 70 ms por elemento.
+- `Reveal` (componente de servidor, sin JS): entrada y salida ligadas al scroll con `animation-timeline: view()`, en ambos sentidos; ver Fase 4 · Parte 2.
 - Scroll suave con **Lenis** (las anclas descuentan la altura del menú).
 - Hover cuidado: botones que suben 2 px y mueven su icono, tarjetas que se elevan con `shadow-lift`, subrayados que crecen.
 - Transición carga → página: la carga se disuelve y el hero entra escalonado (solo con `transform`).
@@ -239,7 +239,12 @@ Un componente por sección, cada uno con su `id`. `SECTIONS` (en `components/ui/
 - `SectionCurtain`: al navegar desde el menú, una cortina `navy` con "04 — Proyectos" cubre la pantalla, salta a la sección y se levanta (≈ 800 ms, máximo 900). Se salta con clic o `Esc` y mueve el foco a la sección.
 - Sin animaciones (interruptor o `prefers-reduced-motion`), todo queda visible y quieto: cada ciclo empieza y termina en reposo.
 
-**Fase 4 · Parte 2:** clasificación de proyectos, galería horizontal, animaciones de entrada y salida ligadas al scroll, cifras, línea de tiempo, carrusel de testimonios, contacto, barra de progreso y cursor.
+**Fase 4 · Parte 2 (rendimiento, proyectos y scroll):**
+
+- Rendimiento: Motion ya no está en el arranque (solo en el panel del menú móvil, que se descarga al primer toque); `TiltPhoto` y `SectionCurtain` usan variables CSS y Web Animations; Lenis se carga en tiempo ocioso y solo con ratón; los bucles infinitos arrancan cuando la página quedó lista (`html[data-ready]`); fuentes con preload, `swap` y fallback con métricas ajustadas.
+- Entradas y salidas: `.reveal` (sube y aparece en los primeros 160 px al entrar; sale hacia arriba con profundidad solo cuando su borde superior ya dejó la pantalla, en los últimos 300 px), `.reveal-mask` para los títulos (máscara) y `.leave` para el hero y la franja LED. Sin soporte, quietas y visibles.
+- `.scroll-fx` (CSS, sin JS): cifras que ruedan hasta su valor (contador CSS), línea de tiempo que se dibuja y puntos que se encienden, barra de progreso de lectura (`scroll(root)`).
+- Cursor de anillo en escritorio que crece sobre enlaces y botones (el cursor del sistema se mantiene); botón de enviar magnético y campos con subrayado iluminado al enfocar.
 
 ---
 
@@ -254,7 +259,6 @@ Un componente por sección, cada uno con su `id`. `SECTIONS` (en `components/ui/
 
 ## 9. Lo que falta (déjalo editable desde el admin)
 
-- Demo de Luma (`liveUrl`).
 - El proyecto web del restaurante de Diana Jojoa: nombre, URL y año. Ya está como borrador en `content/seed.json`.
 - `public/cv.pdf`: lo subo yo desde el admin.
 

@@ -10,7 +10,9 @@ export type ProjectView = ProjectData & { links: CardAction[] };
 /** Plain cover per kind when there is no screenshot: color + name, nothing fake. Every pair passes 4.5:1. */
 const COVER_TONES: Record<ProjectKind, string> = {
   web: "bg-abyss text-ice",
+  "web-mobile": "bg-deep text-ice",
   mobile: "bg-navy text-ice",
+  wearable: "bg-steel text-abyss",
   desktop: "bg-slate text-ice",
   game: "bg-ice text-abyss",
   api: "bg-mist text-abyss",
@@ -62,15 +64,24 @@ export const ProjectLinks = ({ project, extra = false }: { project: ProjectView;
   ));
 };
 
-export function ProjectCard({ project, onOpen }: { project: ProjectView; onOpen: () => void }) {
+/** 3D tilt toward the cursor: the gallery writes --px/--py (0–1) on `[data-tilt]`; transitions smooth it. */
+const TILT = { transform: "perspective(900px) rotateX(calc((0.5 - var(--py, 0.5)) * 8deg)) rotateY(calc((var(--px, 0.5) - 0.5) * 10deg))" };
+const resetTilt = (event: { currentTarget: HTMLElement }) => {
+  event.currentTarget.style.setProperty("--px", "0.5");
+  event.currentTarget.style.setProperty("--py", "0.5");
+};
+
+export function ProjectCard({ project, onOpen }: { project: ProjectView; onOpen: (card: HTMLElement) => void }) {
   const named = !project.imageUrl; // the plain cover already shows kind, period and name
+  const open = (event: { currentTarget: HTMLElement }) => onOpen(event.currentTarget.closest("article") as HTMLElement);
   return (
-    <article className="group/card relative flex h-full flex-col overflow-hidden rounded-3xl border border-line bg-deep transition-[border-color,box-shadow,translate] duration-300 hover:-translate-y-1 hover:border-steel hover:shadow-lift">
+    <article data-tilt style={TILT} onPointerLeave={resetTilt}
+      className="group/card relative flex h-full flex-col overflow-hidden rounded-3xl border border-line bg-deep transition-[transform,border-color,box-shadow] duration-300 ease-out hover:border-steel hover:shadow-lift after:pointer-events-none after:absolute after:inset-0 after:rounded-3xl after:opacity-0 after:shadow-[inset_0_0_0_1.5px_var(--color-mist),inset_0_0_24px_-6px_var(--color-steel),0_0_32px_-6px_var(--color-steel)] after:transition-opacity after:duration-300 hover:after:opacity-100">
       {/* Mouse shortcut to the detail; keyboard and screen readers use the labelled button below. */}
-      <button type="button" tabIndex={-1} aria-hidden onClick={onOpen} className="block overflow-hidden border-b border-line">
+      <button type="button" tabIndex={-1} aria-hidden onClick={open} className="block overflow-hidden border-b border-line">
         <div className="transition-transform duration-500 ease-(--ease-soft) group-hover/card:scale-[1.03]"><Cover project={project} /></div>
       </button>
-      <button type="button" onClick={onOpen} title="Ver detalle" aria-label={`Ver detalle de ${project.title}`}
+      <button type="button" onClick={open} title="Ver detalle" aria-label={`Ver detalle de ${project.title}`}
         className="absolute right-4 top-4 grid size-11 place-items-center rounded-full border border-line bg-deep text-sky shadow-lift transition-[border-color,rotate] duration-300 hover:rotate-90 hover:border-sky">
         <Icon name="plus" size={20} />
       </button>

@@ -44,6 +44,8 @@ export default async function HomePage() {
       <LavaLamp />
       <Loader initials={initialsOf(profile.displayName)} />
       <Navbar initials={initialsOf(profile.displayName)} name={profile.displayName} cvUrl={profile.cvUrl} cvNote={cvNote} />
+      {/* Reading progress: fills with the page scroll (CSS scroll timeline, no JS); hidden where unsupported or calm. */}
+      <div aria-hidden className="scroll-fx pointer-events-none fixed inset-x-0 top-0 z-50 hidden h-0.5 origin-left bg-mist shadow-glow [animation-name:fill-x] [animation-timeline:scroll(root)]! supports-[animation-timeline:scroll()]:block [html[data-motion=off]_&]:hidden" />
       <main id="contenido" tabIndex={-1} className="overflow-x-clip outline-none">
         <Hero profile={profile} cvNote={cvNote} />
         <Marquee text={profile.role} />

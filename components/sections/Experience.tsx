@@ -47,9 +47,11 @@ export function Experience({ items }: { items: ExperienceView[] }) {
     <Section id="experiencia" title="Experiencia" lead="Formación académica y proyectos en los que he trabajado." aside={tabs}>
       <div id="exp-panel" role="tabpanel" aria-labelledby={`exp-tab-${groups.indexOf(active)}`} tabIndex={0} className="max-w-3xl rounded-sm">
         <ol key={active} className="relative border-l border-line">
+          {/* The lit line draws itself with the scroll; each dot lights up as it is reached (CSS scroll timelines). */}
+          <span aria-hidden className="scroll-fx absolute -left-px top-0 h-full w-0.5 origin-top bg-sky shadow-glow [animation-name:grow-y] [animation-range:entry_15%_cover_75%]" />
           {visible.map((item, i) => (
             <Reveal as="li" key={item.id} index={i} className="relative pb-10 pl-8 last:pb-0 sm:pl-12">
-              <span aria-hidden className={`absolute -left-[7px] top-1.5 size-3.5 rounded-full ring-4 ring-abyss ${DOT[item.accent]}`} />
+              <span aria-hidden className={`scroll-fx absolute -left-[7px] top-1.5 size-3.5 rounded-full shadow-glow ring-4 ring-abyss [animation-name:light-up] [animation-range:cover_20%_cover_40%] ${DOT[item.accent]}`} />
               <p className={`text-sm font-semibold tabular-nums ${TEXT[item.accent]}`}>
                 <span className="sr-only">Periodo: </span>{item.period}
               </p>

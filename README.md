@@ -49,7 +49,7 @@ middleware.ts        protege /admin
 
 1. **Proyecto en Supabase.** Crea un proyecto en [supabase.com](https://supabase.com). En *Project Settings → API* copia
    la *Project URL* y la *anon public key* en `NEXT_PUBLIC_SUPABASE_URL` y `NEXT_PUBLIC_SUPABASE_ANON_KEY`.
-2. **Migración.** En *SQL Editor* pega y ejecuta `supabase/migrations/0001_init.sql`.
+2. **Migración.** En *SQL Editor* pega y ejecuta `supabase/migrations/0001_init.sql` y después `0002_project_kinds.sql` (tipos "Web y móvil" y "Wearable").
 3. **GitHub OAuth App.** En GitHub → *Settings → Developer settings → OAuth Apps → New OAuth App*:
    - *Homepage URL*: la URL del sitio (o `http://localhost:3000`).
    - *Authorization callback URL*: `https://<tu-proyecto>.supabase.co/auth/v1/callback`.

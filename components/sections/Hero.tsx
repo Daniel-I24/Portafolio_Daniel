@@ -36,7 +36,7 @@ export function Hero({ profile, cvNote }: { profile: ProfileData; cvNote?: strin
 
   return (
     <section id="inicio" aria-labelledby="inicio-title" className="relative isolate scroll-mt-20 overflow-x-clip pb-16 pt-24 sm:pb-24 sm:pt-36 lg:pt-40">
-      <div className={`${container} grid items-center gap-12 sm:gap-16 lg:grid-cols-[1.2fr_0.95fr] lg:gap-20`}>
+      <div className={`leave ${container} grid items-center gap-12 sm:gap-16 lg:grid-cols-[1.2fr_0.95fr] lg:gap-20`}>
         <div>
           <p {...step(0)} className="enter text-sm font-medium uppercase tracking-[0.12em] text-mist">
             <span className="text-sky">{sectionNumber("inicio")}</span> — Inicio

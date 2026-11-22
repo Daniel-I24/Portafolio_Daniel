@@ -12,7 +12,7 @@ const FIELDS: { name: ContactField; label: string; type: string; hint: string; m
   { name: "message", label: "Mensaje", type: "textarea", hint: "Cuéntame tu idea, propuesta o pregunta.", max: 2000 },
 ];
 const EMPTY: Record<ContactField, string> = { name: "", email: "", message: "" };
-const inputClass = "mt-2 w-full rounded-xl border border-line bg-abyss px-4 py-3 text-ice transition-colors duration-150 placeholder:text-mist hover:border-steel focus:border-steel focus:outline-none focus-visible:outline-2 focus-visible:outline-sky aria-invalid:border-sky";
+const inputClass = "peer block w-full rounded-xl border border-line bg-abyss px-4 py-3 text-ice transition-colors duration-150 placeholder:text-mist hover:border-steel focus:border-steel focus:outline-none focus-visible:outline-2 focus-visible:outline-sky aria-invalid:border-sky";
 
 /** Copies the email and confirms in place (and to screen readers). */
 export function CopyEmail({ email }: { email: string }) {
@@ -64,9 +64,13 @@ export function ContactForm() {
         return (
           <div key={field.name} className="mb-6">
             <label htmlFor={id} className="font-semibold">{field.label}</label>
-            {field.type === "textarea"
-              ? <textarea {...props} rows={6} className={`${inputClass} resize-y`} />
-              : <input {...props} type={field.type} autoComplete={field.name} className={inputClass} />}
+            <div className="relative mt-2">
+              {field.type === "textarea"
+                ? <textarea {...props} rows={6} className={`${inputClass} resize-y`} />
+                : <input {...props} type={field.type} autoComplete={field.name} className={inputClass} />}
+              {/* Animated underline: a lit line grows from the left while the field has focus. */}
+              <span aria-hidden className="pointer-events-none absolute inset-x-4 bottom-0 h-0.5 origin-left scale-x-0 rounded-full bg-mist shadow-glow transition-transform duration-500 ease-(--ease-soft) peer-focus:scale-x-100" />
+            </div>
             <div className="mt-2 flex items-start justify-between gap-4 text-sm">
               <p id={`${id}-help`} className={error ? "font-semibold text-sky" : "text-mist"}>{error || field.hint}</p>
               <p id={`${id}-count`} className={`shrink-0 tabular-nums ${used > field.max * 0.9 ? "font-semibold text-sky" : "text-mist"}`}>
@@ -84,7 +88,7 @@ export function ContactForm() {
 
       <div id="contact-status" role="status" className="mt-6 empty:hidden">
         {state.status === "ok" && (
-          <p className="flex items-start gap-3 rounded-xl border border-sky bg-abyss p-4 text-sky animate-rise">
+          <p className="flex items-start gap-3 rounded-xl border border-sky bg-abyss p-4 text-sky">
             <Icon name="check" size={22} className="mt-0.5 shrink-0" />
             <span><strong className="block">{state.message}</strong>Gracias por escribir: te responderé pronto a tu correo.</span>
           </p>

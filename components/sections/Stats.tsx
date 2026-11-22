@@ -1,3 +1,4 @@
+import type { CSSProperties } from "react";
 import { Reveal } from "@/components/ui/Reveal";
 import { container, sectionNumber } from "@/components/ui/Section";
 
@@ -29,7 +30,11 @@ export function Stats({ projects, platforms, techs, techGroups }: StatsProps) {
             <Reveal key={figure.label} index={i} className="border-t border-steel pt-5">
               <dt className="sr-only">{figure.label}</dt>
               <dd className="flex flex-col gap-2">
-                <span className="font-display text-4xl font-semibold leading-none tabular-nums">{figure.value}</span>
+                {/* The number rolls up as the band scrolls in (CSS counter on a scroll timeline); readers get the plain value. */}
+                <span className="font-display text-4xl font-semibold leading-none tabular-nums">
+                  <span className="sr-only">{figure.value}</span>
+                  <span aria-hidden className="tally scroll-fx [animation-name:tally] [animation-range:entry_10%_cover_45%]" style={{ "--v": figure.value } as CSSProperties} />
+                </span>
                 <span className="text-lg font-medium" aria-hidden>{figure.label}</span>
               </dd>
               <dd className="mt-3 text-sm text-mist">{figure.detail}</dd>

@@ -47,8 +47,9 @@ export function Section({ id, title, lead, children, surface = "plain", aside }:
             <p className="text-sm font-medium uppercase tracking-[0.12em] text-mist">
               <span className="text-sky">{sectionNumber(id)}</span> — {SECTIONS.find((s) => s.id === id)?.label}
             </p>
-            <h2 id={`${id}-title`} className="mt-3 font-display text-2xl font-semibold tracking-tight sm:text-3xl lg:text-4xl">
-              {title}
+            {/* The title rises inside a mask as it enters, then drifts up and fades as it leaves. */}
+            <h2 id={`${id}-title`} className="mt-3 overflow-clip pb-[0.12em] font-display text-2xl font-semibold tracking-tight sm:text-3xl lg:text-4xl">
+              <span className="reveal-mask block">{title}</span>
             </h2>
             {lead && <p className="mt-4 text-lg text-mist">{lead}</p>}
           </div>
