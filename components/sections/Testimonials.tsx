@@ -20,10 +20,11 @@ export function Testimonials({ testimonials }: { testimonials: TestimonialView[]
   if (testimonials.length === 0) return null;
   return (
     <Section id="testimonios" title="Testimonios" lead="Personas que han trabajado conmigo o han usado lo que construyo." surface="bone">
-      <Reveal className="max-w-3xl">
+      {/* Wide screens: the card keeps a reading width and a large drawn quote mark fills the side. */}
+      <Reveal className="grid items-center gap-10 lg:grid-cols-[minmax(0,48rem)_1fr]">
         <Carousel label="Testimonios" slides={testimonials.map((person, i) => (
-          <figure key={person.id} className="flex h-full flex-col rounded-3xl border border-line bg-abyss p-7 sm:p-10">
-            <span aria-hidden className="font-display text-[4rem] leading-none text-sky">“</span>
+          <figure key={person.id} className="flex h-full flex-col rounded-3xl border border-line bg-deep p-7 shadow-lift sm:p-10">
+            <span aria-hidden className="font-display text-[4rem] leading-none text-sky lg:hidden">“</span>
             <blockquote className="mt-2 flex-1 font-display text-lg leading-relaxed text-ice sm:text-xl">
               <p>{person.quote}</p>
             </blockquote>
@@ -36,6 +37,7 @@ export function Testimonials({ testimonials }: { testimonials: TestimonialView[]
             </figcaption>
           </figure>
         ))} />
+        <span aria-hidden className="hidden select-none justify-self-center font-display text-[18rem] leading-[0.7] text-steel lg:block">“</span>
       </Reveal>
     </Section>
   );

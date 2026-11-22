@@ -24,7 +24,7 @@ function arrive(id: SectionId) {
   const target = document.getElementById(id);
   if (!target) return;
   if (smoothScroll.current) smoothScroll.current.scrollTo(target, { immediate: true, force: true, offset: -HEADER_OFFSET });
-  else target.scrollIntoView();
+  else target.scrollIntoView({ behavior: "instant" });
   // replaceState: no hashchange, no extra history entry per menu click.
   history.replaceState(history.state, "", `#${id}`);
   if (!target.hasAttribute("tabindex")) target.setAttribute("tabindex", "-1");

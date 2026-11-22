@@ -18,7 +18,7 @@ import { MotionProvider } from "@/components/ui/MotionProvider";
 import { SectionCurtain } from "@/components/ui/SectionCurtain";
 import { initialsOf, PLATFORM_LABELS } from "@/lib/domain";
 import { getPortfolio } from "@/lib/patterns";
-import type { ProfileData } from "@/lib/schemas";
+import { platformKinds, type ProfileData } from "@/lib/schemas";
 
 const CV_PENDING = "El CV se está actualizando: muy pronto podrás descargarlo.";
 
@@ -34,7 +34,8 @@ export default async function HomePage() {
   const { profile, projects, testimonials, experience, skills, interests } = await getPortfolio();
   const cvNote = cvMissing(profile) ? CV_PENDING : undefined;
   const socials = profile.socials.map(({ label, url, kind }) => ({ label, url, icon: kind }));
-  const platforms = [...new Set(projects.flatMap((project) => project.platforms))].map((platform) => PLATFORM_LABELS[platform]);
+  const used = new Set(projects.flatMap((project) => project.platforms));
+  const platforms = platformKinds.filter((platform) => used.has(platform)).map((platform) => PLATFORM_LABELS[platform]);
   const techs = new Set(skills.map((skill) => skill.data.name.toLowerCase())).size;
   const techGroups = [...new Set(skills.map((skill) => skill.data.group))];
 

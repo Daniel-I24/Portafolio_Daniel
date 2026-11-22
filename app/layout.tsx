@@ -39,7 +39,7 @@ export const viewport: Viewport = { themeColor: "#021a2a", colorScheme: "dark" }
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="es" className={`${fraunces.variable} ${plex.variable}`} suppressHydrationWarning>
+    <html lang="es" className={`scroll-smooth ${fraunces.variable} ${plex.variable}`} suppressHydrationWarning>
       <head>
         <script dangerouslySetInnerHTML={{ __html: PREFS_SCRIPT }} />
       </head>

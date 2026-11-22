@@ -62,8 +62,9 @@
   }
   ::selection { background: var(--color-mist); color: var(--color-abyss); }
 
-  /* Lenis */
+  /* Lenis (it glides by itself, so it overrides the html scroll-smooth class; touch keeps the native smooth scroll) */
   html.lenis, html.lenis body { height: auto; } .lenis.lenis-stopped { overflow: clip; } .lenis [data-lenis-prevent] { overscroll-behavior: contain; }
+  html.lenis.lenis-smooth { scroll-behavior: auto !important; }
 }
 
 @layer utilities {
@@ -112,8 +113,7 @@
 
 @property --n { syntax: "<integer>"; initial-value: 0; inherits: false; } @property --v { syntax: "<integer>"; initial-value: 0; inherits: false; }
 
-@keyframes rise { from { transform: translateY(28px); } to { transform: none; } }
-@keyframes letter { from { transform: translateY(110%); } to { transform: none; } }
+@keyframes rise { from { transform: translateY(28px); } to { transform: none; } } @keyframes letter { from { transform: translateY(110%); } to { transform: none; } }
 @keyframes draw { from { clip-path: inset(-30% 102% -30% -8%); } to { clip-path: inset(-30% -8% -30% -8%); } }
 @keyframes ink-in { from { opacity: 0; } to { opacity: 1; } } @keyframes unblur { from { opacity: 1; } to { opacity: 0; } } @keyframes swash { from { stroke-dashoffset: 1.1; } to { stroke-dashoffset: 0; } }
 @keyframes sharpen { from { transform: scale(1.02); } to { transform: none; } }
