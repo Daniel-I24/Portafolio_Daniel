@@ -127,6 +127,7 @@ lib/
   site.ts               public site URL + schema.org Person (JSON-LD)
 e2e/                    Playwright end-to-end tests (menus, curtain, projects, modal, contact form, motion switch)
 content/seed.json       initial content (already in the repo)
+docs/                   PROMPT.md (this brief) · SETUP.md (setup and maintenance guide)
 supabase/migrations/    0001_init.sql (tables, RLS, storage) · 0002_project_kinds.sql (kinds "web-mobile", "wearable")
                         · 0003_project_platforms.sql (one kind → list of platforms; adds Nexium)
 middleware.ts           refreshes the session and protects /admin
@@ -202,7 +203,7 @@ playwright.config.ts · vitest.config.ts
   - un botón "Sincronizar" refresca estrellas, descripción y release de los proyectos ya importados.
 - **Seguridad del admin**: todas las acciones son Server Actions que validan con Zod y verifican `isAdmin()` antes de tocar la base. Sin endpoints abiertos. Los errores no exponen detalles internos.
 - **`.env.example`** con: `NEXT_PUBLIC_SUPABASE_URL`, `NEXT_PUBLIC_SUPABASE_ANON_KEY`, `SUPABASE_SERVICE_ROLE_KEY` (solo servidor), `ADMIN_USER_ID`, `GITHUB_TOKEN` y `RESEND_API_KEY` o `FORMSPREE_ID`.
-- **Guía de configuración** en el `README.md`, con pasos cortos: crear el proyecto en Supabase, correr la migración, activar GitHub OAuth, copiar mi `user.id` a `ADMIN_USER_ID` y configurar las variables en Vercel.
+- **Guía de configuración** en `docs/SETUP.md`, con pasos cortos: crear el proyecto en Supabase, correr la migración, activar GitHub OAuth, copiar mi `user.id` a `ADMIN_USER_ID` y configurar las variables en Vercel.
 
 ---
 
@@ -262,7 +263,8 @@ Un componente por sección, cada uno con su `id`. `SECTIONS` (en `components/ui/
 - **SEO**: metadata completa (canónica, Open Graph, Twitter), imagen Open Graph propia de 1200×630, favicon, apple-touch-icon, `sitemap.xml`, `robots.txt` (sin `/admin`), datos estructurados `Person` y página 404 con el diseño del sitio.
 - **Rendimiento**: `browserslist` moderno sin polyfills heredados; Zod y `next/cache` fuera del bundle del navegador (126 kB de JS inicial).
 - **Responsive**: revisa 390, 768, 1440 y 1920 px, sin solapamientos, recortes ni scroll horizontal y con distancias equilibradas.
-- **README.md**: stack, cómo correrlo, estructura, configuración del admin y despliegue.
+- **README.md**: presentación del portafolio (sitio publicado, secciones, características, tecnologías, arquitectura y contacto), sin instrucciones técnicas.
+- **docs/SETUP.md**: guía técnica: stack, cómo correrlo, estructura, configuración del admin, seguridad y despliegue.
 
 ---
 

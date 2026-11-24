@@ -1,108 +1,50 @@
-# Dani · Noche azul
+# Portafolio · Daniel Igua
 
-Portafolio de **Ivan Daniel Igua Benavides**: desarrollador full stack, futuro especialista en ciberseguridad.
-Dirección visual "Noche azul": azul marino profundo con secciones en blanco hueso, una lámpara de lava de fondo, la foto en un marco de luz LED con su propio contorno y titulares en serif.
+Soy Ivan Daniel Igua Benavides, desarrollador full stack de Pasto, Nariño, Colombia. Construyo aplicaciones web, móviles y APIs, y este es el lugar donde reúno mi trabajo.
 
-## Stack
+## 🚀 Sitio publicado
 
-- **Next.js 15** (App Router) + **TypeScript** estricto
-- **Tailwind CSS v4** con tokens en `@theme` (`app/globals.css`)
-- **Supabase**: Postgres con RLS, Auth (GitHub OAuth) y Storage
-- Movimiento ligero: CSS (scroll timelines, keyframes) y Web Animations en el arranque; **Motion** (`motion/react`) solo en el panel del menú móvil (carga diferida) y el admin; **Lenis** cargado en tiempo ocioso. Todo respeta `prefers-reduced-motion` y el interruptor "Pausar animaciones".
-- **Vitest** para las pruebas unitarias de `lib/` y **Playwright** para las pruebas end-to-end
-- Despliegue en **Vercel**
+**[portafolio-daniel-six.vercel.app](https://portafolio-daniel-six.vercel.app)**
 
-## Cómo correrlo
+[![Portada del portafolio: nombre, rol y foto en un marco de luz LED](app/opengraph-image.jpg)](https://portafolio-daniel-six.vercel.app)
 
-```bash
-npm install
-cp .env.example .env.local   # opcional: sin variables, la web usa content/seed.json
-npm run dev                  # http://localhost:3000
-npm run lint && npm run build
-npm test                     # Vitest: lib/structures, lib/schemas y lib/domain
-npm run build && npm run test:e2e   # Playwright: menús, cortina, proyectos, modal, formulario e interruptor
-```
+## 🧭 Secciones
 
-La primera vez, `npx playwright install chromium` descarga el navegador de las pruebas. Si ya tienes un Chromium,
-`PLAYWRIGHT_CHROMIUM=<ruta al ejecutable>` lo usa en su lugar.
+- **Inicio:** quién soy, mi rol y mi CV.
+- **Cifras:** proyectos publicados, plataformas y tecnologías.
+- **Sobre mí:** mi enfoque y el stack con el que trabajo.
+- **Proyectos:** web, móvil, wearables, escritorio, videojuegos y APIs.
+- **Testimonios:** lo que dicen quienes han trabajado conmigo.
+- **Experiencia:** formación académica y proyectos laborales.
+- **Más allá del código:** lo que disfruto fuera de la pantalla.
+- **Contacto:** formulario y mis redes.
 
-Sin variables de Supabase la web funciona igual: `SeedRepository` lee `content/seed.json`.
-El panel `/admin` y el guardado de mensajes necesitan Supabase.
+## ✨ Características
 
-## Estructura
+- **Diseño y animaciones:** una dirección visual propia, "Noche azul", con secciones en blanco hueso, una lámpara de lava de fondo, mi foto en un marco de luz LED y animaciones que acompañan el scroll.
+- **Galería de proyectos:** recorrido horizontal con filtros por plataforma, contador y detalle de cada proyecto en una ventana propia.
+- 📱 **Versión móvil:** pensada para el celular desde el inicio, con un menú flotante siempre a mano.
+- ♿ **Accesibilidad:** navegación completa con teclado, buen contraste en todo el texto y un interruptor para ver el sitio sin animaciones.
+- 🔐 **Panel privado:** administro todo el contenido desde un panel al que solo yo entro, con mi cuenta de GitHub.
+- ⚡ **Rendimiento:** PageSpeed da 96 en móvil, 98 en escritorio y 100 en accesibilidad y SEO.
 
-```
-app/                 page.tsx (secciones en orden), layout.tsx (metadatos), actions.ts (formulario de contacto)
-                     not-found.tsx, sitemap.ts, robots.ts, icon.svg, favicon.ico, apple-icon.png, opengraph-image.jpg
-  admin/             panel privado: layout (guarda + noindex), page (pestañas), actions (CRUD), login
-  auth/callback/     retorno de GitHub OAuth
-components/
-  sections/          Loader · Navbar · Hero · Stats · About · Projects · Testimonials · Experience · OffTheClock · Contact · Footer
-  ui/                Section · Button · CvButton · Icon · Reveal (CSS, sin JS) · Modal · MotionProvider (interruptor, Lenis diferido)
-                     MobileMenu + MenuPanel (botón flotante y panel diferido) · ProjectCard · Gallery · Carousel · ContactForm
-                     LavaLamp · Glow + TiltPhoto + PhotoShape (foto LED con su contorno) · Marquee · Ambient · SectionCurtain
-  admin/             EntityTable · EntityForm + fields.ts (generado desde Zod) · GithubImport
-lib/
-  domain.ts          POO: Entity → Project, Testimonial, Skill, Interest, Experience → Academic/Work
-  patterns.ts        Repository (Seed/Supabase), Factory, Strategy (reglas de validación), Observer
-  structures.ts      Trie, CircularQueue, TechIndex, ordenamientos
-  *.test.ts          pruebas unitarias (Vitest) de structures, schemas y domain
-  schemas.ts         Zod: única fuente para formularios, base de datos y validación
-  supabase.ts        clientes + isAdmin() + SupabaseRepository
-  github.ts          cliente REST de GitHub (solo servidor)
-  site.ts            URL pública y datos estructurados (JSON-LD Person)
-e2e/                 pruebas end-to-end (Playwright)
-content/seed.json    contenido inicial
-supabase/migrations/ 0001 tablas, RLS y Storage · 0002 tipos "web-mobile" y "wearable" · 0003 varias plataformas por proyecto (+ Nexium)
-middleware.ts        protege /admin
-```
+## 🛠️ Tecnologías
 
-## Configurar el panel de administración
+Next.js 15 · TypeScript · Tailwind CSS v4 · Supabase · Motion · Vercel · Vitest · Playwright
 
-1. **Proyecto en Supabase.** Crea un proyecto en [supabase.com](https://supabase.com). En *Project Settings → API* copia
-   la *Project URL* y la *anon public key* en `NEXT_PUBLIC_SUPABASE_URL` y `NEXT_PUBLIC_SUPABASE_ANON_KEY`.
-2. **Migración.** En *SQL Editor* pega y ejecuta, en orden, `supabase/migrations/0001_init.sql`, `0002_project_kinds.sql`
-   y `0003_project_platforms.sql` (cada proyecto pasa de un tipo a una lista de plataformas; agrega Nexium).
-3. **GitHub OAuth App.** En GitHub → *Settings → Developer settings → OAuth Apps → New OAuth App*:
-   - *Homepage URL*: la URL del sitio (o `http://localhost:3000`).
-   - *Authorization callback URL*: `https://<tu-proyecto>.supabase.co/auth/v1/callback`.
-   Copia el *Client ID* y genera un *Client secret*.
-4. **Activar GitHub en Supabase.** *Authentication → Sign In / Providers → GitHub*: pega el Client ID y el secret.
-   En *Authentication → URL Configuration* pon la *Site URL* y agrega a *Redirect URLs*
-   `http://localhost:3000/auth/callback` y `https://<tu-dominio>/auth/callback`.
-5. **Tu `user.id`.** Corre el sitio, entra a `/admin/login` y pulsa «Entrar con GitHub». Mientras `ADMIN_USER_ID`
-   esté vacío, la página te muestra tu id. Cópialo en `ADMIN_USER_ID` y regístralo en la base:
-   ```sql
-   insert into public.admins (user_id) values ('<tu-user-id>');
-   ```
-   Reinicia el servidor y vuelve a entrar. Cualquier otra cuenta ve «Acceso denegado» y su sesión se cierra.
-6. **Contenido inicial.** En `/admin` pulsa «Importar seed.json» (solo aparece con la base vacía).
-7. **Correo del formulario.** Crea una API key en [resend.com](https://resend.com) y ponla en `RESEND_API_KEY`.
-   Sin dominio verificado, Resend solo entrega al correo de tu cuenta: regístrate con el mismo correo del perfil.
-   Los mensajes se guardan siempre en la tabla `messages` y los ves en la pestaña «Mensajes».
-   Opcional: `CONTACT_TO` es el correo que recibe los mensajes del formulario (solo servidor). Si falta, llegan al
-   correo del perfil. El correo público que muestra la web no cambia.
-8. **GitHub (opcional).** Un *fine-grained token* de solo lectura en `GITHUB_TOKEN` sube el límite de la API y
-   permite listar los repos públicos donde colaboras. Sin token, pega la URL del repo en «Importar desde GitHub».
+## 🏗️ Arquitectura
 
-## Seguridad
+La lógica del sitio vive en `lib/` y aplica lo que trabajo en ingeniería de software:
 
-- Doble guarda del admin: `middleware.ts` y `app/admin/layout.tsx`; además, **RLS** con `is_admin()` en cada tabla.
-- Todas las escrituras son Server Actions que validan con Zod y verifican `isAdmin()`.
-- Cabeceras CSP, HSTS, X-Frame-Options, Referrer-Policy y Permissions-Policy en `next.config.ts`. La CSP solo
-  permite `vercel.live` (barra de comentarios de Vercel) en los despliegues de preview; en producción es estricta.
-- Formulario de contacto con honeypot y límite de envíos; los errores nunca exponen detalles internos.
-- Ningún secreto en el cliente: solo las variables `NEXT_PUBLIC_*` llegan al navegador.
+- **Programación orientada a objetos:** clases abstractas, herencia y polimorfismo para proyectos, testimonios y experiencia.
+- **Patrones de diseño:** Repository, Factory, Strategy y Observer.
+- **Estructuras de datos:** un Trie para la búsqueda, una cola circular para el carrusel y un índice invertido para los filtros.
 
-## Despliegue en Vercel
+## 📬 Contacto
 
-1. Importa el repositorio en [vercel.com/new](https://vercel.com/new).
-2. En *Settings → Environment Variables* agrega las variables de `.env.example`.
-3. Agrega `https://<tu-dominio>/auth/callback` en las *Redirect URLs* de Supabase.
-   Opcional: `NEXT_PUBLIC_SITE_URL` con el dominio definitivo; si falta, los metadatos, el sitemap y el
-   robots usan el dominio de producción que da Vercel.
-4. Cada `git push` a `main` publica una versión nueva. Los cambios hechos en `/admin` se ven al instante,
-   sin redeploy (`revalidateTag`).
+- **Correo:** [danieliguadev@gmail.com](mailto:danieliguadev@gmail.com)
+- **LinkedIn:** [linkedin.com/in/ivan-igua-1a60ab1ab](https://www.linkedin.com/in/ivan-igua-1a60ab1ab)
+- **GitHub:** [github.com/Daniel-I24](https://github.com/Daniel-I24)
 
 ---
 

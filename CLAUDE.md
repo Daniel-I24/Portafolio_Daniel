@@ -1,6 +1,6 @@
 # Portafolio Daniel Igua — project rules
 
-Personal portfolio of Ivan Daniel Igua Benavides ("Dani"). Visual direction: **"Noche azul"** (deep navy with bone-cream sections, lava-lamp backdrop, LED light, editorial serif). Full build brief: `docs/PROMPT.md`. Content seed: `content/seed.json`.
+Personal portfolio of Ivan Daniel Igua Benavides ("Dani"). Visual direction: **"Noche azul"** (deep navy with bone-cream sections, lava-lamp backdrop, LED light, editorial serif). Full build brief: `docs/PROMPT.md`. Setup and maintenance guide: `docs/SETUP.md` (README.md is the public presentation, no technical steps). Content seed: `content/seed.json`.
 
 ## Stack
 Next.js 15 (App Router) · TypeScript strict · Tailwind CSS v4 (`@theme` tokens in `app/globals.css`) · Supabase (Postgres, Auth, Storage) · Motion (`motion/react`, only in lazily loaded parts: mobile menu panel, admin) · Lenis (smooth scroll, loaded when idle) · Vitest (unit tests for `lib/`) · Playwright (end-to-end tests in `e2e/`) · Vercel.

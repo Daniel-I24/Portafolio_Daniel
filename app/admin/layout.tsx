@@ -22,7 +22,7 @@ export default async function AdminLayout({ children }: { children: React.ReactN
         <h1 className="font-display font-semibold text-4xl text-ice">Admin sin conectar</h1>
         <p className="mt-4 text-ice">
           Faltan <code className="text-sky">NEXT_PUBLIC_SUPABASE_URL</code> y{" "}
-          <code className="text-sky">NEXT_PUBLIC_SUPABASE_ANON_KEY</code>. Sigue la guía del README.
+          <code className="text-sky">NEXT_PUBLIC_SUPABASE_ANON_KEY</code>. Sigue la guía de docs/SETUP.md.
         </p>
       </main>
     );
