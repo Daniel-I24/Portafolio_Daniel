@@ -10,3 +10,6 @@ npm-debug.log*
 .DS_Store
 test-results/
 playwright-report/
+
+# Local working notes, not part of the repo
+docs/CONTEXTO_PORTAFOLIO_DANIEL.md

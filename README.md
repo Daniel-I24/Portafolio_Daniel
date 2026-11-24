@@ -80,6 +80,8 @@ middleware.ts        protege /admin
 7. **Correo del formulario.** Crea una API key en [resend.com](https://resend.com) y ponla en `RESEND_API_KEY`.
    Sin dominio verificado, Resend solo entrega al correo de tu cuenta: regístrate con el mismo correo del perfil.
    Los mensajes se guardan siempre en la tabla `messages` y los ves en la pestaña «Mensajes».
+   Opcional: `CONTACT_TO` es el correo que recibe los mensajes del formulario (solo servidor). Si falta, llegan al
+   correo del perfil. El correo público que muestra la web no cambia.
 8. **GitHub (opcional).** Un *fine-grained token* de solo lectura en `GITHUB_TOKEN` sube el límite de la API y
    permite listar los repos públicos donde colaboras. Sin token, pega la URL del repo en «Importar desde GitHub».
 

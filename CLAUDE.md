@@ -15,7 +15,7 @@ Next.js 15 (App Router) · TypeScript strict · Tailwind CSS v4 (`@theme` tokens
 - Performance: modern browserslist (no legacy polyfills); client components never import Zod or `next/cache` (keep `lib/patterns.ts` tree-shakable); keep animation libraries out of start-up (prefer CSS scroll timelines, keyframes and Web Animations); animate only `transform` and `opacity`; endless loops wait for `html[data-ready]`. Section reveals use `Reveal`/`.reveal` (server, no JS).
 - Security: Zod validation on the server, `isAdmin()` check in every admin action, RLS on every table, no secrets in client code, security headers in `next.config.ts`.
 - Never use images from the internet. Icons are our own paths in `components/ui/Icon.tsx`.
-- Do not alter `public/daniel*.webp` (no filters, no edits).
+- Do not alter `public/daniel-sin-hora.webp` (no filters, no edits).
 - Palette and fonts: only the tokens in `docs/PROMPT.md` §2 (Tailwind defaults are reset). Avoid the generic "AI look" (purple-blue gradients, flat black + single neon, emoji decoration, Inter/Roboto, template layouts).
 - Legibility: 4.5:1 minimum contrast and no informative text under 14 px (`text-sm` is the floor). Text colors are `ice`, `mist` and `sky` (never `steel` or `sky` on `slate`); on `mist`/`ice`/`bone` fills the text is `abyss`. Cream sections use `Section surface="bone"`, which inverts the tokens (`.surface-bone`), so components inside need no extra classes. Fraunces for titles and short display text; IBM Plex Sans for everything else.
 
